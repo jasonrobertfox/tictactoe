@@ -1,15 +1,34 @@
 .row
   .large-12.columns.text-center
-    h1 #{settings.title}
-    p You won't beat me. But you can try.
+    h1.subheader #{settings.title}
+    h4.subheader You won't beat me. But you can try.
 .row
-  .large-12.columns
+  .large-6.small-9.small-centered.large-centered.columns.text-center
+    ul.small-block-grid-3.board
+      li id="top-left"
+        .space
+      li id="top-center"
+        .space
+      li id="top-right"
+        .space
+      li id="middle-left"
+        .space
+      li id="middle-center"
+        .space
+      li id="middle-right"
+        .space
+      li id="bottom-left"
+        .space
+      li id="bottom-center"
+        .space
+      li id="bottom-right"
+        .space
 .row
-  .large-6.columns.text-center
+  .small-6.columns.text-center
     a id="start-computer"
       i class="fa fa-laptop fa-5x"
       p You Start
-  .large-6.columns.text-center
+  .small-6.columns.text-center
     a id="start-human"
       i class="fa fa-user fa-5x"
       p I'll Start

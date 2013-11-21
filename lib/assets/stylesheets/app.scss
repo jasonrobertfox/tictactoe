@@ -56,3 +56,26 @@
 // @import "foundation/components/tooltips";
 // @import "foundation/components/dropdown";
 
+.board{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    li {
+        padding: 0em;
+        border: 2px solid #fff;
+    }
+    li:before{
+        content: "";
+        display: block;
+        padding-top: 100%;
+    }
+}
+
+$board-border: 2px solid #eee;
+
+#top-left, #top-center, #top-right, #middle-left, #middle-center, #middle-right{
+    border-bottom: $board-border;
+}
+
+#top-left, #top-center, #middle-left, #middle-center, #bottom-left, #bottom-center{
+    border-right: $board-border;
+}
