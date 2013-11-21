@@ -51,7 +51,7 @@ module App
 
       js_compression  :jsmin
       css_compression :sass
-      prebuild true
+      prebuild true if ENV['RACK_ENV'] == 'production'
     end
 
     get '/' do
