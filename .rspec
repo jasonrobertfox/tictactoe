@@ -1,0 +1,6 @@
+--color
+--format progress
+--format documentation
+--out build/spec/manual_run.log
+--format html
+--out build/spec/manual_run.html

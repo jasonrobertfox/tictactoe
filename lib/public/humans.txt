@@ -1,0 +1,11 @@
+Sinatra Bootstrap, a quick way to get up and running in a clean test driven way!
+
+/* TEAM */
+Creator: Jason Fox
+Site: http://www.neverstopbuilding.com
+Twitter: @jasonrobertfox
+
+/* SITE */
+Standards: HTML5, CSS3, Rubocop
+Components: Modernizr, jQuery, Zurb-Foundation, Sinatra
+Software: Textmate, Git, Rspec, Guard
