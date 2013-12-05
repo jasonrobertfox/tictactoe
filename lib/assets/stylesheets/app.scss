@@ -118,3 +118,8 @@ $board-border: 2px solid #eee;
 .selected{
     color: $primary-color;
 }
+
+.winning{
+    background-color: $secondary-color;
+    border: 2px solid $secondary-color;
+}
