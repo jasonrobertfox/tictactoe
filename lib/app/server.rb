@@ -79,6 +79,7 @@ module App
         board.each do |space|
           space['value'] = content['piece'] if space['id'] == choice
         end
+        sleep(1)
 
         # Return the response
         piece = content['piece'] == 'x' ? 'o' : 'x'
