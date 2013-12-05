@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'sinatra'
-gem 'sinatra-contrib', require: %w(sinatra/config_file)
+gem 'sinatra-contrib', require: %w(sinatra/config_file sinatra/namespace)
 gem 'thin'
 gem 'slim'
 gem 'sinatra-assetpack'
