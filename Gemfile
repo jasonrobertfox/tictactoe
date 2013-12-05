@@ -8,7 +8,7 @@ gem 'sinatra-contrib', require: %w(sinatra/config_file)
 gem 'thin'
 gem 'slim'
 gem 'sinatra-assetpack'
-gem 'zurb-foundation'
+gem 'zurb-foundation', '4.3.2'
 gem 'compass'
 
 group :application do

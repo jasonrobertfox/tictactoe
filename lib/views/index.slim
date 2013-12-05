@@ -5,30 +5,21 @@
 .row
   .large-6.small-9.small-centered.large-centered.columns.text-center
     ul.small-block-grid-3.board
-      li id="top-left"
-        .space
-      li id="top-center"
-        .space
-      li id="top-right"
-        .space
-      li id="middle-left"
-        .space
-      li id="middle-center"
-        .space
-      li id="middle-right"
-        .space
-      li id="bottom-left"
-        .space
-      li id="bottom-center"
-        .space
-      li id="bottom-right"
-        .space
+      - for space in %w[top-left top-center top-right middle-left middle-center middle-right bottom-left bottom-center bottom-right] do
+        li
+          .space-wrapper-1
+            .space-wrapper-2
+              .space-wrapper-3
+                .space id="#{space}"
+                  i.fa
 .row
-  .small-6.columns.text-center
+  .small-4.columns.text-center
     a id="start-computer"
       i class="fa fa-laptop fa-5x"
       p You Start
-  .small-6.columns.text-center
+  .small-4.columns.text-center
+    h3.subheader.prompt Who starts?
+  .small-4.columns.text-center
     a id="start-human"
       i class="fa fa-user fa-5x"
       p I'll Start

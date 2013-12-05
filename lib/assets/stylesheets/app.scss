@@ -61,12 +61,7 @@
     margin-bottom: 1em;
     li {
         padding: 0em;
-        border: 2px solid #fff;
-    }
-    li:before{
-        content: "";
-        display: block;
-        padding-top: 100%;
+        border-collapse: collapse;
     }
 }
 
@@ -78,4 +73,44 @@ $board-border: 2px solid #eee;
 
 #top-left, #top-center, #middle-left, #middle-center, #bottom-left, #bottom-center{
     border-right: $board-border;
+}
+
+.prompt{
+    padding-top: 1em;
+}
+
+.space-wrapper-1{
+    position: relative;
+    width: 100%;
+    &:before{
+    content: "";
+    display: block;
+    padding-top: 100%;
+    }
+}
+
+.space-wrapper-2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.space-wrapper-3{
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.space{
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 2.5em;
+}
+
+@media #{$small} {
+    .space{
+        font-size: 5em;
+    }
 }
