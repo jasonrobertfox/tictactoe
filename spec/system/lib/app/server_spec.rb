@@ -65,4 +65,8 @@ describe 'tic tac toe api behavior' do
     result['data']['piece'].should eq 'o'
     result['data']['board'].count { |space| space['value'] != '' }.should eq 7
   end
+
+  # Other tests
+  # what happens if we send a board with a win on it?
+  # what happens if we send a draw board?
 end

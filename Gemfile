@@ -18,8 +18,9 @@ end
 group :test do
   gem 'rspec'
   gem 'coveralls'
-  gem 'capybara'
+  gem 'capybara', '2.1.0'
   gem 'rubocop'
+  gem 'poltergeist'
 end
 
 group :development do

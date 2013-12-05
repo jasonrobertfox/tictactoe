@@ -7,6 +7,7 @@ require 'sinatra'
 require 'capybara/rspec'
 require 'capybara'
 require 'capybara/dsl'
+require 'capybara/poltergeist'
 
 require_relative '../../lib/app'
 
@@ -27,5 +28,6 @@ RSpec.configure do |config|
 end
 
 Capybara.app = App::Server
+Capybara.javascript_driver = :poltergeist
 
 puts 'Loaded system testing configuration.'
