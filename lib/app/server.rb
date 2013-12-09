@@ -62,7 +62,7 @@ module App
     end
 
     # This API conforms to message specifications as defined by http://labs.omniti.com/labs/jsend
-
+    # Simple api version, just as a best practice
     namespace '/api/v1', layout: false do
 
       post '/play' do
@@ -72,6 +72,7 @@ module App
         return_fail('Board was not defined.') unless content['board']
         return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
         board = content['board']
+        piece = content['piece']
 
         # Here is where we will simply do a random selection again to bring the ui logic onto the server side
         blanks = board.select { |space| space['value'] == '' }
@@ -81,8 +82,16 @@ module App
         end
         sleep(1)
 
+        # I think i want a process like this
+
+        # game.new(board data, turn data)
+        # game = computer_player.get_next_move(game)
+        # game.turn, board.turn
+
+        # thus you could tests by checking the game state each time
+
         # Return the response
-        piece = content['piece'] == 'x' ? 'o' : 'x'
+        piece = piece == 'x' ? 'o' : 'x'
         return_success(piece: piece, board: board)
       end
 

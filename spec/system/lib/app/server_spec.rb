@@ -8,23 +8,6 @@ def post_json(url, data)
   JSON.parse(last_response.body)
 end
 
-def get_test_board_data(data)
-  board = []
-  rows = %w(top middle bottom)
-  columns = %w(left center right)
-  r = 0
-  c = 0
-  data.each do |row|
-    row.each do |column|
-      id = "#{rows[r]}-#{columns[c]}"
-      board.push(id: id, value: column)
-      c == 2 ? c = 0 : c += 1
-    end
-    r += 1
-  end
-  board
-end
-
 describe 'default app behavior' do
   it 'should have the correct title' do
     get '/'
@@ -58,7 +41,7 @@ describe 'tic tac toe api behavior' do
   end
 
   it 'should return a data set with next move and other piece if the game is active' do
-    data = { piece: 'x', board: get_test_board_data([['x', 'x', ''], ['o', 'o', ''], ['x', 'x', '']]) }
+    data = { piece: 'x', board: get_test_board_data([['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]) }
     result = post_json('/api/v1/play', data)
     expect(last_response.status).to be 200
     result['status'].should eq 'success'
@@ -68,5 +51,7 @@ describe 'tic tac toe api behavior' do
 
   # Other tests
   # what happens if we send a board with a win on it?
-  # what happens if we send a draw board?
+  # This is an edge case for this application as the client does not allow it, but the
+  # api should handle that case
+  # what happens if we send a "draw" board? Similarly a full board should throw some error
 end
