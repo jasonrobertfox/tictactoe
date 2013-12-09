@@ -70,4 +70,8 @@ describe App::GameState do
     game_state.over?.should be_true
   end
 
+  it 'should return an array of the blank spaces' do
+    game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
+    game_state.get_blanks.should eq [[0, 2], [1, 2], [2, 2]]
+  end
 end

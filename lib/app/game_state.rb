@@ -55,6 +55,16 @@ module App
       !win? && !@board.flatten.include?('')
     end
 
+    def get_blanks
+      blanks = []
+      (0..2).each do | row |
+        (0..2).each do | column |
+          blanks.push([row, column]) if @board[row][column] == ''
+        end
+      end
+      blanks
+    end
+
     def get_data
       return_data = []
       rows = %w(top middle bottom)
