@@ -9,10 +9,10 @@ module App
         rows = %w(top middle bottom)
         columns = %w(left center right)
         board.each do |space|
-          row_column = space[:id].split('-')
+          row_column = space['id'].split('-')
           row = rows.index(row_column.first)
           column = columns.index(row_column.last)
-          board_array[row][column] = space[:value]
+          board_array[row][column] = space['value']
         end
         new(board_array, active_turn)
     end
@@ -71,7 +71,7 @@ module App
       columns = %w(left center right)
       @board.each_index do | row |
         @board[row].each_index do | column |
-          return_data.push(id: "#{rows[row]}-#{columns[column]}", value: @board[row][column])
+          return_data.push('id' => "#{rows[row]}-#{columns[column]}", 'value' => @board[row][column])
         end
       end
       return_data

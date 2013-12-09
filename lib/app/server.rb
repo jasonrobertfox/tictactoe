@@ -9,6 +9,9 @@ require 'sinatra/assetpack'
 require 'zurb-foundation'
 require 'json'
 
+require 'app/player/random_player'
+require 'app/game_state'
+
 module App
   class Server < Sinatra::Base
     set :root, File.expand_path(File.join(Dir.pwd, 'lib'))
@@ -71,30 +74,13 @@ module App
         return_fail('Piece was not defined as either x or o.') unless content['piece'] && (content['piece'] == 'x' || content['piece'] == 'o')
         return_fail('Board was not defined.') unless content['board']
         return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
-        board = content['board']
-        piece = content['piece']
 
-        # Here is where we will simply do a random selection again to bring the ui logic onto the server side
-        blanks = board.select { |space| space['value'] == '' }
-        choice = blanks.sample['id']
-        board.each do |space|
-          space['value'] = content['piece'] if space['id'] == choice
-        end
-        sleep(1)
-
-        # I think i want a process like this
-
-        # game.new(board data, turn data)
-        # game = computer_player.get_next_move(game)
-        # game.turn, board.turn
-
-        # thus you could tests by checking the game state each time
-
-        # Return the response
-        piece = piece == 'x' ? 'o' : 'x'
-        return_success(piece: piece, board: board)
+        # For now we will replace the random logic with a random player
+        computer_payer = App::Player::RandomPlayer.new
+        game_state = App::GameState.new_from_data(content['board'], content['piece'])
+        new_state = computer_payer.get_new_state(game_state)
+        return_success(piece: new_state.active_turn, board: new_state.get_data)
       end
-
     end
 
     def return_success(data)

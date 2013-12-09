@@ -20,7 +20,7 @@ def get_test_board_data(data)
   data.each do |row|
     row.each do |column|
       id = "#{rows[r]}-#{columns[c]}"
-      board.push(id: id, value: column)
+      board.push('id' => id, 'value' => column)
       c == 2 ? c = 0 : c += 1
     end
     r += 1

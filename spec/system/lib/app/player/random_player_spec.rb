@@ -24,4 +24,12 @@ describe App::Player::RandomPlayer do
     end
     game_state.over?.should be_true
   end
+  it 'should be able to complete a game' do
+    game_state = App::GameState.new([['x', '', ''], ['', '', ''], ['', '', '']], 'o')
+    players = { 'x' => App::Player::RandomPlayer.new, 'o' => App::Player::RandomPlayer.new }
+    while game_state.over? == false
+      game_state = players[game_state.active_turn].get_new_state(game_state)
+    end
+    game_state.over?.should be_true
+  end
 end
