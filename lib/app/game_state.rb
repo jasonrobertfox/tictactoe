@@ -2,12 +2,24 @@
 
 module App
   class GameState
-    attr_reader :board, :board_array, :active_turn
+    attr_reader :board, :active_turn
+
+    def self.new_from_data(board, active_turn)
+      board_array = [[], [], []]
+        rows = %w(top middle bottom)
+        columns = %w(left center right)
+        board.each do |space|
+          row_column = space[:id].split('-')
+          row = rows.index(row_column.first)
+          column = columns.index(row_column.last)
+          board_array[row][column] = space[:value]
+        end
+        new(board_array, active_turn)
+    end
 
     def initialize(board, active_turn)
       @board = board
       @active_turn = active_turn
-      @board_array = make_board_array(board)
     end
 
     def over?
@@ -20,19 +32,19 @@ module App
 
       # Check each row
       (0..2).each do | row |
-        return true if @board_array[row][0] == player && @board_array[row][1] == player && @board_array[row][2] == player
+        return true if @board[row][0] == player && @board[row][1] == player && @board[row][2] == player
       end
 
       # Check each column
       (0..2).each do | column |
-        return true if @board_array[0][column] == player && @board_array[1][column] == player && @board_array[2][column] == player
+        return true if @board[0][column] == player && @board[1][column] == player && @board[2][column] == player
       end
 
       # Check first diagonal
-      return true if @board_array[0][0] == player && @board_array[1][1] == player && @board_array[2][2] == player
+      return true if @board[0][0] == player && @board[1][1] == player && @board[2][2] == player
 
       # Check second diagonal
-      return true if @board_array[0][2] == player && @board_array[1][1] == player && @board_array[2][0] == player
+      return true if @board[0][2] == player && @board[1][1] == player && @board[2][0] == player
 
       # There is no win at this point, but there could be a draw
       false
@@ -40,22 +52,19 @@ module App
 
     def draw?
       # A draw is a full board without a win
-      !win? && !@board_array.flatten.include?('')
+      !win? && !@board.flatten.include?('')
     end
 
-    private
-
-      def make_board_array(board)
-        board_array = [[], [], []]
-        rows = %w(top middle bottom)
-        columns = %w(left center right)
-        board.each do |space|
-          row_column = space[:id].split('-')
-          row = rows.index(row_column.first)
-          column = columns.index(row_column.last)
-          board_array[row][column] = space[:value]
+    def get_data
+      return_data = []
+      rows = %w(top middle bottom)
+      columns = %w(left center right)
+      @board.each_index do | row |
+        @board[row].each_index do | column |
+          return_data.push(id: "#{rows[row]}-#{columns[column]}", value: @board[row][column])
         end
-        board_array
       end
+      return_data
+    end
   end
 end

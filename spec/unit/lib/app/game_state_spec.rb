@@ -20,29 +20,44 @@ def get_o_winning_board
 end
 
 describe App::GameState do
-  it 'should be initialized with the board information and the active turn' do
-    board = get_in_progress_board
-    active_turn = 'x'
-    game_state = App::GameState.new(board, active_turn)
+
+  it 'can be created with formated data' do
+    game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
+    game_state.board.should eq [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
+  end
+
+  it 'can be created with an array' do
+    board = [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
+    game_state = App::GameState.new(board, 'x')
     game_state.board.should eq board
-    game_state.active_turn.should eq active_turn
-    game_state.board_array.should eq [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
+  end
+
+  it 'can output formatted data' do
+    board = [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
+    game_state = App::GameState.new(board, 'x')
+    game_state.get_data.should eq get_in_progress_board
+  end
+
+  it 'should be initialized with the board information and the active turn' do
+    game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
+    game_state.board.should eq [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
+    game_state.active_turn.should eq 'x'
   end
 
   it 'should report if the game state is over' do
-    game_state = App::GameState.new(get_draw_board, 'o')
+    game_state = App::GameState.new_from_data(get_draw_board, 'o')
     game_state.over?.should be_true
-    game_state = App::GameState.new(get_in_progress_board, 'x')
+    game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
     game_state.over?.should be_false
   end
 
   it 'should report if the game has been won' do
-    game_state = App::GameState.new(get_x_winning_board, 'o')
+    game_state = App::GameState.new_from_data(get_x_winning_board, 'o')
     game_state.win?.should be_true
     game_state.win?('x').should be_true
     game_state.win?('o').should be_false
     game_state.over?.should be_true
-    game_state = App::GameState.new(get_o_winning_board, 'x')
+    game_state = App::GameState.new_from_data(get_o_winning_board, 'x')
     game_state.win?.should be_true
     game_state.win?('x').should be_false
     game_state.win?('o').should be_true
@@ -50,7 +65,7 @@ describe App::GameState do
   end
 
   it 'should report if the game is a draw' do
-    game_state = App::GameState.new(get_draw_board, 'o')
+    game_state = App::GameState.new_from_data(get_draw_board, 'o')
     game_state.draw?.should be_true
     game_state.over?.should be_true
   end

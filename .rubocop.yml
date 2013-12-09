@@ -10,6 +10,9 @@ SymbolName:
 Documentation:
   Enabled: false
 
+CyclomaticComplexity:
+  Enabled: false
+
 AllCops:
   Includes:
     - Rakefile
