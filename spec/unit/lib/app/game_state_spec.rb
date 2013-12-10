@@ -74,4 +74,14 @@ describe App::GameState do
     game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
     game_state.get_blanks.should eq [[0, 2], [1, 2], [2, 2]]
   end
+
+  it 'should return a new instance of itself on update state' do
+    game_state = App::GameState.new_from_data(get_in_progress_board, 'x')
+    new_state = game_state.get_new_state([0, 2])
+    result = [%w(x x x), ['o', 'o', ''], ['x', 'o', '']]
+    new_state.board.should eq result
+    new_state.active_turn.should eq 'o'
+    new_state.should_not be game_state
+    game_state.should_not eq result
+  end
 end

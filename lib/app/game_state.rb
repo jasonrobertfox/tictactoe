@@ -2,7 +2,7 @@
 
 module App
   class GameState
-    attr_reader :board, :active_turn
+    attr_accessor :board, :active_turn
 
     def self.new_from_data(board, active_turn)
       board_array = [[], [], []]
@@ -18,6 +18,7 @@ module App
     end
 
     def initialize(board, active_turn)
+      @id = SecureRandom.uuid
       @board = board
       @active_turn = active_turn
     end
@@ -63,6 +64,23 @@ module App
         end
       end
       blanks
+    end
+
+    def get_new_state(choice)
+      # This needs to be looked into further, as there is some very strange behavior
+      # The board reference is updating other objects
+      new_board = [[], [], []]
+      (0..2).each do | row |
+        (0..2).each do | column |
+          if row == choice[0] && column == choice[1]
+            new_board[row][column] = @active_turn
+          else
+            new_board[row][column] = @board[row][column]
+          end
+        end
+      end
+      active_turn = @active_turn == 'x' ? 'o' : 'x'
+      GameState.new(new_board, active_turn)
     end
 
     def get_data
