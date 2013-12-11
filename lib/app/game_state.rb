@@ -18,7 +18,6 @@ module App
     end
 
     def initialize(board, active_turn)
-      @id = SecureRandom.uuid
       @board = board
       @active_turn = active_turn
     end

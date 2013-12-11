@@ -13,15 +13,12 @@ module App
 
         if @game_state.get_blanks.length == 9
           # If its the first move pick a random good starting move
-          puts 'start-move'
           @game_state.get_new_state([[0, 2].sample, [0, 2].sample])
         elsif @game_state.get_blanks.length == 1
           # Pick the last available space if there is only one
-          puts 'last-move'
           @game_state.get_new_state(@game_state.get_blanks.first)
         else
           # Determine the best possible move via a minimax calculation
-          puts 'ai-move'
           # Whoever is playing is trying to maximize their game
           max_choice(@game_state)
           @game_state.get_new_state(@choice)
