@@ -10,6 +10,7 @@ require 'zurb-foundation'
 require 'json'
 
 require 'app/player/random_player'
+require 'app/player/perfect_player'
 require 'app/game_state'
 
 module App
@@ -76,7 +77,7 @@ module App
         return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
 
         # For now we will replace the random logic with a random player
-        computer_payer = App::Player::RandomPlayer.new
+        computer_payer = App::Player::PerfectPlayer.new
         game_state = App::GameState.new_from_data(content['board'], content['piece'])
         new_state = computer_payer.get_new_state(game_state)
         return_success(piece: new_state.active_turn, board: new_state.get_data)
