@@ -50,15 +50,16 @@ describe 'tic tac toe api behavior' do
   end
 
   it 'should reject a board that is in a draw state' do
-    data = { piece: 'x', board: get_test_board_data([%w(x x 0), %w(o o x), %w(x o o)]) }
+    data = { piece: 'x', board: get_test_board_data([%w(x x o), %w(o o x), %w(x o o)]) }
     result = post_json('/api/v1/play', data)
     expect(last_response.status).to be 400
     result['data']['message'].should eq 'Nothing to do, the board provided is a draw.'
   end
 
-  # Other tests
-  # what happens if we send a board with a win on it?
-  # This is an edge case for this application as the client does not allow it, but the
-  # api should handle that case
-  # what happens if we send a "draw" board? Similarly a full board should throw some error
+  it 'should reject a board that is already in a wining state' do
+    data = { piece: 'x', board: get_test_board_data([%w(x x x), ['o', 'o', ''], ['x', 'o', '']]) }
+    result = post_json('/api/v1/play', data)
+    expect(last_response.status).to be 400
+    result['data']['message'].should eq 'Nothing to do, there is already a winner.'
+  end
 end

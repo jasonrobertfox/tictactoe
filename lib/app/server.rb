@@ -71,6 +71,9 @@ module App
 
       post '/play' do
         content_type :json
+
+        # puts request.body.read
+
         content = JSON.parse request.body.read
         return_fail('Piece was not defined as either x or o.') unless content['piece'] && (content['piece'] == 'x' || content['piece'] == 'o')
         return_fail('Board was not defined.') unless content['board']
@@ -79,10 +82,14 @@ module App
         # Check edge cases for silly api requests
         game_state = App::GameState.new_from_data(content['board'], content['piece'])
         return_fail('Nothing to do, the board provided is a draw.') if game_state.draw?
+        return_fail('Nothing to do, there is already a winner.') if game_state.win?
 
         # For now we will replace the random logic with a random player
         computer_payer = App::Player::PerfectPlayer.new
         new_state = computer_payer.get_new_state(game_state)
+
+        # puts JSON.to_json(piece: new_state.active_turn, board: new_state.get_data)
+
         return_success(piece: new_state.active_turn, board: new_state.get_data)
       end
     end

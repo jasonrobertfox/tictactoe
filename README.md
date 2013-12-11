@@ -2,7 +2,113 @@
 
 A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
 
+Along with the game there is a "Tic Tac Toe" API, simply post a JSON request indicating the current board state and the "turn" piece. The response will be an updated board state.
+
+**API End Point**
+
+    POST /api/v1/play
+
+**Example Request**
+
+    {
+       "piece":"o",
+       "board":[
+          {
+             "id":"top-left",
+             "value":""
+          },
+          {
+             "id":"top-center",
+             "value":""
+          },
+          {
+             "id":"top-right",
+             "value":"x"
+          },
+          {
+             "id":"middle-left",
+             "value":""
+          },
+          {
+             "id":"middle-center",
+             "value":"o"
+          },
+          {
+             "id":"middle-right",
+             "value":""
+          },
+          {
+             "id":"bottom-left",
+             "value":"x"
+          },
+          {
+             "id":"bottom-center",
+             "value":"o"
+          },
+          {
+             "id":"bottom-right",
+             "value":"x"
+          }
+       ]
+    }
+
+**Example Response**
+*Note the addition of "o" in the top-center and that piece has switched.*
+
+    {
+       "status":"success",
+       "data":{
+          "piece":"x",
+          "board":[
+             {
+                "id":"top-left",
+                "value":""
+             },
+             {
+                "id":"top-center",
+                "value":"o"
+             },
+             {
+                "id":"top-right",
+                "value":"x"
+             },
+             {
+                "id":"middle-left",
+                "value":""
+             },
+             {
+                "id":"middle-center",
+                "value":"o"
+             },
+             {
+                "id":"middle-right",
+                "value":""
+             },
+             {
+                "id":"bottom-left",
+                "value":"x"
+             },
+             {
+                "id":"bottom-center",
+                "value":"o"
+             },
+             {
+                "id":"bottom-right",
+                "value":"x"
+             }
+          ]
+       }
+    }
+
+
+
+###Development
 This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Docs related to that are below.
+
+###Room for Improvement
+- There may be some places to refactor common code
+- The win check in the front end client could depend on the data returned by the API rather than check again
+- There may be a way to speed up the algorithm
 
 ##Sinatra Boilerplate Documentation
 The below should be universally applicable from the original [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate)
