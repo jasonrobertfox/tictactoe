@@ -20,56 +20,53 @@ module App
         else
           # Determine the best possible move via a minimax calculation
           # Whoever is playing is trying to maximize their game
-          max_choice(@game_state)
+          max_choice(@game_state, 0)
           @game_state.get_new_state(@choice)
         end
       end
 
       private
 
-        def max_choice(state)
-          # Check for an end condition
-          n = -100_000
+        def evaluate_state(state, depth)
           if state.win?(@player)
-            return 1
+            # The active turn for a current state is next player
+            score = 10 - depth
           elsif state.win?(@other_payer)
-            return -1
-          elsif state.draw?
-            return 0
+            score = depth - 10
           else
-            # Loop through each available space
-            state.get_blanks.each do | choice |
-              new_state = state.get_new_state(choice)
-              next_choice = min_choice(new_state)
-              if next_choice > n
-                n = next_choice
-                @choice = choice
-              end
-            end
-            return n
+            score = 0
           end
+          # puts "Terminal state: #{state.board.inspect} #{score}"
+          score
         end
 
-        def min_choice(state)
-          n = 100_000
-          if state.win?(@player)
-            return 1
-          elsif state.win?(@other_payer)
-            return -1
-          elsif state.draw?
-            return 0
-          else
-            # Loop through each available space
-            state.get_blanks.each do | choice |
-              new_state = state.get_new_state(choice)
-              next_choice = max_choice(new_state)
-              if next_choice < n
-                n = next_choice
-                @choice = choice
-              end
+        def max_choice(state, depth)
+          return evaluate_state(state, depth) if state.over?
+          base_score = -100_000
+          depth += 1
+          state.get_blanks.each do |choice|
+            node = state.get_new_state(choice)
+            # puts "Max #{depth} -> #{node.board}"
+            score = min_choice(node, depth)
+            if score > base_score
+              base_score = score
+              @choice = choice
             end
-            return n
           end
+          base_score
+        end
+
+        def min_choice(state, depth)
+          return evaluate_state(state, depth) if state.over?
+          base_score = 100_000
+          depth += 1
+          state.get_blanks.each do |choice|
+            node = state.get_new_state(choice)
+            # puts "Min #{depth} -> #{node.board}"
+            score = max_choice(node, depth)
+            base_score = score if score < base_score
+          end
+          base_score
         end
     end
   end
