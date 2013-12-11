@@ -19,38 +19,34 @@ module App
           @game_state.get_new_state(@game_state.get_blanks.first)
         else
           # Determine the best possible move via a minimax calculation
-          # Whoever is playing is trying to maximize their game
-
-          # max_choice(@game_state, 0)
-
-          minmax(@game_state)
-
+          minmax(@game_state, 0)
           @game_state.get_new_state(@choice)
         end
       end
 
       private
 
-        def evaluate_state(state)
+        def evaluate_state(state, depth)
+          # Weight more shallow levels more so that even "bad" or "rigged" games are played
+          # realistically.
           if state.win?(@player)
-            # The active turn for a current state is next player
-            score = 10
+            score = 10 - depth
           elsif state.win?(@other_payer)
-            score = - 10
+            score = depth - 10
           else
             score = 0
           end
-          # puts "Terminal state: #{state.board.inspect} #{score}"
           score
         end
 
-        def minmax(state)
-          return evaluate_state(state) if state.over?
+        def minmax(state, depth)
+          return evaluate_state(state, depth) if state.over?
+          depth += 1
           scores = []
           moves = []
           state.get_blanks.each do |choice|
             node = state.get_new_state(choice)
-            scores.push minmax(node)
+            scores.push minmax(node, depth)
             moves.push choice
           end
           if state.active_turn == @player
