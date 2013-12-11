@@ -20,54 +20,50 @@ module App
         else
           # Determine the best possible move via a minimax calculation
           # Whoever is playing is trying to maximize their game
-          max_choice(@game_state, 0)
+
+          # max_choice(@game_state, 0)
+
+          minmax(@game_state)
+
           @game_state.get_new_state(@choice)
         end
       end
 
       private
 
-        def evaluate_state(state, depth)
-          depth = 0
+        def evaluate_state(state)
           if state.win?(@player)
             # The active turn for a current state is next player
-            score = 10 - depth
+            score = 10
           elsif state.win?(@other_payer)
-            score = depth - 10
+            score = - 10
           else
-            score = 100_000
+            score = 0
           end
           # puts "Terminal state: #{state.board.inspect} #{score}"
           score
         end
 
-        def max_choice(state, depth)
-          return evaluate_state(state, depth) if state.over?
-          base_score = -100_000
-          depth += 1
+        def minmax(state)
+          return evaluate_state(state) if state.over?
+          scores = []
+          moves = []
           state.get_blanks.each do |choice|
             node = state.get_new_state(choice)
-            # puts "Max #{depth} -> #{node.board}"
-            score = min_choice(node, depth)
-            if score > base_score
-              base_score = score
-              @choice = choice
-            end
+            scores.push minmax(node)
+            moves.push choice
           end
-          base_score
-        end
-
-        def min_choice(state, depth)
-          return evaluate_state(state, depth) if state.over?
-          base_score = 100_000
-          depth += 1
-          state.get_blanks.each do |choice|
-            node = state.get_new_state(choice)
-            # puts "Min #{depth} -> #{node.board}"
-            score = max_choice(node, depth)
-            base_score = score if score < base_score
+          if state.active_turn == @player
+            # this is a maximizing move
+            max_index = scores.each_with_index.max[1]
+            @choice = moves[max_index]
+            return scores[max_index]
+          else
+            # this is a minimizing move
+            min_index = scores.each_with_index.min[1]
+            @choice = moves[min_index]
+            return scores[min_index]
           end
-          base_score
         end
     end
   end

@@ -74,23 +74,14 @@ describe App::Player::PerfectPlayer do
     new_state.board.should eq [['o', '', 'o'], ['', '', 'x'], ['', '', 'x']]
   end
 
-  it 'should clearly block a move 3' do
-    game_state = App::GameState.new([['', 'x', ''], ['', '', 'x'], %w(o o x)], 'o')
-    player = App::Player::PerfectPlayer.new
-    new_state = player.get_new_state(game_state)
-    new_state.over?.should be_false
-    new_state.board.should eq [['', 'x', 'o'], ['', '', 'x'], %w(o o x)]
-  end
-
   it 'should always draw when playing itself' do
     players = { 'x' => App::Player::PerfectPlayer.new, 'o' => App::Player::PerfectPlayer.new }
     # for 10 games
     results = []
-    (1..2).each do
+    (1..10).each do
       game_state = App::GameState.new(get_blank_board, 'x')
       while game_state.over? == false
         game_state = players[game_state.active_turn].get_new_state(game_state)
-        puts game_state.board.inspect
       end
       results.push game_state.draw?
     end
