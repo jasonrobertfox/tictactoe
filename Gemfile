@@ -15,11 +15,13 @@ group :application do
   # Here should be all the specifics for the application
 end
 
+# TODO: move these back into test for production deployment
+gem 'rspec'
+gem 'rubocop'
+
 group :test do
-  gem 'rspec'
   gem 'coveralls'
   gem 'capybara', '2.1.0'
-  gem 'rubocop'
   gem 'poltergeist'
 end
 
