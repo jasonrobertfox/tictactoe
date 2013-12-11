@@ -1,6 +1,8 @@
-#App Documentation
+#Tic Tac Toe Documentation
 
-> This is where you can plop your app's documentation :)
+A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
+
+This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Docs related to that are below.
 
 ##Sinatra Boilerplate Documentation
 The below should be universally applicable from the original [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate)
