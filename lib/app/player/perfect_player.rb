@@ -28,13 +28,14 @@ module App
       private
 
         def evaluate_state(state, depth)
+          depth = 0
           if state.win?(@player)
             # The active turn for a current state is next player
             score = 10 - depth
           elsif state.win?(@other_payer)
             score = depth - 10
           else
-            score = 0
+            score = 100_000
           end
           # puts "Terminal state: #{state.board.inspect} #{score}"
           score
