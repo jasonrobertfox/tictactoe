@@ -30,6 +30,6 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'guard-livereload'
-  gem 'guard-shotgun'
+  gem 'guard-shotgun', git: 'https://github.com/rchampourlier/guard-shotgun.git', branch: 'master'
   gem 'blam'
 end

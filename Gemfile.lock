@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/rchampourlier/guard-shotgun.git
+  revision: f7d2e6fb316541bdaf65ad7ee42e71d82d6fbe44
+  branch: master
+  specs:
+    guard-shotgun (0.0.6)
+      ffi
+      guard
+      spoon
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -52,10 +62,6 @@ GEM
     guard-rubocop (1.0.1)
       guard (~> 2.0)
       rubocop (~> 0.10)
-    guard-shotgun (0.1.1)
-      ffi
-      guard
-      spoon
     http_parser.rb (0.5.3)
     jsmin (1.0.1)
     listen (2.4.0)
@@ -163,7 +169,7 @@ DEPENDENCIES
   guard-livereload
   guard-rspec
   guard-rubocop
-  guard-shotgun
+  guard-shotgun!
   poltergeist
   rake
   rspec
