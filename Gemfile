@@ -18,7 +18,7 @@ end
 # TODO: move these back into test for production deployment
 gem 'rspec'
 gem 'rubocop'
-
+gem 'rake'
 group :test do
   gem 'coveralls'
   gem 'capybara', '2.1.0'
@@ -26,7 +26,6 @@ group :test do
 end
 
 group :development do
-  gem 'rake'
   gem 'guard', '2.2.3'
   gem 'guard-rspec'
   gem 'guard-rubocop'
