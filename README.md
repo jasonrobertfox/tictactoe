@@ -114,11 +114,7 @@ Tests are best executed using the rake tasks:
 - `rake unit`
 - `rake` (For all the tests.)
 
-This is due to the multiple `spec_helper.rb` files that allow the tests to run more efficiently. To run the system or unit tests directly use the following pattern:
-
-    TEST_TYPE='system' bundle exec rspec spec/system/lib/app/server_spec.rb
-
-Where the test type is either `system` or `unit` depending on which tests you would like to run.
+This is due to conditional configuration based on test type to improve the execution speed. You may run tests directly with the `rspec` command but this will include all dependencies.
 
 ###Room for Improvement
 - There may be some places to refactor common code
