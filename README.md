@@ -107,6 +107,19 @@ Along with the game there is a "Tic Tac Toe" API, simply post a JSON request ind
 ###Development
 This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Docs related to that are below.
 
+###Notes on Testing
+Tests are best executed using the rake tasks:
+
+- `rake system`
+- `rake unit`
+- `rake` (For all the tests.)
+
+This is due to the multiple `spec_helper.rb` files that allow the tests to run more efficiently. To run the system or unit tests directly use the following pattern:
+
+    TEST_TYPE='system' bundle exec rspec spec/system/lib/app/server_spec.rb
+
+Where the test type is either `system` or `unit` depending on which tests you would like to run.
+
 ###Room for Improvement
 - There may be some places to refactor common code
 - The win check in the front end client could depend on the data returned by the API rather than check again
