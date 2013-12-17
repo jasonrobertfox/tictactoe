@@ -1,5 +1,7 @@
 #Tic Tac Toe Documentation
 
+[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe)
+
 A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
 
 Along with the game there is a "Tic Tac Toe" API, simply post a JSON request indicating the current board state and the "turn" piece. The response will be an updated board state.
