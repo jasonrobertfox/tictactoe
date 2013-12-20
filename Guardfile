@@ -29,7 +29,7 @@ end
 
 # Reload the server on source changes
 guard 'shotgun', :server => 'thin' do
-  watch(%r{lib/app/.+\.rb})
+  watch(%r{lib/.+\.rb})
   watch %r{lib/config/.*\.yml}
   watch 'config.ru'
 end

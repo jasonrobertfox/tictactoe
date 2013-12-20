@@ -2,5 +2,5 @@
 Encoding.default_internal = Encoding::UTF_8
 require 'bundler/setup'
 
-require File.join(File.dirname(__FILE__), 'lib/app')
-run App::Server
+require File.join(File.dirname(__FILE__), 'lib/tictactoe_web_app')
+run TictactoeWebApp
