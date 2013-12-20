@@ -1,6 +1,6 @@
 # Encoding: utf-8
 
-module App
+module Tictactoe
   class GameState
     attr_accessor :board, :active_turn
 

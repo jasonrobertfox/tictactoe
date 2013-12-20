@@ -1,6 +1,6 @@
 # Encoding: utf-8
 
-module App
+module Tictactoe
   module Version
     VERSION = '1.0.0'
 

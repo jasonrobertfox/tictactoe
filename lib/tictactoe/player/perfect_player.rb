@@ -1,8 +1,8 @@
 # Encoding: utf-8
 
-require 'app/game_state'
+require 'tictactoe/game_state'
 
-module App
+module Tictactoe
   module Player
     class PerfectPlayer
       def get_new_state(game_state)

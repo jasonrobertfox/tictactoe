@@ -20,18 +20,18 @@ def configure_rspec_for_system
   require 'capybara'
   require 'capybara/dsl'
   require 'capybara/poltergeist'
-  require_relative '../lib/app'
+  require_relative '../lib/tictactoe_web_app'
 
   RSpec.configure do |config|
     config.expect_with :rspec, :stdlib
     config.include Rack::Test::Methods
     config.include Capybara::DSL
     def app
-      App::Server
+      TictactoeWebApp
     end
   end
 
-  Capybara.app = App::Server
+  Capybara.app = TictactoeWebApp
   Capybara.javascript_driver = :poltergeist
 end
 

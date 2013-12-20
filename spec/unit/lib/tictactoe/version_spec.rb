@@ -1,10 +1,10 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'app/version'
+require 'tictactoe/version'
 
-describe App::Version do
+describe Tictactoe::Version do
   it 'should return the version with get method' do
-    App::Version.get.should eq '1.0.0'
+    Tictactoe::Version.get.should eq '1.0.0'
   end
 end
