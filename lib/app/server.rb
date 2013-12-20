@@ -9,7 +9,6 @@ require 'sinatra/assetpack'
 require 'zurb-foundation'
 require 'json'
 
-require 'app/player/random_player'
 require 'app/player/perfect_player'
 require 'app/game_state'
 
