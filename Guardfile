@@ -18,7 +18,7 @@ group :tests do
   end
 
   group :system do
-    guard :rspec, cmd: 'TEST_TYPE=system rspec' do
+    guard :rspec, cmd: 'SYSTEM=true rspec' do
       watch(%r{^spec/system/.+_spec\.rb$})
       watch(%r{^lib/(.+)\.(rb|slim)$})     { |m| "spec/system/lib/#{m[1]}_spec.rb" }
       watch('spec/spec_helper.rb')
