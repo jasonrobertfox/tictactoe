@@ -38,6 +38,10 @@ module Tictactoe
       !is_draw? && !win_for_piece?(player.piece)
     end
 
+    def empty?
+      board.flatten.count('') == board_size**2
+    end
+
     def available_moves
       moves = []
       each_space do |row, column|

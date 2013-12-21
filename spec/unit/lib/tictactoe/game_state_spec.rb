@@ -3,8 +3,6 @@
 require 'spec_helper'
 require 'tictactoe/game_state'
 
-PlayerStub = Struct.new(:piece)
-
 def get_draw_board
   [%w(x x o), %w(o o x), %w(x o x)]
 end
@@ -19,11 +17,6 @@ end
 
 def get_o_winning_board
   [%w(x x o), ['x', 'o', ''], ['o', '', '']]
-end
-
-def get_game_state(board, player_piece)
-  opponent_piece = player_piece == 'x' ? 'o' : 'x'
-  Tictactoe::GameState.new(board, player_piece, opponent_piece)
 end
 
 def get_player_stub(piece)
@@ -108,6 +101,11 @@ describe Tictactoe::GameState do
   it 'should return an array of available moves' do
     game_state = get_game_state(get_in_progress_board, 'x')
     game_state.available_moves.should eq [[0, 2], [1, 2], [2, 2]]
+  end
+
+  it 'should indicated if the board is empty' do
+    game_state = get_game_state(get_blank_board, 'x')
+    game_state.empty?.should be_true
   end
 
   it 'should scale available moves for larger boards' do
