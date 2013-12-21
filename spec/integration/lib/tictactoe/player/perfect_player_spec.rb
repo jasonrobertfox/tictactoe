@@ -82,6 +82,12 @@ describe Tictactoe::Player::PerfectPlayer do
     new_state.board.should eq [['o', '', 'o'], ['', '', 'x'], ['', '', 'x']]
   end
 
+  it 'should work with an alternative state' do
+    player = get_player 'z'
+    new_state = player.take_turn(get_alternative_game_state)
+    new_state.board.should eq [['z', ''], %w(z j)]
+  end
+
   it 'should clearly block a move 3' do
     game_state = get_game_state([['', 'x', ''], ['', '', 'x'], %w(o o x)], 'o')
     player = get_player 'o'

@@ -82,6 +82,10 @@ def get_game_state(board, player_piece)
   Tictactoe::GameState.new(board, player_piece, opponent_piece)
 end
 
+def get_alternative_game_state
+  Tictactoe::GameState.new([['z', ''], ['', 'j']], 'z', 'j')
+end
+
 def get_blank_board
   Array.new(3) { Array.new(3, '') }
 end
