@@ -7,19 +7,19 @@ module Tictactoe
 
     attr_accessor :board, :player_piece, :opponent_piece
 
-    def self.new_from_data(board, active_turn)
-      board_array = [[], [], []]
-        rows = %w(top middle bottom)
-        columns = %w(left center right)
-        board.each do |space|
-          row_column = space['id'].split('-')
-          row = rows.index(row_column.first)
-          column = columns.index(row_column.last)
-          board_array[row][column] = space['value']
-        end
-        next_turn = active_turn == 'x' ? 'o' : 'x'
-        new(board_array, active_turn, next_turn)
-    end
+    # def self.new_from_data(board, active_turn)
+    #   board_array = [[], [], []]
+    #     rows = %w(top middle bottom)
+    #     columns = %w(left center right)
+    #     board.each do |space|
+    #       row_column = space['id'].split('-')
+    #       row = rows.index(row_column.first)
+    #       column = columns.index(row_column.last)
+    #       board_array[row][column] = space['value']
+    #     end
+    #     next_turn = active_turn == 'x' ? 'o' : 'x'
+    #     new(board_array, active_turn, next_turn)
+    # end
 
     def initialize(board, player_piece, opponent_piece)
       validate_piece player_piece
@@ -31,41 +31,24 @@ module Tictactoe
       @board = board
     end
 
-    def active_turn
-      @player_piece
+    def is_over?
+      has_someone_won? || is_draw?
     end
 
-    def over?
-      win? || draw?
+    def has_someone_won?
+      win_for_piece?(player_piece) || win_for_piece?(opponent_piece)
     end
 
-    def win?(player = nil)
-      # Test for both players unless one is specified
-      return win?('x') || win?('o') unless player
-
-      # Check each row
-      (0..2).each do | row |
-        return true if @board[row][0] == player && @board[row][1] == player && @board[row][2] == player
-      end
-
-      # Check each column
-      (0..2).each do | column |
-        return true if @board[0][column] == player && @board[1][column] == player && @board[2][column] == player
-      end
-
-      # Check first diagonal
-      return true if @board[0][0] == player && @board[1][1] == player && @board[2][2] == player
-
-      # Check second diagonal
-      return true if @board[0][2] == player && @board[1][1] == player && @board[2][0] == player
-
-      # There is no win at this point, but there could be a draw
-      false
+    def is_draw?
+      !has_someone_won? && !@board.flatten.include?(BLANK)
     end
 
-    def draw?
-      # A draw is a full board without a win
-      !win? && !@board.flatten.include?('')
+    def have_i_won?(player)
+      win_for_piece? player.piece
+    end
+
+    def have_i_lost?(player)
+      !is_draw? && !win_for_piece?(player.piece)
     end
 
     def get_blanks
@@ -86,27 +69,26 @@ module Tictactoe
       (0..2).each do | row |
         (0..2).each do | column |
           if row == choice[0] && column == choice[1]
-            new_board[row][column] = active_turn
+            new_board[row][column] = player_piece
           else
             new_board[row][column] = @board[row][column]
           end
         end
       end
-      next_turn = active_turn == 'x' ? 'o' : 'x'
-      GameState.new(new_board, next_turn, active_turn)
+      GameState.new(new_board, opponent_piece, player_piece)
     end
 
-    def get_data
-      return_data = []
-      rows = %w(top middle bottom)
-      columns = %w(left center right)
-      @board.each_index do | row |
-        @board[row].each_index do | column |
-          return_data.push('id' => "#{rows[row]}-#{columns[column]}", 'value' => @board[row][column])
-        end
-      end
-      return_data
-    end
+    # def get_data
+    #   return_data = []
+    #   rows = %w(top middle bottom)
+    #   columns = %w(left center right)
+    #   @board.each_index do | row |
+    #     @board[row].each_index do | column |
+    #       return_data.push('id' => "#{rows[row]}-#{columns[column]}", 'value' => @board[row][column])
+    #     end
+    #   end
+    #   return_data
+    # end
 
     private
 
@@ -125,6 +107,28 @@ module Tictactoe
         if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0
           fail ArgumentError, 'Board contains invalid pieces.'
         end
+      end
+
+      def win_for_piece?(piece)
+
+        # Check each row
+        (0..2).each do | row |
+          return true if @board[row][0] == piece && @board[row][1] == piece && @board[row][2] == piece
+        end
+
+        # Check each column
+        (0..2).each do | column |
+          return true if @board[0][column] == piece && @board[1][column] == piece && @board[2][column] == piece
+        end
+
+        # Check first diagonal
+        return true if @board[0][0] == piece && @board[1][1] == piece && @board[2][2] == piece
+
+        # Check second diagonal
+        return true if @board[0][2] == piece && @board[1][1] == piece && @board[2][0] == piece
+
+        # There is no win at this point, but there could be a draw
+        false
       end
   end
 end
