@@ -100,12 +100,22 @@ describe Tictactoe::GameState do
   end
 
   it 'should scale available moves for larger boards' do
-    board = Array.new(4, Array.new(4, ''))
+    board = Array.new(4) { Array.new(4, '') }
     game_state = get_game_state(board, 'x')
     game_state.available_moves.count.should eq 16
   end
 
-  # TODO: see if we can avoid creating a new object
+  it 'should return a new instance of itself when a move is applied' do
+    game_state = get_game_state(get_in_progress_board, 'x')
+    new_state = game_state.apply_move [0, 2]
+    result = [%w(x x x), ['o', 'o', ''], ['x', 'o', '']]
+    new_state.board.should eq result
+    new_state.player_piece.should eq 'o'
+    new_state.should_not be game_state
+    game_state.should_not eq result
+  end
+
+
   # it 'should return a new instance of itself on update state' do
   #   game_state = get_game_state(get_in_progress_board, 'x')
   #   new_state = game_state.get_new_state([0, 2])

@@ -53,42 +53,24 @@ module Tictactoe
 
     def available_moves
       moves = []
-      board.each_index do |row|
-        board[row].each_index do |column|
-          moves.push([row, column]) if board[row][column] == BLANK
-        end
+      each_space do |row, column|
+        moves.push([row, column]) if board[row][column] == BLANK
       end
       moves
     end
 
     # register_move?
-    def get_new_state(choice)
-      # This needs to be looked into further, as there is some very strange behavior
-      # The board reference is updating other objects
-      new_board = [[], [], []]
-      (0..2).each do | row |
-        (0..2).each do | column |
-          if row == choice[0] && column == choice[1]
-            new_board[row][column] = player_piece
-          else
-            new_board[row][column] = @board[row][column]
-          end
+    def apply_move(choice)
+      new_board = Array.new(board.length) { Array.new }
+      each_space do |row, column|
+        if row == choice[0] && column == choice[1]
+          new_board[row][column] = player_piece
+        else
+          new_board[row][column] = board[row][column]
         end
       end
       GameState.new(new_board, opponent_piece, player_piece)
     end
-
-    # def get_data
-    #   return_data = []
-    #   rows = %w(top middle bottom)
-    #   columns = %w(left center right)
-    #   @board.each_index do | row |
-    #     @board[row].each_index do | column |
-    #       return_data.push('id' => "#{rows[row]}-#{columns[column]}", 'value' => @board[row][column])
-    #     end
-    #   end
-    #   return_data
-    # end
 
     private
 
@@ -106,6 +88,14 @@ module Tictactoe
         end
         if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0
           fail ArgumentError, 'Board contains invalid pieces.'
+        end
+      end
+
+      def each_space
+        board.each_index do |row|
+          board[row].each_index do |column|
+            yield row, column
+          end
         end
       end
 
