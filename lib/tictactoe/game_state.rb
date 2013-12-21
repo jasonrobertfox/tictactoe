@@ -2,7 +2,7 @@
 
 module Tictactoe
   class GameState
-    attr_accessor :board, :active_turn
+    attr_accessor :board, :player_piece, :opponent_piece
 
     def self.new_from_data(board, active_turn)
       board_array = [[], [], []]
@@ -14,12 +14,21 @@ module Tictactoe
           column = columns.index(row_column.last)
           board_array[row][column] = space['value']
         end
-        new(board_array, active_turn)
+        next_turn = active_turn == 'x' ? 'o' : 'x'
+        new(board_array, active_turn, next_turn)
     end
 
-    def initialize(board, active_turn)
+    def initialize(board, player_piece, opponent_piece)
       @board = board
-      @active_turn = active_turn
+      validate_piece player_piece
+      validate_piece opponent_piece
+      validate_pieces_different player_piece, opponent_piece
+      @player_piece = player_piece
+      @opponent_piece = opponent_piece
+    end
+
+    def active_turn
+      @player_piece
     end
 
     def over?
@@ -65,6 +74,7 @@ module Tictactoe
       blanks
     end
 
+    # register_move?
     def get_new_state(choice)
       # This needs to be looked into further, as there is some very strange behavior
       # The board reference is updating other objects
@@ -72,14 +82,14 @@ module Tictactoe
       (0..2).each do | row |
         (0..2).each do | column |
           if row == choice[0] && column == choice[1]
-            new_board[row][column] = @active_turn
+            new_board[row][column] = active_turn
           else
             new_board[row][column] = @board[row][column]
           end
         end
       end
-      active_turn = @active_turn == 'x' ? 'o' : 'x'
-      GameState.new(new_board, active_turn)
+      next_turn = active_turn == 'x' ? 'o' : 'x'
+      GameState.new(new_board, next_turn, active_turn)
     end
 
     def get_data
@@ -93,5 +103,15 @@ module Tictactoe
       end
       return_data
     end
+
+    private
+
+      def validate_piece(piece)
+        fail ArgumentError, "Piece #{piece} must be a single character." if piece.length != 1
+      end
+
+      def validate_pieces_different(first_player, second_player)
+        fail ArgumentError, 'You can not have both pieces be the same character.' if first_player.downcase == second_player.downcase
+      end
   end
 end
