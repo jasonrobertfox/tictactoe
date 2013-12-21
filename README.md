@@ -111,7 +111,7 @@ This game was built on top of my [sinatra-boilerplate](https://github.com/nevers
 Tests are best executed using the rake tasks:
 
 - `rake test`
-- `rake unit`
+- `rake system`
 - `rake build_full` (For all the tests.)
 
 This is due to conditional configuration based on test type to improve the execution speed. You may run tests directly with the `rspec` command but this will include all dependencies.
