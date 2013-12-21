@@ -2,6 +2,8 @@
 
 module Tictactoe
   class GameState
+    require 'matrix'
+
     BLANK = ''
 
     attr_reader :board, :player_piece, :opponent_piece, :board_size
@@ -48,15 +50,10 @@ module Tictactoe
     end
 
     def apply_move(choice)
-      new_board = Array.new(board_size) { Array.new }
-      each_space do |row, column|
-        if row == choice[0] && column == choice[1]
-          new_board[row][column] = player_piece
-        else
-          new_board[row][column] = board[row][column]
-        end
-      end
-      GameState.new(new_board, opponent_piece, player_piece)
+      # TODO: It is still strange that I have to do this strange copy to break refs
+      new_board = Matrix.rows(board).to_a
+      new_board[choice.first][choice.last] = player_piece
+      GameState.new(new_board.to_a, opponent_piece, player_piece)
     end
 
     private
