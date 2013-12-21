@@ -25,7 +25,7 @@ end
 
 describe Tictactoe::GameState do
 
-   it 'should be initialized with size and pieces' do
+  it 'should be initialized with size and pieces' do
     game_state = get_game_state(get_in_progress_board, 'x')
     game_state.player_piece.should eq 'x'
     game_state.opponent_piece.should eq 'o'
@@ -83,7 +83,7 @@ describe Tictactoe::GameState do
 
   it 'should check additional win states' do
     win_boards = {
-      diagonal: [['x', 'x', ''], ['o', 'x', ''], ['x', 'o', 'x']],
+      diagonal: [['x', 'x', ''], ['o', 'x', ''], %w(x o x)],
       column: [['x', 'x', ''], ['x', 'o', ''], ['x', 'o', '']]
     }
     win_boards.each do |name, board|
@@ -126,10 +126,10 @@ describe Tictactoe::GameState do
 
   it 'should have a general win algorithm for arbitrary board size' do
     win_boards = {
-      diagonal: [['x','','',''], ['','x','',''], ['','','x',''], ['','','','x']],
-      reverse_diagonal: [['','','','x'], ['','','x',''], ['','x','',''], ['x','','','']],
-      row: [['','','',''], ['','','',''], ['x','x','x','x'], ['','','','']],
-      column: [['','x','',''], ['','x','',''], ['','x','',''], ['','x','','']]
+      diagonal: [['x', '', '', ''], ['', 'x', '', ''], ['', '', 'x', ''], ['', '', '', 'x']],
+      reverse_diagonal: [['', '', '', 'x'], ['', '', 'x', ''], ['', 'x', '', ''], ['x', '', '', '']],
+      row: [['', '', '', ''], ['', '', '', ''], %w(x x x x), ['', '', '', '']],
+      column: [['', 'x', '', ''], ['', 'x', '', ''], ['', 'x', '', ''], ['', 'x', '', '']]
     }
 
     win_boards.each do |name, board|

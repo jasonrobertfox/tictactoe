@@ -58,6 +58,23 @@ configure_rspec_defaults
 configure_rspec_for_system if system
 
 # Other general helper functions
+def get_test_board_data(data)
+  board = []
+  rows = %w(top middle bottom)
+  columns = %w(left center right)
+  r = 0
+  c = 0
+  data.each do |row|
+    row.each do |column|
+      id = "#{rows[r]}-#{columns[c]}"
+      board.push('id' => id, 'value' => column)
+      c == 2 ? c = 0 : c += 1
+    end
+    r += 1
+  end
+  board
+end
+
 PlayerStub = Struct.new(:piece)
 
 def get_game_state(board, player_piece)

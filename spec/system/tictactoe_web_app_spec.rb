@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'default app behavior' do
+describe 'tic tac toe web application' do
 
   before(:each) do
     visit '/'
@@ -20,7 +20,6 @@ describe 'default app behavior' do
     page.should have_content 'Go.'
     find('#top-left').click
     page.should have_css('.space i[title=x]')
-    page.should have_css('.space i[title=o]')
   end
 
   it 'should start the game when I tell the computer to start', js: true do

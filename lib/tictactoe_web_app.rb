@@ -67,31 +67,21 @@ class TictactoeWebApp < Sinatra::Base
   end
 
   # This API conforms to message specifications as defined by http://labs.omniti.com/labs/jsend
-  # Simple api version, just as a best practice
   namespace '/api/v1', layout: false do
 
     post '/play' do
-      content_type :json
-
-      # puts request.body.read
-
-      content = JSON.parse request.body.read
-      return_fail('Piece was not defined as either x or o.') unless content['piece'] && (content['piece'] == 'x' || content['piece'] == 'o')
-      return_fail('Board was not defined.') unless content['board']
-      return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
-
-      # Check edge cases for silly api requests
-      game_state = Tictactoe::GameState.new_from_data(content['board'], content['piece'])
-      return_fail('Nothing to do, the board provided is a draw.') if game_state.draw?
-      return_fail('Nothing to do, there is already a winner.') if game_state.win?
-
-      # For now we will replace the random logic with a random player
-      computer_payer = Tictactoe::Player::PerfectPlayer.new
-      new_state = computer_payer.get_new_state(game_state)
-
-      # puts JSON.to_json(piece: new_state.active_turn, board: new_state.get_data)
-
-      return_success(piece: new_state.active_turn, board: new_state.get_data)
+      begin
+        content_type :json
+        content = JSON.parse request.body.read
+        validate_request content
+        game_state = unpack_request content
+        validate_gamestate game_state
+        computer_payer = Tictactoe::Player::PerfectPlayer.new game_state.player_piece
+        new_state = computer_payer.take_turn game_state
+        return_success(create_response(new_state))
+      rescue ArgumentError => e
+        return_fail e.message
+      end
     end
   end
 
@@ -107,30 +97,40 @@ class TictactoeWebApp < Sinatra::Base
     %w(top middle bottom)
   end
 
-  def columens
+  def columns
     %w(left center right)
   end
 
-  def unpack_request_data(data)
+  def validate_request(content)
+    return_fail('Piece was not defined as either x or o.') unless content['piece'] && (content['piece'] == 'x' || content['piece'] == 'o')
+    return_fail('Board was not defined.') unless content['board']
+    return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
+  end
+
+  def validate_gamestate(game_state)
+    return_fail('Nothing to do, the board provided is a draw.') if game_state.is_draw?
+    return_fail('Nothing to do, there is already a winner.') if game_state.has_someone_won?
+  end
+
+  def unpack_request(content)
     board_array = Array.new(3) { Array.new }
-      data['board'].each do |space|
+    content['board'].each do |space|
       row_column = space['id'].split('-')
       row = rows.index(row_column.first)
       column = columns.index(row_column.last)
       board_array[row][column] = space['value']
     end
-    opponent_piece = data['piece'] == 'x' ? 'o' : 'x'
-    Tictactoe::GameState.new(board_array, data['piece'], opponent_piece)
+    opponent_piece = content['piece'] == 'x' ? 'o' : 'x'
+    Tictactoe::GameState.new(board_array, content['piece'], opponent_piece)
   end
 
-  def pack_repquest_data(game_state)
-    return_data = []
+  def create_response(game_state)
+    board_data = []
     game_state.board.each_with_index do |row, r|
       row.each_with_index do |value, c|
-        return_data.push('id' => "#{rows[r]}-#{columns[c]}", 'value' => value)
+        board_data.push('id' => "#{rows[r]}-#{columns[c]}", 'value' => value)
       end
     end
-    return_data
+    { piece: game_state.player_piece, board: board_data }
   end
-
 end

@@ -2,7 +2,6 @@
 
 module Tictactoe
   class GameState
-
     BLANK = ''
 
     attr_reader :board, :player_piece, :opponent_piece, :board_size
@@ -73,7 +72,7 @@ module Tictactoe
       end
 
       def validate_board(board)
-        if board.length != board.count { |row| row.length == board.length}
+        if board.length != board.count { |row| row.length == board.length }
           fail ArgumentError, 'Provided board is not square.'
         end
         if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0

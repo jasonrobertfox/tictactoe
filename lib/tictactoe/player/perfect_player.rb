@@ -5,7 +5,6 @@ require 'tictactoe/game_state'
 module Tictactoe
   module Player
     class PerfectPlayer
-
       attr_reader :piece
 
       def initialize(piece)
