@@ -32,6 +32,14 @@ describe 'tic tac toe api behavior' do
     result['data']['message'].should eq 'Piece was not defined as either x or o.'
   end
 
+  it 'should handle the exception if a board validation exception is raised' do
+    data = { piece: 'x', board: get_test_board_data([['x', 'b', ''], ['o', 'o', ''], ['x', 'o', '']]) }
+    result = post_json('/api/v1/play', data)
+    expect(last_response.status).to be 400
+    result['status'].should eq 'fail'
+    result['data']['message'].should eq 'Board contains invalid pieces.'
+  end
+
   it 'should return an error if there is no board object defined' do
     data = { piece: 'x' }
     result = post_json('/api/v1/play', data)
