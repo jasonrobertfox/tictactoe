@@ -59,7 +59,6 @@ module Tictactoe
       moves
     end
 
-    # register_move?
     def apply_move(choice)
       new_board = Array.new(board.length) { Array.new }
       each_space do |row, column|
@@ -99,26 +98,36 @@ module Tictactoe
         end
       end
 
-      def win_for_piece?(piece)
-
-        # Check each row
-        (0..2).each do | row |
-          return true if @board[row][0] == piece && @board[row][1] == piece && @board[row][2] == piece
+      def winning_row?(piece)
+        board.each do |row|
+          return true if row.count(piece) == row.length
         end
-
-        # Check each column
-        (0..2).each do | column |
-          return true if @board[0][column] == piece && @board[1][column] == piece && @board[2][column] == piece
-        end
-
-        # Check first diagonal
-        return true if @board[0][0] == piece && @board[1][1] == piece && @board[2][2] == piece
-
-        # Check second diagonal
-        return true if @board[0][2] == piece && @board[1][1] == piece && @board[2][0] == piece
-
-        # There is no win at this point, but there could be a draw
         false
+      end
+
+      def winning_column?(piece)
+        board.transpose.each do |row|
+          return true if row.count(piece) == row.length
+        end
+        false
+      end
+
+      def winning_diagonal?(piece)
+        board.each_with_index do |row, i|
+          return false unless row[i] == piece
+        end
+        true
+      end
+
+      def winning_reverse_diagonal?(piece)
+        board.each_with_index do |row, i|
+          return false unless row[row.length - i - 1] == piece
+        end
+        true
+      end
+
+      def win_for_piece?(piece)
+        winning_row?(piece) || winning_column?(piece) || winning_diagonal?(piece) || winning_reverse_diagonal?(piece)
       end
   end
 end

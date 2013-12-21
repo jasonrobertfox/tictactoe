@@ -88,6 +88,17 @@ describe Tictactoe::GameState do
     game_state.is_over?.should be_true
   end
 
+  it 'should check additional win states' do
+    win_boards = {
+      diagonal: [['x', 'x', ''], ['o', 'x', ''], ['x', 'o', 'x']],
+      column: [['x', 'x', ''], ['x', 'o', ''], ['x', 'o', '']]
+    }
+    win_boards.each do |name, board|
+      game_state = Tictactoe::GameState.new(board, 'o', 'x')
+      game_state.have_i_won?(get_player_stub 'x').should be_true, "#{name} should have won but it didn't!"
+    end
+  end
+
   it 'should report if the game is a draw' do
     game_state = get_game_state(get_draw_board, 'o')
     game_state.is_draw?.should be_true
@@ -115,16 +126,19 @@ describe Tictactoe::GameState do
     game_state.should_not eq result
   end
 
+  it 'should have a general win algorithm for arbitrary board size' do
+    win_boards = {
+      diagonal: [['x','','',''], ['','x','',''], ['','','x',''], ['','','','x']],
+      reverse_diagonal: [['','','','x'], ['','','x',''], ['','x','',''], ['x','','','']],
+      row: [['','','',''], ['','','',''], ['x','x','x','x'], ['','','','']],
+      column: [['','x','',''], ['','x','',''], ['','x','',''], ['','x','','']]
+    }
 
-  # it 'should return a new instance of itself on update state' do
-  #   game_state = get_game_state(get_in_progress_board, 'x')
-  #   new_state = game_state.get_new_state([0, 2])
-  #   result = [%w(x x x), ['o', 'o', ''], ['x', 'o', '']]
-  #   new_state.board.should eq result
-  #   new_state.player_piece.should eq 'o'
-  #   new_state.should_not be game_state
-  #   game_state.should_not eq result
-  # end
+    win_boards.each do |name, board|
+      game_state = Tictactoe::GameState.new(board, 'o', 'x')
+      game_state.have_i_won?(get_player_stub 'x').should be_true, "#{name} should have won but it didn't!"
+    end
+  end
 
   # TODO: move translation of transport data to different class
   # it 'can be created with formated data' do
