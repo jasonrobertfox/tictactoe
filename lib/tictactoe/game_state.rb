@@ -50,10 +50,9 @@ module Tictactoe
     end
 
     def apply_move(choice)
-      # TODO: It is still strange that I have to do this strange copy to break refs
-      new_board = Matrix.rows(board).to_a
+      new_board = board.map { |row| row.map { |space| space.dup } }
       new_board[choice.first][choice.last] = player_piece
-      GameState.new(new_board.to_a, opponent_piece, player_piece)
+      GameState.new(new_board, opponent_piece, player_piece)
     end
 
     private
