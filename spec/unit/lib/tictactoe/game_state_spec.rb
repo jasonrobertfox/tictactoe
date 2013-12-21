@@ -139,22 +139,4 @@ describe Tictactoe::GameState do
       game_state.have_i_won?(get_player_stub 'x').should be_true, "#{name} should have won but it didn't!"
     end
   end
-
-  # TODO: move translation of transport data to different class
-  # it 'can be created with formated data' do
-  #   game_state = get_game_state(get_in_progress_board, 'x')
-  #   game_state.board.should eq [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
-  # end
-
-  # it 'can be created with an array' do
-  #   board = [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
-  #   game_state = Tictactoe::GameState.new(board, 'x', 'o')
-  #   game_state.board.should eq board
-  # end
-
-  # it 'can output formatted data' do
-  #   board = [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]
-  #   game_state = Tictactoe::GameState.new(board, 'x', 'o')
-  #   game_state.get_data.should eq get_test_board_data(get_in_progress_board)
-  # end
 end

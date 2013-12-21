@@ -102,4 +102,35 @@ class TictactoeWebApp < Sinatra::Base
   def return_fail(message)
     halt 400, { 'Content-Type' => 'application/json' }, { status: 'fail', data: { message: message } }.to_json
   end
+
+  def rows
+    %w(top middle bottom)
+  end
+
+  def columens
+    %w(left center right)
+  end
+
+  def unpack_request_data(data)
+    board_array = Array.new(3) { Array.new }
+      data['board'].each do |space|
+      row_column = space['id'].split('-')
+      row = rows.index(row_column.first)
+      column = columns.index(row_column.last)
+      board_array[row][column] = space['value']
+    end
+    opponent_piece = data['piece'] == 'x' ? 'o' : 'x'
+    Tictactoe::GameState.new(board_array, data['piece'], opponent_piece)
+  end
+
+  def pack_repquest_data(game_state)
+    return_data = []
+    game_state.board.each_with_index do |row, r|
+      row.each_with_index do |value, c|
+        return_data.push('id' => "#{rows[r]}-#{columns[c]}", 'value' => value)
+      end
+    end
+    return_data
+  end
+
 end

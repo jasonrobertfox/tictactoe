@@ -5,21 +5,7 @@ module Tictactoe
 
     BLANK = ''
 
-    attr_accessor :board, :player_piece, :opponent_piece
-
-    # def self.new_from_data(board, active_turn)
-    #   board_array = [[], [], []]
-    #     rows = %w(top middle bottom)
-    #     columns = %w(left center right)
-    #     board.each do |space|
-    #       row_column = space['id'].split('-')
-    #       row = rows.index(row_column.first)
-    #       column = columns.index(row_column.last)
-    #       board_array[row][column] = space['value']
-    #     end
-    #     next_turn = active_turn == 'x' ? 'o' : 'x'
-    #     new(board_array, active_turn, next_turn)
-    # end
+    attr_reader :board, :player_piece, :opponent_piece, :board_size
 
     def initialize(board, player_piece, opponent_piece)
       validate_piece player_piece
@@ -29,6 +15,7 @@ module Tictactoe
       @opponent_piece = opponent_piece
       validate_board board
       @board = board
+      @board_size = board.length
     end
 
     def is_over?
@@ -60,7 +47,7 @@ module Tictactoe
     end
 
     def apply_move(choice)
-      new_board = Array.new(board.length) { Array.new }
+      new_board = Array.new(board_size) { Array.new }
       each_space do |row, column|
         if row == choice[0] && column == choice[1]
           new_board[row][column] = player_piece
@@ -100,14 +87,14 @@ module Tictactoe
 
       def winning_row?(piece)
         board.each do |row|
-          return true if row.count(piece) == row.length
+          return true if row.count(piece) == board_size
         end
         false
       end
 
       def winning_column?(piece)
         board.transpose.each do |row|
-          return true if row.count(piece) == row.length
+          return true if row.count(piece) == board_size
         end
         false
       end
@@ -121,7 +108,7 @@ module Tictactoe
 
       def winning_reverse_diagonal?(piece)
         board.each_with_index do |row, i|
-          return false unless row[row.length - i - 1] == piece
+          return false unless row[board_size - i - 1] == piece
         end
         true
       end
