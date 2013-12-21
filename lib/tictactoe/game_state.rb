@@ -51,14 +51,14 @@ module Tictactoe
       !is_draw? && !win_for_piece?(player.piece)
     end
 
-    def get_blanks
-      blanks = []
-      (0..2).each do | row |
-        (0..2).each do | column |
-          blanks.push([row, column]) if @board[row][column] == ''
+    def available_moves
+      moves = []
+      board.each_index do |row|
+        board[row].each_index do |column|
+          moves.push([row, column]) if board[row][column] == BLANK
         end
       end
-      blanks
+      moves
     end
 
     # register_move?

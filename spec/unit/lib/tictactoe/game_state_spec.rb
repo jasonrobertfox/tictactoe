@@ -96,18 +96,25 @@ describe Tictactoe::GameState do
 
   it 'should return an array of available moves' do
     game_state = get_game_state(get_in_progress_board, 'x')
-    game_state.get_blanks.should eq [[0, 2], [1, 2], [2, 2]]
+    game_state.available_moves.should eq [[0, 2], [1, 2], [2, 2]]
   end
 
-  it 'should return a new instance of itself on update state' do
-    game_state = get_game_state(get_in_progress_board, 'x')
-    new_state = game_state.get_new_state([0, 2])
-    result = [%w(x x x), ['o', 'o', ''], ['x', 'o', '']]
-    new_state.board.should eq result
-    new_state.player_piece.should eq 'o'
-    new_state.should_not be game_state
-    game_state.should_not eq result
+  it 'should scale available moves for larger boards' do
+    board = Array.new(4, Array.new(4, ''))
+    game_state = get_game_state(board, 'x')
+    game_state.available_moves.count.should eq 16
   end
+
+  # TODO: see if we can avoid creating a new object
+  # it 'should return a new instance of itself on update state' do
+  #   game_state = get_game_state(get_in_progress_board, 'x')
+  #   new_state = game_state.get_new_state([0, 2])
+  #   result = [%w(x x x), ['o', 'o', ''], ['x', 'o', '']]
+  #   new_state.board.should eq result
+  #   new_state.player_piece.should eq 'o'
+  #   new_state.should_not be game_state
+  #   game_state.should_not eq result
+  # end
 
   # TODO: move translation of transport data to different class
   # it 'can be created with formated data' do
