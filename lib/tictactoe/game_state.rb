@@ -42,11 +42,9 @@ module Tictactoe
     end
 
     def available_moves
-      moves = []
-      each_space do |row, column|
-        moves.push([row, column]) if board[row][column] == BLANK
-      end
-      moves
+      board.flatten.each_with_index.map do |value, i|
+        [i / board_size, i - (i / board_size) * board_size] if value == BLANK
+      end.compact
     end
 
     def apply_move(choice)

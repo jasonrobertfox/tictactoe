@@ -37,27 +37,27 @@ module Tictactoe
           @current_move_choice
         end
 
-        def evaluate_state(state, depth)
-          if state.have_i_won?(self)
+        def evaluate_state(game_state, depth)
+          if game_state.have_i_won?(self)
             10 - depth
-          elsif state.have_i_lost?(self)
+          elsif game_state.have_i_lost?(self)
             depth - 10
           else
             0
           end
         end
 
-        def minmax(state, depth)
-          return evaluate_state(state, depth) if state.is_over?
+        def minmax(game_state, depth)
+          return evaluate_state(game_state, depth) if game_state.is_over?
           depth += 1
           scores = []
           moves = []
-          state.available_moves.each do |choice|
-            node = state.apply_move(choice)
+          game_state.available_moves.each do |choice|
+            node = game_state.apply_move(choice)
             scores.push minmax(node, depth)
             moves.push choice
           end
-          if state.player_piece == piece
+          if game_state.player_piece == piece
             # this is a maximizing move
             max_index = scores.each_with_index.max[1]
             @current_move_choice = moves[max_index]
