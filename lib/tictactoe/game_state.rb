@@ -2,6 +2,9 @@
 
 module Tictactoe
   class GameState
+
+    BLANK = ''
+
     attr_accessor :board, :player_piece, :opponent_piece
 
     def self.new_from_data(board, active_turn)
@@ -19,12 +22,13 @@ module Tictactoe
     end
 
     def initialize(board, player_piece, opponent_piece)
-      @board = board
       validate_piece player_piece
       validate_piece opponent_piece
       validate_pieces_different player_piece, opponent_piece
       @player_piece = player_piece
       @opponent_piece = opponent_piece
+      validate_board board
+      @board = board
     end
 
     def active_turn
@@ -112,6 +116,15 @@ module Tictactoe
 
       def validate_pieces_different(first_player, second_player)
         fail ArgumentError, 'You can not have both pieces be the same character.' if first_player.downcase == second_player.downcase
+      end
+
+      def validate_board(board)
+        if board.length != board.count { |row| row.length == board.length}
+          fail ArgumentError, 'Provided board is not square.'
+        end
+        if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0
+          fail ArgumentError, 'Board contains invalid pieces.'
+        end
       end
   end
 end

@@ -44,6 +44,18 @@ describe Tictactoe::GameState do
     end.to raise_error ArgumentError, 'You can not have both pieces be the same character.'
   end
 
+  it 'should reject a non square board' do
+    expect do
+      Tictactoe::GameState.new([%w(x o o), ['x', 'o', '']], 'x', 'o')
+    end.to raise_error ArgumentError, 'Provided board is not square.'
+  end
+
+  it 'should reject a board with invalid pieces' do
+    expect do
+      Tictactoe::GameState.new([%w(x 1 o), ['x', 'b', ''], ['x', 'o', '']], 'x', 'o')
+    end.to raise_error ArgumentError, 'Board contains invalid pieces.'
+  end
+
   # TODO: move translation of transport data to different class
   # it 'can be created with formated data' do
   #   game_state = get_game_state(get_in_progress_board, 'x')
