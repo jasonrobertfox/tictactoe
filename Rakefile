@@ -37,6 +37,7 @@ end
 
 RSpec::Core::RakeTask.new(:system) do |t|
   ENV['SYSTEM'] = 'true'
+  ENV['COVERAGE'] = 'false'
   t.pattern = FileList['spec/system/**/*_spec.rb']
   t.rspec_opts = get_rspec_flags('system')
 end

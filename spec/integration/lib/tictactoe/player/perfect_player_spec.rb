@@ -90,7 +90,7 @@ describe Tictactoe::Player::PerfectPlayer do
     new_state.board.should eq [['', 'x', 'o'], ['', '', 'x'], %w(o o x)]
   end
 
-  it 'should always draw when playing itself' do
+  it 'should always draw when playing itself', :skip do
     players = { 'x' => Tictactoe::Player::PerfectPlayer.new('x'), 'o' => Tictactoe::Player::PerfectPlayer.new('o') }
     # for 10 games
     results = []
