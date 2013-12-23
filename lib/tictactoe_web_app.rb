@@ -79,8 +79,8 @@ class TictactoeWebApp < Sinatra::Base
         computer_payer = Tictactoe::Player::PerfectPlayer.new game_state.player_piece
         new_state = computer_payer.take_turn game_state
         return_success(create_response(new_state))
-      rescue ArgumentError => e
-        return_fail e.message
+      rescue ArgumentError => error
+        return_fail error.message
       end
     end
   end

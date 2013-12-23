@@ -58,6 +58,14 @@ configure_rspec_defaults
 configure_rspec_for_system if system
 
 # Other general helper functions
+def get_adapter
+  Tictactoe::Adapter::Web.new(3, 'x', 'o')
+end
+
+def get_request(piece, data)
+  { 'piece' => piece, 'board' => get_test_board_data(data) }
+end
+
 def get_test_board_data(data)
   board = []
   rows = %w(top middle bottom)
