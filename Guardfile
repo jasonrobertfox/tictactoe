@@ -9,7 +9,7 @@ group :tests do
   end
 
   group :unit do
-    guard :rspec do
+    guard :rspec, failed_mode: :none do
       watch(%r{^spec/unit/.+_spec\.rb$})
       watch(%r{^lib/(.+)\.rb$})     { |m| "spec/unit/lib/#{m[1]}_spec.rb" }
       watch('spec/spec_helper.rb')
