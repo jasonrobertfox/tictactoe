@@ -96,11 +96,11 @@ describe Tictactoe::Player::PerfectPlayer do
     new_state.board.should eq [['', 'x', 'o'], ['', '', 'x'], %w(o o x)]
   end
 
-  it 'should always draw when playing itself', :skip do
+  it 'should always draw when playing itself' do
     players = { 'x' => Tictactoe::Player::PerfectPlayer.new('x'), 'o' => Tictactoe::Player::PerfectPlayer.new('o') }
-    # for 10 games
+    # for 2 games
     results = []
-    (1..10).each do
+    (1..2).each do
       game_state = get_game_state(get_blank_board, 'x')
       while game_state.is_over? == false
         game_state = players[game_state.player_piece].take_turn(game_state)

@@ -7,8 +7,6 @@ module Tictactoe
     class PerfectPlayer
       attr_reader :piece
 
-      BASE_SCORE = 10
-
       Node = Struct.new(:score, :move)
 
       def initialize(piece)
@@ -22,6 +20,7 @@ module Tictactoe
         elsif game_state.available_moves.count == 1
           game_state.apply_move last_available_move(game_state)
         else
+          @base_score = game_state.board_size**2 + 1
           game_state.apply_move best_possible_move(game_state)
         end
       end
@@ -43,9 +42,9 @@ module Tictactoe
 
         def evaluate_state(game_state, depth)
           if game_state.have_i_won?(self)
-            BASE_SCORE - depth
+            @base_score - depth
           elsif game_state.have_i_lost?(self)
-            depth - BASE_SCORE
+            depth - @base_score
           else
             0
           end
