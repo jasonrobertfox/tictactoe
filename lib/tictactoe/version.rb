@@ -2,7 +2,7 @@
 
 module Tictactoe
   module Version
-    VERSION = '1.0.0'
+    VERSION = '1.1.0'
 
     def self.get
       VERSION
