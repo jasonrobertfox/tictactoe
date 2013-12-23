@@ -28,7 +28,8 @@ module Tictactoe
       private
 
         def random_corner_move(game_state)
-          [[0, game_state.board_size - 1].sample, [0, game_state.board_size - 1].sample]
+          max_index = game_state.board_size - 1
+          [[0, max_index].sample, [0, max_index].sample]
         end
 
         def last_available_move(game_state)

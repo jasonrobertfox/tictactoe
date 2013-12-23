@@ -42,8 +42,9 @@ module Tictactoe
     end
 
     def available_moves
-      board.flatten.each_with_index.map do |value, i|
-        [i / board_size, i - (i / board_size) * board_size] if value == BLANK
+      board.flatten.each_with_index.map do |value, index|
+        row = (index / board_size)
+        [row, index - row * board_size] if value == BLANK
       end.compact
     end
 
@@ -64,10 +65,11 @@ module Tictactoe
       end
 
       def validate_board(board)
-        if board.length != board.count { |row| row.length == board.length }
+        board_size = board.length
+        if board_size != board.count { |row| row.length == board_size }
           fail ArgumentError, 'Provided board is not square.'
         end
-        if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0
+        if board.flatten.reject { |piece| [player_piece, opponent_piece, BLANK].include? piece }.length > 0
           fail ArgumentError, 'Board contains invalid pieces.'
         end
       end
@@ -87,15 +89,15 @@ module Tictactoe
       end
 
       def winning_diagonal?(piece)
-        board.each_with_index do |row, i|
-          return false unless row[i] == piece
+        board.each_with_index do |row, index|
+          return false unless row[index] == piece
         end
         true
       end
 
       def winning_reverse_diagonal?(piece)
-        board.each_with_index do |row, i|
-          return false unless row[board_size - i - 1] == piece
+        board.each_with_index do |row, index|
+          return false unless row[board_size - index - 1] == piece
         end
         true
       end

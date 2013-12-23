@@ -16,7 +16,7 @@ group :application do
 end
 
 # TODO: move these back into test for production deployment
-gem 'rspec'
+gem 'rspec', '2.14.1'
 gem 'rubocop'
 gem 'rake'
 group :test do
@@ -32,4 +32,6 @@ group :development do
   gem 'guard-livereload'
   gem 'guard-shotgun', git: 'https://github.com/rchampourlier/guard-shotgun.git', branch: 'master'
   gem 'blam'
+  gem 'flay'
+  gem 'reek'
 end
