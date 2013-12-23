@@ -1,5 +1,8 @@
 # Encoding: utf-8
 
+require 'tictactoe/player/perfect_player'
+require 'tictactoe/game_state'
+
 module Tictactoe
   module Adapter
     class Web

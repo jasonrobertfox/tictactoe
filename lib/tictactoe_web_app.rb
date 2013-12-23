@@ -12,8 +12,7 @@ require 'sinatra/assetpack'
 require 'zurb-foundation'
 require 'json'
 
-require 'tictactoe/player/perfect_player'
-require 'tictactoe/game_state'
+require 'tictactoe/adapter/web'
 
 class TictactoeWebApp < Sinatra::Base
   set :root, File.expand_path(File.join(Dir.pwd, 'lib'))
@@ -73,12 +72,8 @@ class TictactoeWebApp < Sinatra::Base
       begin
         content_type :json
         content = JSON.parse request.body.read
-        validate_request content
-        game_state = unpack_request content
-        validate_gamestate game_state
-        computer_payer = Tictactoe::Player::PerfectPlayer.new game_state.player_piece
-        new_state = computer_payer.take_turn game_state
-        return_success(create_response(new_state))
+        web_adapter = Tictactoe::Adapter::Web.new(3, 'x', 'o')
+        return_success web_adapter.get_response(content)
       rescue ArgumentError => error
         return_fail error.message
       end
@@ -91,46 +86,5 @@ class TictactoeWebApp < Sinatra::Base
 
   def return_fail(message)
     halt 400, { 'Content-Type' => 'application/json' }, { status: 'fail', data: { message: message } }.to_json
-  end
-
-  def rows
-    %w(top middle bottom)
-  end
-
-  def columns
-    %w(left center right)
-  end
-
-  def validate_request(content)
-    return_fail('Piece was not defined as either x or o.') unless content['piece'] && (content['piece'] == 'x' || content['piece'] == 'o')
-    return_fail('Board was not defined.') unless content['board']
-    return_fail('Board given contains less than 9 spaces.') unless content['board'].count == 9
-  end
-
-  def validate_gamestate(game_state)
-    return_fail('Nothing to do, the board provided is a draw.') if game_state.is_draw?
-    return_fail('Nothing to do, there is already a winner.') if game_state.has_someone_won?
-  end
-
-  def unpack_request(content)
-    board_array = Array.new(3) { Array.new }
-    content['board'].each do |space|
-      row_column = space['id'].split('-')
-      row = rows.index(row_column.first)
-      column = columns.index(row_column.last)
-      board_array[row][column] = space['value']
-    end
-    opponent_piece = content['piece'] == 'x' ? 'o' : 'x'
-    Tictactoe::GameState.new(board_array, content['piece'], opponent_piece)
-  end
-
-  def create_response(game_state)
-    board_data = []
-    game_state.board.each_with_index do |row, r|
-      row.each_with_index do |value, c|
-        board_data.push('id' => "#{rows[r]}-#{columns[c]}", 'value' => value)
-      end
-    end
-    { piece: game_state.player_piece, board: board_data }
   end
 end
