@@ -7,6 +7,10 @@ module Tictactoe
     class PerfectPlayer
       attr_reader :piece
 
+      BASE_SCORE = 10
+
+      Node = Struct.new(:score, :move)
+
       def initialize(piece)
         @piece = piece
       end
@@ -39,9 +43,9 @@ module Tictactoe
 
         def evaluate_state(game_state, depth)
           if game_state.have_i_won?(self)
-            10 - depth
+            BASE_SCORE - depth
           elsif game_state.have_i_lost?(self)
-            depth - 10
+            depth - BASE_SCORE
           else
             0
           end
@@ -49,25 +53,18 @@ module Tictactoe
 
         def minmax(game_state, depth)
           return evaluate_state(game_state, depth) if game_state.is_over?
-          depth += 1
-          scores = []
-          moves = []
-          game_state.available_moves.each do |choice|
-            node = game_state.apply_move(choice)
-            scores.push minmax(node, depth)
-            moves.push choice
+          nodes = game_state.available_moves.map do |move|
+            Node.new minmax(game_state.apply_move(move), depth + 1), move
           end
-          if game_state.player_piece == piece
-            # this is a maximizing move
-            max_index = scores.each_with_index.max[1]
-            @current_move_choice = moves[max_index]
-            return scores[max_index]
-          else
-            # this is a minimizing move
-            min_index = scores.each_with_index.min[1]
-            @current_move_choice = moves[min_index]
-            return scores[min_index]
+          minmax_node = nodes.reduce do |base, node|
+            if game_state.player_piece == piece
+              base.score > node.score ? base : node
+            else
+              base.score < node.score ? base : node
+            end
           end
+          @current_move_choice = minmax_node.move
+          minmax_node.score
         end
     end
   end

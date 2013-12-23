@@ -2,8 +2,6 @@
 
 module Tictactoe
   class GameState
-    require 'matrix'
-
     BLANK = ''
 
     attr_reader :board, :player_piece, :opponent_piece, :board_size
@@ -71,14 +69,6 @@ module Tictactoe
         end
         if board.flatten.reject { |e| [player_piece, opponent_piece, BLANK].include? e }.length > 0
           fail ArgumentError, 'Board contains invalid pieces.'
-        end
-      end
-
-      def each_space
-        board.each_index do |row|
-          board[row].each_index do |column|
-            yield row, column
-          end
         end
       end
 
