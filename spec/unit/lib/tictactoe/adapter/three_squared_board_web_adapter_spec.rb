@@ -1,9 +1,9 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'tictactoe/adapter/web'
+require 'tictactoe/adapter/three_squared_board_web_adapter'
 
-describe Tictactoe::Adapter::Web do
+describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
   it 'should be initialized with game settings' do
     adapter = get_adapter
     adapter.board_width.should eq 3
