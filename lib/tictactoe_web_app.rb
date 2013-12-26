@@ -12,7 +12,7 @@ require 'sinatra/assetpack'
 require 'zurb-foundation'
 require 'json'
 
-require 'tictactoe/adapter/web'
+require 'tictactoe/adapter/three_squared_board_web_adapter'
 
 class TictactoeWebApp < Sinatra::Base
   set :root, File.expand_path(File.join(Dir.pwd, 'lib'))
@@ -72,7 +72,7 @@ class TictactoeWebApp < Sinatra::Base
       begin
         content_type :json
         content = JSON.parse request.body.read
-        web_adapter = Tictactoe::Adapter::Web.new(3, 'x', 'o')
+        web_adapter = Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new(3, 'x', 'o')
         return_success web_adapter.get_response(content)
       rescue ArgumentError => error
         return_fail error.message

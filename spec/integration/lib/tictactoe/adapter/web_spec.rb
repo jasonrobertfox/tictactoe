@@ -1,9 +1,9 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'tictactoe/adapter/web'
+require 'tictactoe/adapter/three_squared_board_web_adapter'
 
-describe Tictactoe::Adapter::Web do
+describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
   it 'should raise an error if the board is in a draw' do
     expect do
       get_adapter.get_response(get_request('x', [%w(x x o), %w(o o x), %w(x o o)]))

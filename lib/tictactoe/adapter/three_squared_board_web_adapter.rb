@@ -5,7 +5,7 @@ require 'tictactoe/game_state'
 
 module Tictactoe
   module Adapter
-    class Web
+    class ThreeSquaredBoardWebAdapter
       attr_reader :board_width, :player_one, :player_two
 
       def initialize(board_width, player_one, player_two)
