@@ -59,7 +59,7 @@ configure_rspec_for_system if system
 
 # Other general helper functions
 def get_adapter
-  Tictactoe::Adapter::Web.new(3, 'x', 'o')
+  Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
 end
 
 def get_request(piece, data)
