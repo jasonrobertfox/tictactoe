@@ -72,7 +72,7 @@ class TictactoeWebApp < Sinatra::Base
       begin
         content_type :json
         content = JSON.parse request.body.read
-        web_adapter = Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new(3, 'x', 'o')
+        web_adapter = Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
         return_success web_adapter.get_response(content)
       rescue ArgumentError => error
         return_fail error.message

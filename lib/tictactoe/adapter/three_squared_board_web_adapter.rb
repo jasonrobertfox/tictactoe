@@ -8,8 +8,10 @@ module Tictactoe
     class ThreeSquaredBoardWebAdapter
       attr_reader :board_width, :player_one, :player_two
 
-      def initialize(board_width, player_one, player_two)
-        @board_width = board_width
+      BOARD_WIDTH = 3
+
+      def initialize(player_one, player_two)
+        @board_width = BOARD_WIDTH
         @player_one = player_one
         @player_two = player_two
         @rows = %w(top middle bottom)
