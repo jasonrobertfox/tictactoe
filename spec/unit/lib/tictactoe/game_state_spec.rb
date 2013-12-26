@@ -105,7 +105,7 @@ describe Tictactoe::GameState do
 
   it 'should indicated if the board is empty' do
     game_state = get_game_state(get_blank_board, 'x')
-    game_state.empty?.should be_true
+    game_state.board_empty?.should be_true
   end
 
   it 'should scale available moves for larger boards' do

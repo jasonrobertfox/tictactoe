@@ -37,7 +37,7 @@ module Tictactoe
       !is_draw? && !win_for_piece?(player.piece)
     end
 
-    def empty?
+    def board_empty?
       board.flatten.count('') == board_size**2
     end
 

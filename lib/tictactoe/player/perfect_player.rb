@@ -14,18 +14,21 @@ module Tictactoe
       end
 
       def take_turn(game_state)
-        fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
-        if game_state.empty?
+        validate_game_state(game_state)
+        if game_state.board_empty?
           game_state.apply_move random_corner_move(game_state)
         elsif game_state.available_moves.count == 1
           game_state.apply_move last_available_move(game_state)
         else
-          @base_score = game_state.board_size**2 + 1
           game_state.apply_move best_possible_move(game_state)
         end
       end
 
       private
+
+        def validate_game_state(game_state)
+          fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
+        end
 
         def random_corner_move(game_state)
           max_index = game_state.board_size - 1
@@ -37,8 +40,16 @@ module Tictactoe
         end
 
         def best_possible_move(game_state)
+          @base_score = game_state.board_size**2 + 1
           minmax(game_state, 0)
           @current_move_choice
+        end
+
+        def minmax(game_state, depth)
+          return evaluate_state(game_state, depth) if game_state.is_over?
+          minmax_node = reduce_nodes(game_state, generate_nodes(game_state, depth))
+          @current_move_choice = minmax_node.move
+          minmax_node.score
         end
 
         def evaluate_state(game_state, depth)
@@ -51,20 +62,20 @@ module Tictactoe
           end
         end
 
-        def minmax(game_state, depth)
-          return evaluate_state(game_state, depth) if game_state.is_over?
-          nodes = game_state.available_moves.map do |move|
+        def generate_nodes(game_state, depth)
+          game_state.available_moves.map do |move|
             Node.new minmax(game_state.apply_move(move), depth + 1), move
           end
-          minmax_node = nodes.reduce do |base, node|
+        end
+
+        def reduce_nodes(game_state, nodes)
+          nodes.reduce do |base, node|
             if game_state.player_piece == piece
               base.score > node.score ? base : node
             else
               base.score < node.score ? base : node
             end
           end
-          @current_move_choice = minmax_node.move
-          minmax_node.score
         end
     end
   end
