@@ -29,12 +29,12 @@ module Tictactoe
       !has_someone_won? && !@board.flatten.include?(BLANK)
     end
 
-    def have_i_won?(player)
-      win_for_piece? player.piece
+    def have_i_won?(player_piece)
+      win_for_piece? player_piece
     end
 
-    def have_i_lost?(player)
-      !is_draw? && !win_for_piece?(player.piece)
+    def have_i_lost?(player_piece)
+      !is_draw? && !win_for_piece?(player_piece)
     end
 
     def board_empty?

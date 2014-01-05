@@ -71,13 +71,13 @@ describe Tictactoe::GameState do
   it 'should report if the game has been won' do
     game_state = get_game_state(get_x_winning_board, 'o')
     game_state.has_someone_won?.should be_true
-    game_state.have_i_won?(get_player_stub 'x').should be_true
-    game_state.have_i_lost?(get_player_stub 'x').should be_false
+    game_state.have_i_won?('x').should be_true
+    game_state.have_i_lost?('x').should be_false
     game_state.is_over?.should be_true
     game_state = get_game_state(get_o_winning_board, 'x')
     game_state.has_someone_won?.should be_true
-    game_state.have_i_won?(get_player_stub 'x').should be_false
-    game_state.have_i_lost?(get_player_stub 'x').should be_true
+    game_state.have_i_won?('x').should be_false
+    game_state.have_i_lost?('x').should be_true
     game_state.is_over?.should be_true
   end
 
@@ -88,7 +88,7 @@ describe Tictactoe::GameState do
     }
     win_boards.each do |name, board|
       game_state = Tictactoe::GameState.new(board, 'o', 'x')
-      game_state.have_i_won?(get_player_stub 'x').should be_true, "#{name} should have won but it didn't!"
+      game_state.have_i_won?('x').should be_true, "#{name} should have won but it didn't!"
     end
   end
 
@@ -134,7 +134,7 @@ describe Tictactoe::GameState do
 
     win_boards.each do |name, board|
       game_state = Tictactoe::GameState.new(board, 'o', 'x')
-      game_state.have_i_won?(get_player_stub 'x').should be_true, "#{name} should have won but it didn't!"
+      game_state.have_i_won?('x').should be_true, "#{name} should have won but it didn't!"
     end
   end
 end

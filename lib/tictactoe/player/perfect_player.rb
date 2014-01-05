@@ -54,9 +54,9 @@ module Tictactoe
         end
 
         def evaluate_state(node_state, depth)
-          if node_state.have_i_won?(self)
+          if node_state.have_i_won?(piece)
             @base_score - depth
-          elsif node_state.have_i_lost?(self)
+          elsif node_state.have_i_lost?(piece)
             depth - @base_score
           else
             0

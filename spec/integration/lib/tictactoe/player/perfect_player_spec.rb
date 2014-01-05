@@ -39,21 +39,21 @@ describe Tictactoe::Player::PerfectPlayer do
     player = get_player 'x'
     new_state = player.take_turn(game_state)
     new_state.available_moves.length.should eq 2
-    new_state.have_i_won?(player).should be_true
+    new_state.have_i_won?('x').should be_true
   end
 
   it 'should pick the winning move of a nearly complete game for o' do
     game_state = get_game_state([%w(x o x), ['x', 'x', ''], ['', 'o', 'o']], 'o')
     player = get_player 'o'
     new_state = player.take_turn(game_state)
-    new_state.have_i_won?(player).should be_true
+    new_state.have_i_won?('o').should be_true
   end
 
   it 'should pick the winning move from a more incomplete game' do
     game_state = get_game_state([['x', '', 'x'], ['', 'o', ''], ['', 'o', '']], 'x')
     player = get_player 'x'
     new_state = player.take_turn(game_state)
-    new_state.have_i_won?(player).should be_true
+    new_state.have_i_won?('x').should be_true
   end
 
   it 'should pick the next move from a more incomplete game', profile: true do
