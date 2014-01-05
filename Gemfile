@@ -23,6 +23,7 @@ group :test do
   gem 'coveralls'
   gem 'capybara', '2.1.0'
   gem 'poltergeist'
+  gem 'ruby-prof'
 end
 
 group :development do

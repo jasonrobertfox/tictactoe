@@ -56,7 +56,7 @@ describe Tictactoe::Player::PerfectPlayer do
     new_state.have_i_won?(player).should be_true
   end
 
-  it 'should pick the next move from a more incomplete game' do
+  it 'should pick the next move from a more incomplete game', profile: true do
     game_state = get_game_state([['x', '', ''], ['', '', ''], ['', '', '']], 'o')
     player = get_player 'o'
     new_state = player.take_turn(game_state)
