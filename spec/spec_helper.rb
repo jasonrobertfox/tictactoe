@@ -2,6 +2,20 @@
 
 ENV['RACK_ENV'] = 'test'
 require 'rspec'
+require 'ruby-prof'
+
+def configure_coverage
+  require 'simplecov'
+  require 'coveralls'
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ]
+  SimpleCov.start do
+    add_filter 'spec'
+    coverage_dir 'build/coverage'
+  end
+end
 
 def configure_rspec_defaults
   RSpec.configure do |config|
@@ -35,16 +49,27 @@ def configure_rspec_for_system
   Capybara.javascript_driver = :poltergeist
 end
 
-def configure_coverage
-  require 'simplecov'
-  require 'coveralls'
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-  SimpleCov.start do
-    add_filter 'spec'
-    coverage_dir 'build/coverage'
+def configure_profiling
+  RSpec.configure do |config|
+    def profile
+      result = RubyProf.profile { yield }
+      printer = RubyProf::MultiPrinter.new(result)
+      name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, '-').gsub(/-+/, '-')
+      directory_name = 'build/profiles'
+      Dir.mkdir(directory_name) unless File.exists?(directory_name)
+      printer = RubyProf::CallTreePrinter.new(result)
+      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.trace", 'w') do |f|
+        printer.print(f)
+      end
+    end
+
+    config.around(:each) do |example|
+      if example.metadata[:profile] && ENV['PROFILE']
+        profile { example.run }
+      else
+        example.run
+      end
+    end
   end
 end
 
@@ -56,6 +81,7 @@ coverage = ENV['COVERAGE'] == 'true' ? true : false
 configure_coverage if coverage
 configure_rspec_defaults
 configure_rspec_for_system if system
+configure_profiling
 
 # Other general helper functions
 def get_adapter
