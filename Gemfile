@@ -11,10 +11,6 @@ gem 'sinatra-assetpack'
 gem 'zurb-foundation', '4.3.2'
 gem 'compass'
 
-group :application do
-  # Here should be all the specifics for the application
-end
-
 # TODO: move these back into test for production deployment
 gem 'rspec', '2.14.1'
 gem 'rubocop'

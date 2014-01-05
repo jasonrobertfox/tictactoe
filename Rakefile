@@ -28,6 +28,12 @@ def get_rspec_flags(log_name, others = nil)
   "--format documentation --out build/spec/#{log_name}.log --format html --out build/spec/#{log_name}.html --format progress #{others}"
 end
 
+desc 'Run tests with profiling of those tagged "profile".'
+task :profile do
+  ENV['PROFILE'] = 'true'
+  Rake::Task['test'].invoke
+end
+
 RSpec::Core::RakeTask.new(:test) do |t|
   ENV['COVERAGE'] = 'true'
   ENV['SYSTEM'] = 'false'

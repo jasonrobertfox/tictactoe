@@ -54,14 +54,17 @@ def configure_profiling
     def profile
       result = RubyProf.profile { yield }
       printer = RubyProf::MultiPrinter.new(result)
-      name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, "-").gsub(/-+/, "-")
-      directory_name = "build"
+      name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, '-').gsub(/-+/, '-')
+      directory_name = 'build/profiles'
       Dir.mkdir(directory_name) unless File.exists?(directory_name)
-      printer.print(:path => directory_name, :profile => name)
+      printer = RubyProf::CallTreePrinter.new(result)
+      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.trace", 'w') do |f|
+        printer.print(f)
+      end
     end
 
     config.around(:each) do |example|
-      if example.metadata[:profile]
+      if example.metadata[:profile] && ENV['PROFILE']
         profile { example.run }
       else
         example.run
@@ -79,28 +82,6 @@ configure_coverage if coverage
 configure_rspec_defaults
 configure_rspec_for_system if system
 configure_profiling
-
-# RSpec.configure do |c|
-#   def profile
-#     result = RubyProf.profile { yield }
-#     name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, "-").gsub(/-+/, "-")
-#     printer = RubyProf::CallTreePrinter.new(result)
-#     open("tmp/performance/callgrind.#{name}.#{Time.now.to_i}.trace", "w") do |f|
-#       printer.print(f)
-#     end
-#   end
-
-#   c.around(:each) do |example|
-#     if ENV['PROFILE'] == 'all' or (example.metadata[:profile] and ENV['PROFILE'])
-#       profile { example.run }
-#     else
-#       example.run
-#     end
-#   end
-# end
-
-
-
 
 # Other general helper functions
 def get_adapter
