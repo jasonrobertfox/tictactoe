@@ -60,8 +60,8 @@ module Tictactoe
 
     def hand_off
       copy = self.dup
-      copy.board = deep_copy @board
-      copy.available_moves = deep_copy @available_moves
+      copy.board = copy_2d_array @board
+      copy.available_moves = copy_2d_array @available_moves
       copy.player_piece = @opponent_piece
       copy.opponent_piece = @player_piece
       copy
@@ -91,6 +91,7 @@ module Tictactoe
       @number_of_spaces = @size**2
       @max_index = @size - 1
       @board_range = (0..@max_index).to_a
+      @tail_range = (1..@max_index).to_a
       @minimum_moves_required_to_win = (2 * @size) - 1
     end
 
@@ -116,16 +117,6 @@ module Tictactoe
       @moves_made >= @minimum_moves_required_to_win
     end
 
-    def deep_copy(value)
-      if value.is_a?(Array)
-        result = []
-        value.each { |v| result << deep_copy(v) }
-        result
-      else
-        value
-      end
-    end
-
     def check_for_win
       @winner = winning_row || winning_column || winning_diagonal || winning_reverse_diagonal
     end
@@ -135,7 +126,7 @@ module Tictactoe
         candidate = @board[row][0]
         unless candidate == BLANK
           catch(:row_fail) do
-            (1..@size - 1).to_a.each do |column|
+            @tail_range.each do |column|
               throw :row_fail unless @board[row][column] == candidate
             end
             return candidate
@@ -150,7 +141,7 @@ module Tictactoe
         candidate = @board[0][column]
         unless candidate == BLANK
           catch(:column_fail) do
-            (1..@size - 1).to_a.each do |row|
+            @tail_range.each do |row|
               throw :column_fail unless @board[row][column] == candidate
             end
             return candidate
@@ -169,11 +160,17 @@ module Tictactoe
     end
 
     def winning_reverse_diagonal
-      candidate = @board[0][@size - 1]
+      candidate = @board[0][@max_index]
       @board.each_with_index do |row, index|
-        return nil unless row[@size - index - 1] == candidate
+        return nil unless row[@max_index - index] == candidate
       end
       candidate
+    end
+
+    def copy_2d_array(array)
+      array.map do |sub_array|
+        sub_array.dup
+      end
     end
 
   end
