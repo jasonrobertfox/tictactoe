@@ -1,6 +1,6 @@
 # Encoding: utf-8
 
-require 'tictactoe/game_state'
+# require 'tictactoe/game_state'
 
 module Tictactoe
   module Player
@@ -14,26 +14,32 @@ module Tictactoe
       end
 
       def take_turn(game_state)
-        validate_game_state(game_state)
+        validate_players_turn(game_state)
         @game_state = game_state
-        if game_state.board_empty?
-          game_state.apply_move random_corner_move
-        elsif game_state.available_moves.count == 1
-          game_state.apply_move last_available_move
+        if game_state.blank?
+          play_random_corner_move
+        elsif game_state.last_move?
+          play_last_available_move
         else
-          game_state.apply_move best_possible_move
+          move = best_possible_move
+          game_state.place_piece(piece, move.first, move.last)
         end
       end
 
       private
 
-        def validate_game_state(game_state)
+        def validate_players_turn(game_state)
           fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
         end
 
-        def random_corner_move
-          max_index = game_state.board_size - 1
-          [[0, max_index].sample, [0, max_index].sample]
+        def play_random_corner_move
+          move = game_state.corner_spaces.sample
+          game_state.place_piece(piece, move.first, move.last)
+        end
+
+        def play_last_available_move
+          move = game_state.available_moves[0]
+          game_state.place_piece(piece, move.first, move.last)
         end
 
         def last_available_move
@@ -47,16 +53,16 @@ module Tictactoe
         end
 
         def minmax(node_state, depth)
-          return evaluate_state(node_state, depth) if node_state.is_over?
+          return evaluate_state(node_state, depth) if node_state.over?
           minmax_node = reduce_nodes(node_state, generate_nodes(node_state, depth))
           @current_move_choice = minmax_node.move
           minmax_node.score
         end
 
         def evaluate_state(node_state, depth)
-          if node_state.have_i_won?(piece)
+          if node_state.has_won?(piece)
             @base_score - depth
-          elsif node_state.have_i_lost?(piece)
+          elsif node_state.has_lost?(piece)
             depth - @base_score
           else
             0
@@ -65,7 +71,8 @@ module Tictactoe
 
         def generate_nodes(node_state, depth)
           node_state.available_moves.map do |move|
-            Node.new minmax(node_state.apply_move(move), depth + 1), move
+            new_node = node_state.player_piece(node_state.player_piece, move.first, move.last)
+            Node.new minmax(new_node, depth + 1), move
           end
         end
 

@@ -113,13 +113,30 @@ PlayerStub = Struct.new(:piece)
 
 def get_game_state(board, player_piece)
   opponent_piece = player_piece == 'x' ? 'o' : 'x'
-  Tictactoe::GameState.new(board, player_piece, opponent_piece)
+  board = build_board(board.flatten.map { |i| i == '' ? '_' : i }.join)
+  Tictactoe::Board.new(3, player_piece, opponent_piece)
 end
 
-def get_alternative_game_state
-  Tictactoe::GameState.new([['z', ''], ['', 'j']], 'z', 'j')
-end
+# def get_alternative_game_state
+#   Tictactoe::GameState.new([['z', ''], ['', 'j']], 'z', 'j')
+# end
 
 def get_blank_board
   Array.new(3) { Array.new(3, '') }
+end
+
+def build_board(code, size = 3)
+  board = Tictactoe::Board.new(size, 'x', 'o')
+  row = 0
+  column = 0
+  code.split(//).each do |c|
+    board.place_piece(c, row, column) unless c == '_'
+    if column == size - 1
+      column = 0
+      row += 1
+    else
+      column += 1
+    end
+  end
+  board
 end

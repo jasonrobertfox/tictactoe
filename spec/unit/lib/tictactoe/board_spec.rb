@@ -140,21 +140,4 @@ describe Tictactoe::Board do
     b2.place_piece('x', 2, 2)
     b2.piece_at(1, 1).should eq ''
   end
-
-end
-
-def build_board(code, size = 3)
-  board = Tictactoe::Board.new(size, 'x', 'o')
-  row = 0
-  column = 0
-  code.split(//).each do |c|
-    board.place_piece(c, row, column) unless c == '_'
-    if column == size - 1
-      column = 0
-      row += 1
-    else
-      column += 1
-    end
-  end
-  board
 end
