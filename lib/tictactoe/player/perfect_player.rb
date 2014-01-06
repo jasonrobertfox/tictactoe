@@ -17,14 +17,14 @@ module Tictactoe
         validate_players_turn(game_state)
         @game_state = game_state
         if game_state.blank?
-          play_random_corner_move
+          new_state = play_random_corner_move
         elsif game_state.last_move?
-          play_last_available_move
+          new_state = play_last_available_move
         else
           move = best_possible_move
-          game_state.place_piece(piece, move)
-          game_state
+          new_state = game_state.place_piece(piece, move)
         end
+        new_state.hand_off
       end
 
       private

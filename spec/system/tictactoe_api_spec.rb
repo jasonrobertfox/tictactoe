@@ -37,7 +37,7 @@ describe 'tic tac toe api behavior' do
     result = post_json('/api/v1/play', data)
     expect(last_response.status).to be 400
     result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Board contains invalid pieces.'
+    result['data']['message'].should eq 'Piece was not defined as either x or o.'
   end
 
   it 'should return a data set with next move and other piece if the game is active' do

@@ -23,6 +23,7 @@ describe Tictactoe::Player::PerfectPlayer do
     player = get_player 'x'
     new_state = player.take_turn(game_state)
     [new_state.piece_at(0,0), new_state.piece_at(2,0), new_state.piece_at(0,2), new_state.piece_at(2,2)].should include 'x'
+    new_state.player_piece.should eq 'o'
   end
 
   it 'should simply fill in the last space if there is only one blank' do
@@ -101,7 +102,7 @@ describe Tictactoe::Player::PerfectPlayer do
     (1..2).each do
       game_state = make_board('_________', 3, 'x', 'o')
       while game_state.over? == false
-        game_state = players[game_state.player_piece].take_turn(game_state).hand_off
+        game_state = players[game_state.player_piece].take_turn(game_state)
       end
       results.push game_state.draw?
     end
