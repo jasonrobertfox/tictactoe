@@ -86,15 +86,15 @@ configure_rspec_for_system if system
 configure_profiling
 
 # Other general helper functions
-def get_adapter
+def test_adapter
   Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
 end
 
-def get_request(piece, data)
-  { 'piece' => piece, 'board' => get_test_board_data(data) }
+def test_request(piece, data)
+  { 'piece' => piece, 'board' => test_board_data(data) }
 end
 
-def get_test_board_data(data)
+def test_board_data(data)
   board = []
   rows = %w(top middle bottom)
   columns = %w(left center right)
@@ -113,11 +113,11 @@ end
 
 PlayerStub = Struct.new(:piece)
 
-def build_board(code)
-  make_board(code, 3, 'x', 'o')
+def test_board(code)
+  test_board(code, 3, 'x', 'o')
 end
 
-def make_board(code, size = 3, player_piece = 'x', opponent_piece = 'o')
+def test_board(code, size = 3, player_piece = 'x', opponent_piece = 'o')
   board = Tictactoe::Board.new(size, player_piece, opponent_piece)
   row = 0
   column = 0

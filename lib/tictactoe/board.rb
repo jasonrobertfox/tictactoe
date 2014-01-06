@@ -4,12 +4,7 @@ module Tictactoe
   class Board
     BLANK = ''
 
-    attr_reader :available_moves,
-                :corner_spaces,
-                :number_of_spaces,
-                :player_piece,
-                :opponent_piece,
-                :board
+    attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board
 
     def initialize(size, player_piece, opponent_piece)
       validate_pieces(player_piece, opponent_piece)
@@ -50,16 +45,16 @@ module Tictactoe
       !!@winner
     end
 
-    def has_lost?(piece)
+    def lost?(piece)
       @winner && @winner != piece
     end
 
-    def has_won?(piece)
+    def won?(piece)
       piece == @winner
     end
 
     def hand_off
-      copy = self.dup
+      copy = dup
       copy.board = copy_2d_array @board
       copy.available_moves = copy_2d_array @available_moves
       copy.player_piece = @opponent_piece
@@ -91,7 +86,6 @@ module Tictactoe
       @number_of_spaces = @size**2
       @max_index = @size - 1
       @board_range = (0..@max_index).to_a
-      # @tail_range = (1..@max_index).to_a
       @minimum_moves_required_to_win = (2 * @size) - 1
     end
 
@@ -118,31 +112,16 @@ module Tictactoe
     end
 
     def check_for_win
-      @winner = winning_row || winning_column || winning_diagonal || winning_reverse_diagonal
+      @winner = winning_row(@board) || winning_row(@board.transpose) || winning_diagonal || winning_reverse_diagonal
     end
 
-    def winning_row
-      for row in 0..@max_index
-        candidate = @board[row][0]
+    def winning_row(board)
+      (0..@max_index).each do |row|
+        candidate = board[row][0]
         unless candidate == BLANK
           catch(:row_fail) do
-            for column in 1..@max_index
-              throw :row_fail unless @board[row][column] == candidate
-            end
-            return candidate
-          end
-        end
-      end
-      nil
-    end
-
-    def winning_column
-      for column in 0..@max_index
-        candidate = @board[0][column]
-        unless candidate == BLANK
-          catch(:column_fail) do
-            for row in 1..@max_index
-              throw :column_fail unless @board[row][column] == candidate
+            (1..@max_index).each do |column|
+              throw :row_fail unless board[row][column] == candidate
             end
             return candidate
           end
@@ -152,17 +131,16 @@ module Tictactoe
     end
 
     def winning_diagonal
-      candidate = @board[0][0]
-      for i in 0..@max_index
-        return nil unless @board[i][i] == candidate
-      end
-      candidate
+      check_diagonal(@board[0][0]) { |i| @board[i][i] }
     end
 
     def winning_reverse_diagonal
-      candidate = @board[0][@max_index]
-      for i in 0..@max_index
-        return nil unless @board[i][@max_index - i] == candidate
+      check_diagonal(@board[@max_index][0]) { |i| @board[i][@max_index - i] }
+    end
+
+    def check_diagonal(candidate)
+      (0..@max_index).each do |i|
+        return nil unless (yield i) == candidate
       end
       candidate
     end
@@ -172,6 +150,5 @@ module Tictactoe
         sub_array.dup
       end
     end
-
   end
 end

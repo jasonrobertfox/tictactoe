@@ -41,7 +41,7 @@ describe Tictactoe::Board do
   end
 
   it 'should report if there is only a single move left' do
-    b = make_board('xoxoxox__')
+    b = test_board('xoxoxox__')
     b.last_move?.should be_false
     b.place_piece('x', [2, 1])
     b.last_move?.should be_true
@@ -49,8 +49,8 @@ describe Tictactoe::Board do
 
   it 'should report win information for a row victory' do
     %w(xxxo_o___ o__xxx_o_ o__o__xxx).each do |code|
-      b = make_board code
-      b.has_won?('x').should be_true, "Failed with #{code}"
+      b = test_board code
+      b.won?('x').should be_true, "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
     end
@@ -58,30 +58,30 @@ describe Tictactoe::Board do
 
   it 'should report win information for a column victory' do
     %w(x_oxo_x__ _xo_x_ox_ __x_ox_ox).each do |code|
-      b = make_board code
-      b.has_won?('x').should be_true, "Failed with #{code}"
+      b = test_board code
+      b.won?('x').should be_true, "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
     end
   end
 
   it 'should report win information for a diagonal victory' do
-    b = make_board 'xo__xo__x'
-    b.has_won?('x').should be_true
-    b.has_lost?('o').should be_true
+    b = test_board 'xo__xo__x'
+    b.won?('x').should be_true
+    b.lost?('o').should be_true
     b.draw?.should be_false
     b.over?.should be_true
   end
 
   it 'should report win information for a reverse diagonal victory' do
-    b = make_board 'x_o_o_o_x'
-    b.has_won?('o').should be_true
+    b = test_board 'x_o_o_o_x'
+    b.won?('o').should be_true
     b.draw?.should be_false
     b.over?.should be_true
   end
 
   it 'should report a draw state' do
-    b = make_board 'xoxxxooxo'
+    b = test_board 'xoxxxooxo'
     b.winner_exists?.should be_false
     b.draw?.should be_true
     b.over?.should be_true
@@ -100,10 +100,9 @@ describe Tictactoe::Board do
   end
 
   it 'should report if someone has won' do
-    b = make_board 'o_x_x_x_o'
+    b = test_board 'o_x_x_x_o'
     b.winner_exists?.should be_true
   end
-
 
   it 'should scale available moves for larger boards' do
     b = Tictactoe::Board.new(4, 'x', 'o')
@@ -118,13 +117,13 @@ describe Tictactoe::Board do
       column: '_xooox___x___x__'
     }
     win_boards.each do |name, code|
-      b = make_board code, 4, 'x', 'o'
-      b.has_won?('x').should be_true
+      b = test_board code, 4, 'x', 'o'
+      b.won?('x').should be_true
     end
   end
 
   it 'should swap player pieces when the board is handed off' do
-    b = make_board 'xo_______'
+    b = test_board 'xo_______'
     b.player_piece.should eq 'x'
     b.place_piece('x', [1, 1])
     new_b = b.hand_off
@@ -133,7 +132,7 @@ describe Tictactoe::Board do
   end
 
   it 'when a board is handed off it should be a deep copy' do
-    b = make_board 'xo_______'
+    b = test_board 'xo_______'
     b1 = b.hand_off
     b2 = b.hand_off
     b1.place_piece('x', [1, 1])
