@@ -74,6 +74,12 @@ describe Tictactoe::Board do
     b.over?.should be_true
   end
 
+  it 'should report a draw state' do
+    b = build_board 'xoxxxooxo'
+    b.winner.should be_nil
+    b.draw?.should be_true
+    b.over?.should be_true
+  end
 
 end
 

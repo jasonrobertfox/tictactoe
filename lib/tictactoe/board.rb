@@ -53,11 +53,13 @@ module Tictactoe
     end
 
     def winning_row
-      @board.each do |row|
-        candidate = row[0]
+      (0..size - 1).to_a.each do |row|
+        candidate = @board[row][0]
         unless candidate == BLANK
-          (1..size - 1).to_a.each do |column|
-            break unless row[column] == candidate
+          catch(:row_fail) do
+            (1..size - 1).to_a.each do |column|
+              throw :row_fail unless @board[row][column] == candidate
+            end
             return candidate
           end
         end
@@ -69,8 +71,10 @@ module Tictactoe
       (0..size - 1).to_a.each do |column|
         candidate = @board[0][column]
         unless candidate == BLANK
-          (1..size - 1).to_a.each do |row|
-            break unless @board[row][column] == candidate
+          catch(:column_fail) do
+            (1..size - 1).to_a.each do |row|
+              throw :column_fail unless @board[row][column] == candidate
+            end
             return candidate
           end
         end
