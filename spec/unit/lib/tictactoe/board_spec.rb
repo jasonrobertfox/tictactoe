@@ -40,7 +40,7 @@ describe Tictactoe::Board do
   end
 
   it 'should report if there is only a single move left' do
-    b = build_board('xoxoxox__')
+    b = make_board('xoxoxox__')
     b.last_move?.should be_false
     b.place_piece('x', [2, 1])
     b.last_move?.should be_true
@@ -48,7 +48,7 @@ describe Tictactoe::Board do
 
   it 'should report win information for a row victory' do
     %w(xxxo_o___ o__xxx_o_ o__o__xxx).each do |code|
-      b = build_board code
+      b = make_board code
       b.winner.should eq('x'), "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
@@ -57,7 +57,7 @@ describe Tictactoe::Board do
 
   it 'should report win information for a column victory' do
     %w(x_oxo_x__ _xo_x_ox_ __x_ox_ox).each do |code|
-      b = build_board code
+      b = make_board code
       b.winner.should eq('x'), "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
@@ -65,7 +65,7 @@ describe Tictactoe::Board do
   end
 
   it 'should report win information for a diagonal victory' do
-    b = build_board 'xo__xo__x'
+    b = make_board 'xo__xo__x'
     b.winner.should eq('x')
     b.has_won?('x').should be_true
     b.has_lost?('o').should be_true
@@ -74,14 +74,14 @@ describe Tictactoe::Board do
   end
 
   it 'should report win information for a reverse diagonal victory' do
-    b = build_board 'x_o_o_o_x'
+    b = make_board 'x_o_o_o_x'
     b.winner.should eq('o')
     b.draw?.should be_false
     b.over?.should be_true
   end
 
   it 'should report a draw state' do
-    b = build_board 'xoxxxooxo'
+    b = make_board 'xoxxxooxo'
     b.winner.should be_nil
     b.draw?.should be_true
     b.over?.should be_true
@@ -100,7 +100,7 @@ describe Tictactoe::Board do
   end
 
   it 'should report if someone has won' do
-    b = build_board 'o_x_x_x_o'
+    b = make_board 'o_x_x_x_o'
     b.winner_exists?.should be_true
   end
 
@@ -127,7 +127,7 @@ describe Tictactoe::Board do
   end
 
   it 'should swap player pieces when the board is handed off' do
-    b = build_board 'xo_______'
+    b = make_board 'xo_______'
     b.player_piece.should eq 'x'
     b.place_piece('x', [1, 1])
     new_b = b.hand_off
@@ -136,7 +136,7 @@ describe Tictactoe::Board do
   end
 
   it 'when a board is handed off it should be a deep copy' do
-    b = build_board 'xo_______'
+    b = make_board 'xo_______'
     b1 = b.hand_off
     b2 = b.hand_off
     b1.place_piece('x', [1, 1])
