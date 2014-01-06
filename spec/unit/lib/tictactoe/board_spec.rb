@@ -5,7 +5,7 @@ require 'tictactoe/board'
 
 describe Tictactoe::Board do
 
-  let(:board) { Tictactoe::Board.new(3) }
+  let(:board) { Tictactoe::Board.new(3, 'x', 'o') }
 
   it 'should be initialized with it size' do
     board.size.should eq 3
@@ -81,10 +81,22 @@ describe Tictactoe::Board do
     b.over?.should be_true
   end
 
+  it 'should reject anything but single characters for pieces' do
+    expect do
+      Tictactoe::Board.new(3, 'XX', 'o')
+    end.to raise_error ArgumentError, 'Piece XX must be a single character.'
+  end
+
+  it 'should reject pieces that are not different regardless of case' do
+    expect do
+      Tictactoe::Board.new(3, 'O', 'o')
+    end.to raise_error ArgumentError, 'You can not have both pieces be the same character.'
+  end
+
 end
 
 def build_board(code)
-  board = Tictactoe::Board.new(3)
+  board = Tictactoe::Board.new(3, 'x', 'o')
   row = 0
   column = 0
   code.split(//).each do |c|

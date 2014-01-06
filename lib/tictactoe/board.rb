@@ -6,7 +6,12 @@ module Tictactoe
 
     attr_reader :size, :available_moves, :corner_spaces, :winner
 
-    def initialize(size)
+    def initialize(size, player_piece, opponent_piece)
+      validate_piece player_piece
+      validate_piece opponent_piece
+      validate_pieces_different player_piece, opponent_piece
+      @player_piece = player_piece
+      @opponent_piece = opponent_piece
       @size = size
       @moves_left = size**2
       @moves_made = 0
@@ -51,6 +56,14 @@ module Tictactoe
     def check_for_win
       @winner = winning_row || winning_column || winning_diagonal || winning_reverse_diagonal
     end
+
+      def validate_piece(piece)
+        fail ArgumentError, "Piece #{piece} must be a single character." if piece.length != 1
+      end
+
+      def validate_pieces_different(first_player, second_player)
+        fail ArgumentError, 'You can not have both pieces be the same character.' if first_player.downcase == second_player.downcase
+      end
 
     def winning_row
       (0..size - 1).to_a.each do |row|
