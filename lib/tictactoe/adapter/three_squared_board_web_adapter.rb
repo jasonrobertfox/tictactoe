@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 require 'tictactoe/player/perfect_player'
-require 'tictactoe/board'
+require 'tictactoe/board_factory'
 
 module Tictactoe
   module Adapter
@@ -44,7 +44,7 @@ module Tictactoe
 
       def create_board(turn_piece, request_data)
         opponent_piece = turn_piece == player_one ? player_two : player_one
-        board = Tictactoe::Board.new(board_width, turn_piece, opponent_piece)
+        board = Tictactoe::BoardFactory.build(board_width, turn_piece, opponent_piece)
         request_data['board'].each do |space|
           row_column = space['id'].split('-')
           row = @rows.index(row_column.first)

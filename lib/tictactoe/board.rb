@@ -7,8 +7,6 @@ module Tictactoe
     attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board
 
     def initialize(size, player_piece, opponent_piece)
-      validate_pieces(player_piece, opponent_piece)
-
       @player_piece = player_piece
       @opponent_piece = opponent_piece
       @size = size
@@ -67,20 +65,6 @@ module Tictactoe
     attr_writer :board, :available_moves, :player_piece, :opponent_piece
 
     private
-
-    def validate_pieces(player_piece, opponent_piece)
-      validate_piece player_piece
-      validate_piece opponent_piece
-      validate_pieces_different player_piece, opponent_piece
-    end
-
-    def validate_piece(piece)
-      fail ArgumentError, "Piece #{piece} must be a single character." if piece.length != 1
-    end
-
-    def validate_pieces_different(first_player, second_player)
-      fail ArgumentError, 'You can not have both pieces be the same character.' if first_player.downcase == second_player.downcase
-    end
 
     def initialize_helper_values
       @number_of_spaces = @size**2
