@@ -49,7 +49,7 @@ module Tictactoe
     end
 
     def check_for_win
-      @winner = winning_row || winning_column
+      @winner = winning_row || winning_column || winning_diagonal || winning_reverse_diagonal
     end
 
     def winning_row
@@ -76,6 +76,22 @@ module Tictactoe
         end
       end
       nil
+    end
+
+    def winning_diagonal
+      candidate = @board[0][0]
+      @board.each_with_index do |row, index|
+        return nil unless row[index] == candidate
+      end
+      candidate
+    end
+
+    def winning_reverse_diagonal
+      candidate = @board[0][size - 1]
+      @board.each_with_index do |row, index|
+        return nil unless row[size - index - 1] == candidate
+      end
+      candidate
     end
 
   end

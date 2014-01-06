@@ -60,6 +60,19 @@ describe Tictactoe::Board do
     end
   end
 
+  it 'should report win information for a diagonal victory' do
+    b = build_board 'xo__xo__x'
+    b.winner.should eq('x')
+    b.draw?.should be_false
+    b.over?.should be_true
+  end
+
+  it 'should report win information for a reverse diagonal victory' do
+    b = build_board 'o_x_x_x_o'
+    b.winner.should eq('x')
+    b.draw?.should be_false
+    b.over?.should be_true
+  end
 
 
 end
