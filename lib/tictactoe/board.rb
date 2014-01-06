@@ -55,8 +55,8 @@ module Tictactoe
 
     def hand_off
       copy = dup
-      copy.board = copy_2d_array @board
-      copy.available_moves = copy_2d_array @available_moves
+      copy.board = @board.map { |i| i.dup }
+      copy.available_moves = @available_moves.map { |i| i.dup }
       copy.player_piece = @opponent_piece
       copy.opponent_piece = @player_piece
       copy
@@ -116,16 +116,9 @@ module Tictactoe
     end
 
     def winning_row(board)
-      (0..@max_index).each do |row|
-        candidate = board[row][0]
-        unless candidate == BLANK
-          catch(:row_fail) do
-            (1..@max_index).each do |column|
-              throw :row_fail unless board[row][column] == candidate
-            end
-            return candidate
-          end
-        end
+      board.each do |row|
+        candidate = row[0]
+        return candidate if candidate != BLANK && row.count(candidate) == @size
       end
       nil
     end
@@ -143,12 +136,6 @@ module Tictactoe
         return nil unless (yield i) == candidate
       end
       candidate
-    end
-
-    def copy_2d_array(array)
-      array.map do |sub_array|
-        sub_array.dup
-      end
     end
   end
 end
