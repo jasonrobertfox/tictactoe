@@ -4,7 +4,7 @@ module Tictactoe
   class Board
     BLANK = ''
 
-    attr_reader :size, :available_moves, :corner_spaces, :winner
+    attr_reader :size, :available_moves, :corner_spaces, :winner, :number_of_spaces
 
     def initialize(size, player_piece, opponent_piece)
       validate_piece player_piece
@@ -13,7 +13,7 @@ module Tictactoe
       @player_piece = player_piece
       @opponent_piece = opponent_piece
       @size = size
-      @moves_left = size**2
+      @moves_left = @number_of_spaces = size**2
       @moves_made = 0
       @board = Array.new(size) { Array.new(size, '') }
       @available_moves = (0..size - 1).to_a.product((0..size - 1).to_a)
@@ -51,6 +51,18 @@ module Tictactoe
 
     def draw?
       @moves_left == 0 && !@winner
+    end
+
+    def winner_exists?
+      !!@winner
+    end
+
+    def has_lost?(piece)
+      @winner && @winner != piece
+    end
+
+    def has_won?(piece)
+      piece == @winner
     end
 
     def check_for_win

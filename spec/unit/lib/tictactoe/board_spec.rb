@@ -63,13 +63,15 @@ describe Tictactoe::Board do
   it 'should report win information for a diagonal victory' do
     b = build_board 'xo__xo__x'
     b.winner.should eq('x')
+    b.has_won?('x').should be_true
+    b.has_lost?('o').should be_true
     b.draw?.should be_false
     b.over?.should be_true
   end
 
   it 'should report win information for a reverse diagonal victory' do
-    b = build_board 'o_x_x_x_o'
-    b.winner.should eq('x')
+    b = build_board 'x_o_o_o_x'
+    b.winner.should eq('o')
     b.draw?.should be_false
     b.over?.should be_true
   end
@@ -93,15 +95,42 @@ describe Tictactoe::Board do
     end.to raise_error ArgumentError, 'You can not have both pieces be the same character.'
   end
 
+  it 'should report if someone has won' do
+    b = build_board 'o_x_x_x_o'
+    b.winner_exists?.should be_true
+  end
+
+  it 'should report its size in squares' do
+    board.number_of_spaces.should eq 9
+  end
+
+  it 'should scale available moves for larger boards' do
+    b = Tictactoe::Board.new(4, 'x', 'o')
+    b.available_moves.count.should eq 16
+  end
+
+  it 'should have a general win algorithm for arbitrary board size' do
+    win_boards = {
+      diagonal: 'xooo_x____x____x',
+      reverse_diagonal: 'ooox__x__x__x___',
+      row: 'ooo_____xxxx____',
+      column: '_xooox___x___x__'
+    }
+    win_boards.each do |name, code|
+      b = build_board code, 4
+      b.has_won?('x').should be_true
+    end
+  end
+
 end
 
-def build_board(code)
-  board = Tictactoe::Board.new(3, 'x', 'o')
+def build_board(code, size = 3)
+  board = Tictactoe::Board.new(size, 'x', 'o')
   row = 0
   column = 0
   code.split(//).each do |c|
     board.place_piece(c, row, column) unless c == '_'
-    if column == 2
+    if column == size - 1
       column = 0
       row += 1
     else
