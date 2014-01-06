@@ -1,11 +1,9 @@
 # Encoding: utf-8
 
-# require 'tictactoe/game_state'
-
 module Tictactoe
   module Player
     class PerfectPlayer
-      attr_reader :piece, :game_state
+      attr_reader :piece, :board
 
       Node = Struct.new(:score, :move)
 
@@ -13,45 +11,45 @@ module Tictactoe
         @piece = piece
       end
 
-      def take_turn(game_state)
-        validate_players_turn(game_state)
-        @game_state = game_state
-        if game_state.blank?
+      def take_turn(board)
+        validate_players_turn(board)
+        @board = board
+        if board.blank?
           new_state = play_random_corner_move
-        elsif game_state.last_move?
+        elsif board.last_move?
           new_state = play_last_available_move
         else
           move = best_possible_move
-          new_state = game_state.place_piece(piece, move)
+          new_state = board.place_piece(piece, move)
         end
         new_state.hand_off
       end
 
       private
 
-        def validate_players_turn(game_state)
-          fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
+        def validate_players_turn(board)
+          fail ArgumentError, 'It is not this player\'s turn.' if piece != board.player_piece
         end
 
         def play_random_corner_move
-          move = game_state.corner_spaces.sample
-          game_state.place_piece(piece, move)
-          game_state
+          move = board.corner_spaces.sample
+          board.place_piece(piece, move)
+          board
         end
 
         def play_last_available_move
-          move = game_state.available_moves[0]
-          game_state.place_piece(piece, move)
-          game_state
+          move = board.available_moves[0]
+          board.place_piece(piece, move)
+          board
         end
 
         def last_available_move
-          game_state.available_moves.first
+          board.available_moves.first
         end
 
         def best_possible_move
-          @base_score = game_state.number_of_spaces + 1
-          minmax(game_state, 0)
+          @base_score = board.number_of_spaces + 1
+          minmax(board, 0)
           @current_move_choice
         end
 

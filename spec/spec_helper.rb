@@ -57,12 +57,13 @@ def configure_profiling
       name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, '-').gsub(/-+/, '-')
       directory_name = 'build/profiles'
       Dir.mkdir(directory_name) unless File.exists?(directory_name)
-      # printer = RubyProf::CallTreePrinter.new(result)
-      printer = RubyProf::DotPrinter.new(result)
-      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.dot", 'w') do |f|
+      printer = RubyProf::CallTreePrinter.new(result)
+      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.trace", 'w') do |f|
         printer.print(f)
       end
     end
+
+    config.filter_run :profile if ENV['PROFILE']
 
     config.around(:each) do |example|
       if example.metadata[:profile] && ENV['PROFILE']

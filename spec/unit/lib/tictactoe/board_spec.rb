@@ -8,12 +8,13 @@ describe Tictactoe::Board do
   let(:board) { Tictactoe::Board.new(3, 'x', 'o') }
 
   it 'should be initialized with it size' do
-    board.size.should eq 3
+    board.number_of_spaces.should eq 9
   end
 
   it 'should let a piece be set' do
     board.place_piece('x', [0, 2])
-    board.piece_at(0, 2).should eq 'x'
+    board.available_moves.should_not include [0, 2]
+    # board.piece_at(0, 2).should eq 'x'
   end
 
   it 'should return a full array of available moves' do
@@ -49,7 +50,7 @@ describe Tictactoe::Board do
   it 'should report win information for a row victory' do
     %w(xxxo_o___ o__xxx_o_ o__o__xxx).each do |code|
       b = make_board code
-      b.winner.should eq('x'), "Failed with #{code}"
+      b.has_won?('x').should be_true, "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
     end
@@ -58,7 +59,7 @@ describe Tictactoe::Board do
   it 'should report win information for a column victory' do
     %w(x_oxo_x__ _xo_x_ox_ __x_ox_ox).each do |code|
       b = make_board code
-      b.winner.should eq('x'), "Failed with #{code}"
+      b.has_won?('x').should be_true, "Failed with #{code}"
       b.draw?.should be_false
       b.over?.should be_true
     end
@@ -66,7 +67,6 @@ describe Tictactoe::Board do
 
   it 'should report win information for a diagonal victory' do
     b = make_board 'xo__xo__x'
-    b.winner.should eq('x')
     b.has_won?('x').should be_true
     b.has_lost?('o').should be_true
     b.draw?.should be_false
@@ -75,14 +75,14 @@ describe Tictactoe::Board do
 
   it 'should report win information for a reverse diagonal victory' do
     b = make_board 'x_o_o_o_x'
-    b.winner.should eq('o')
+    b.has_won?('o').should be_true
     b.draw?.should be_false
     b.over?.should be_true
   end
 
   it 'should report a draw state' do
     b = make_board 'xoxxxooxo'
-    b.winner.should be_nil
+    b.winner_exists?.should be_false
     b.draw?.should be_true
     b.over?.should be_true
   end
@@ -104,9 +104,6 @@ describe Tictactoe::Board do
     b.winner_exists?.should be_true
   end
 
-  it 'should report its size in squares' do
-    board.number_of_spaces.should eq 9
-  end
 
   it 'should scale available moves for larger boards' do
     b = Tictactoe::Board.new(4, 'x', 'o')
@@ -141,7 +138,7 @@ describe Tictactoe::Board do
     b2 = b.hand_off
     b1.place_piece('x', [1, 1])
     b2.place_piece('x', [2, 2])
-    b2.piece_at(1, 1).should eq ''
+    b2.board[1][1].should eq ''
     b1.available_moves.should_not eq b2.available_moves
   end
 end
