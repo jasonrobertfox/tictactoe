@@ -30,8 +30,6 @@ module Tictactoe
       private
 
         def validate_players_turn(game_state)
-          puts piece
-          puts game_state.inspect
           fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
         end
 
@@ -76,7 +74,7 @@ module Tictactoe
 
         def generate_nodes(node_state, depth)
           node_state.available_moves.map do |move|
-            new_node = node_state.clone
+            new_node = node_state.hand_off
             new_node.place_piece(node_state.player_piece, move.first, move.last)
 
             Node.new minmax(new_node, depth + 1), move

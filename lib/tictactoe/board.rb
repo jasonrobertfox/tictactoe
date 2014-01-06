@@ -31,7 +31,8 @@ module Tictactoe
       if @moves_made >= 2 * size - 1
         check_for_win
       end
-      @player_piece, @opponent_piece = opponent_piece, player_piece
+      self
+
     end
 
     def piece_at(row, column)
@@ -66,13 +67,14 @@ module Tictactoe
       piece == @winner
     end
 
-    def clone
+    def hand_off
       copy = self.dup
       copy.board = deep_copy @board
       copy.available_moves = deep_copy @available_moves
+      copy.player_piece = @opponent_piece
+      copy.opponent_piece = @player_piece
       copy
     end
-
 
 
     def check_for_win
@@ -136,6 +138,8 @@ module Tictactoe
 
 
     protected
+
+    attr_writer :player_piece, :opponent_piece
 
     def board=(board)
       @board = board

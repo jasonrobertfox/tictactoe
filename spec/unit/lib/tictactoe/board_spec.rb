@@ -30,6 +30,10 @@ describe Tictactoe::Board do
     board.blank?.should be_false
   end
 
+  it 'should return itself after placing a piece' do
+    board.place_piece('x', 0, 2).should be_an_instance_of Tictactoe::Board
+  end
+
   it 'should not show a move that has been made' do
     board.place_piece('x', 0, 0)
     board.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
@@ -122,20 +126,19 @@ describe Tictactoe::Board do
     end
   end
 
-  it 'should swap player pieces when a piece is placed' do
+  it 'should swap player pieces when the board is handed off' do
     b = build_board 'xo_______'
     b.player_piece.should eq 'x'
     b.place_piece('x', 1, 1)
-    b.player_piece.should eq 'o'
-    b.opponent_piece.should eq 'x'
+    new_b = b.hand_off
+    new_b.player_piece.should eq 'o'
+    new_b.opponent_piece.should eq 'x'
   end
 
-  it 'should support duplication of a board without deep references' do
+  it 'when a board is handed off it should be a deep copy' do
     b = build_board 'xo_______'
-    b1 = b.clone
-    b2 = b.clone
-    #     b1 = Marshal.load( Marshal.dump(b))
-    # b2 = Marshal.load( Marshal.dump(b))
+    b1 = b.hand_off
+    b2 = b.hand_off
     b1.place_piece('x', 1, 1)
     b2.place_piece('x', 2, 2)
     b2.piece_at(1, 1).should eq ''
