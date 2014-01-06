@@ -122,6 +122,14 @@ describe Tictactoe::Board do
     end
   end
 
+  it 'should swap player pieces when a piece is placed' do
+    b = build_board 'xo_______'
+    b.player_piece.should eq 'x'
+    b.place_piece('x', 1, 1)
+    b.player_piece.should eq 'o'
+    b.opponent_piece.should eq 'x'
+  end
+
 end
 
 def build_board(code, size = 3)

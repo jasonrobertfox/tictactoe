@@ -4,7 +4,7 @@ module Tictactoe
   class Board
     BLANK = ''
 
-    attr_reader :size, :available_moves, :corner_spaces, :winner, :number_of_spaces
+    attr_reader :size, :available_moves, :corner_spaces, :winner, :number_of_spaces, :player_piece, :opponent_piece
 
     def initialize(size, player_piece, opponent_piece)
       validate_piece player_piece
@@ -31,6 +31,7 @@ module Tictactoe
       if @moves_made >= 2 * size - 1
         check_for_win
       end
+      @player_piece, @opponent_piece = opponent_piece, player_piece
     end
 
     def piece_at(row, column)
