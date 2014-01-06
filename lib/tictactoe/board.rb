@@ -20,7 +20,9 @@ module Tictactoe
       @corner_spaces = [0, size - 1].product([0, size - 1])
     end
 
-    def place_piece(piece, row, column)
+    def place_piece(piece, coordinate)
+      row = coordinate[0]
+      column = coordinate[1]
       @board[row][column] = piece
       @available_moves.delete([row, column])
       @has_pieces ||= true

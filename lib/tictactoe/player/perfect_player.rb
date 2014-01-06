@@ -22,7 +22,7 @@ module Tictactoe
           play_last_available_move
         else
           move = best_possible_move
-          game_state.place_piece(piece, move.first, move.last)
+          game_state.place_piece(piece, move)
           game_state
         end
       end
@@ -35,13 +35,13 @@ module Tictactoe
 
         def play_random_corner_move
           move = game_state.corner_spaces.sample
-          game_state.place_piece(piece, move.first, move.last)
+          game_state.place_piece(piece, move)
           game_state
         end
 
         def play_last_available_move
           move = game_state.available_moves[0]
-          game_state.place_piece(piece, move.first, move.last)
+          game_state.place_piece(piece, move)
           game_state
         end
 
@@ -75,7 +75,7 @@ module Tictactoe
         def generate_nodes(node_state, depth)
           node_state.available_moves.map do |move|
             new_node = node_state.hand_off
-            new_node.place_piece(node_state.player_piece, move.first, move.last)
+            new_node.place_piece(node_state.player_piece, move)
 
             Node.new minmax(new_node, depth + 1), move
           end

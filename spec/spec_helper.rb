@@ -132,7 +132,7 @@ def make_board(code, size, player_piece, opponent_piece)
   row = 0
   column = 0
   code.split(//).each do |c|
-    board.place_piece(c, row, column) unless c == '_'
+    board.place_piece(c, [row, column]) unless c == '_'
     if column == size - 1
       column = 0
       row += 1

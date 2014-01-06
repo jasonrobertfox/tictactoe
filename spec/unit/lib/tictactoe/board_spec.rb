@@ -12,7 +12,7 @@ describe Tictactoe::Board do
   end
 
   it 'should let a piece be set' do
-    board.place_piece('x', 0, 2)
+    board.place_piece('x', [0, 2])
     board.piece_at(0, 2).should eq 'x'
   end
 
@@ -26,23 +26,23 @@ describe Tictactoe::Board do
   end
 
   it 'should not be blank if a piece has been placed on it' do
-    board.place_piece('x', 0, 2)
+    board.place_piece('x', [0, 2])
     board.blank?.should be_false
   end
 
   it 'should return itself after placing a piece' do
-    board.place_piece('x', 0, 2).should be_an_instance_of Tictactoe::Board
+    board.place_piece('x', [0, 2]).should be_an_instance_of Tictactoe::Board
   end
 
   it 'should not show a move that has been made' do
-    board.place_piece('x', 0, 0)
+    board.place_piece('x', [0, 0])
     board.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
   end
 
   it 'should report if there is only a single move left' do
     b = build_board('xoxoxox__')
     b.last_move?.should be_false
-    b.place_piece('x', 2, 1)
+    b.place_piece('x', [2, 1])
     b.last_move?.should be_true
   end
 
@@ -129,7 +129,7 @@ describe Tictactoe::Board do
   it 'should swap player pieces when the board is handed off' do
     b = build_board 'xo_______'
     b.player_piece.should eq 'x'
-    b.place_piece('x', 1, 1)
+    b.place_piece('x', [1, 1])
     new_b = b.hand_off
     new_b.player_piece.should eq 'o'
     new_b.opponent_piece.should eq 'x'
@@ -139,8 +139,8 @@ describe Tictactoe::Board do
     b = build_board 'xo_______'
     b1 = b.hand_off
     b2 = b.hand_off
-    b1.place_piece('x', 1, 1)
-    b2.place_piece('x', 2, 2)
+    b1.place_piece('x', [1, 1])
+    b2.place_piece('x', [2, 2])
     b2.piece_at(1, 1).should eq ''
     b1.available_moves.should_not eq b2.available_moves
   end
