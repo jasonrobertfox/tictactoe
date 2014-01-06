@@ -91,7 +91,7 @@ module Tictactoe
       @number_of_spaces = @size**2
       @max_index = @size - 1
       @board_range = (0..@max_index).to_a
-      @tail_range = (1..@max_index).to_a
+      # @tail_range = (1..@max_index).to_a
       @minimum_moves_required_to_win = (2 * @size) - 1
     end
 
@@ -122,11 +122,11 @@ module Tictactoe
     end
 
     def winning_row
-      @board_range.each do |row|
+      for row in 0..@max_index
         candidate = @board[row][0]
         unless candidate == BLANK
           catch(:row_fail) do
-            @tail_range.each do |column|
+            for column in 1..@max_index
               throw :row_fail unless @board[row][column] == candidate
             end
             return candidate
@@ -137,11 +137,11 @@ module Tictactoe
     end
 
     def winning_column
-      @board_range.each do |column|
+      for column in 0..@max_index
         candidate = @board[0][column]
         unless candidate == BLANK
           catch(:column_fail) do
-            @tail_range.each do |row|
+            for row in 1..@max_index
               throw :column_fail unless @board[row][column] == candidate
             end
             return candidate
@@ -153,16 +153,16 @@ module Tictactoe
 
     def winning_diagonal
       candidate = @board[0][0]
-      @board.each_with_index do |row, index|
-        return nil unless row[index] == candidate
+      for i in 0..@max_index
+        return nil unless @board[i][i] == candidate
       end
       candidate
     end
 
     def winning_reverse_diagonal
       candidate = @board[0][@max_index]
-      @board.each_with_index do |row, index|
-        return nil unless row[@max_index - index] == candidate
+      for i in 0..@max_index
+        return nil unless @board[i][@max_index - i] == candidate
       end
       candidate
     end
