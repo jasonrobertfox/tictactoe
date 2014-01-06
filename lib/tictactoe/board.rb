@@ -67,8 +67,9 @@ module Tictactoe
     end
 
     def clone
-      copy = super
+      copy = self.dup
       copy.board = deep_copy @board
+      copy.available_moves = deep_copy @available_moves
       copy
     end
 
@@ -140,12 +141,15 @@ module Tictactoe
       @board = board
     end
 
+    def available_moves=(moves)
+      @available_moves = moves
+    end
+
     private
 
     def deep_copy(value)
       if value.is_a?(Array)
-        result = value.clone
-        result.clear
+        result = []
         value.each { |v| result << deep_copy(v) }
         result
       else

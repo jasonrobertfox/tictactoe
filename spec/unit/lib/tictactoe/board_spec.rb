@@ -117,7 +117,7 @@ describe Tictactoe::Board do
       column: '_xooox___x___x__'
     }
     win_boards.each do |name, code|
-      b = build_board code, 4
+      b = make_board code, 4, 'x', 'o'
       b.has_won?('x').should be_true
     end
   end
@@ -139,5 +139,6 @@ describe Tictactoe::Board do
     b1.place_piece('x', 1, 1)
     b2.place_piece('x', 2, 2)
     b2.piece_at(1, 1).should eq ''
+    b1.available_moves.should_not eq b2.available_moves
   end
 end

@@ -23,23 +23,28 @@ module Tictactoe
         else
           move = best_possible_move
           game_state.place_piece(piece, move.first, move.last)
+          game_state
         end
       end
 
       private
 
         def validate_players_turn(game_state)
+          puts piece
+          puts game_state.inspect
           fail ArgumentError, 'It is not this player\'s turn.' if piece != game_state.player_piece
         end
 
         def play_random_corner_move
           move = game_state.corner_spaces.sample
           game_state.place_piece(piece, move.first, move.last)
+          game_state
         end
 
         def play_last_available_move
           move = game_state.available_moves[0]
           game_state.place_piece(piece, move.first, move.last)
+          game_state
         end
 
         def last_available_move
@@ -47,7 +52,7 @@ module Tictactoe
         end
 
         def best_possible_move
-          @base_score = game_state.board_size**2 + 1
+          @base_score = game_state.number_of_spaces + 1
           minmax(game_state, 0)
           @current_move_choice
         end
@@ -71,7 +76,9 @@ module Tictactoe
 
         def generate_nodes(node_state, depth)
           node_state.available_moves.map do |move|
-            new_node = node_state.player_piece(node_state.player_piece, move.first, move.last)
+            new_node = node_state.clone
+            new_node.place_piece(node_state.player_piece, move.first, move.last)
+
             Node.new minmax(new_node, depth + 1), move
           end
         end

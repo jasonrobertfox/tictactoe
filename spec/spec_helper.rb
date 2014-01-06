@@ -57,8 +57,9 @@ def configure_profiling
       name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, '-').gsub(/-+/, '-')
       directory_name = 'build/profiles'
       Dir.mkdir(directory_name) unless File.exists?(directory_name)
-      printer = RubyProf::CallTreePrinter.new(result)
-      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.trace", 'w') do |f|
+      # printer = RubyProf::CallTreePrinter.new(result)
+      printer = RubyProf::DotPrinter.new(result)
+      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.dot", 'w') do |f|
         printer.print(f)
       end
     end
@@ -113,8 +114,9 @@ PlayerStub = Struct.new(:piece)
 
 def get_game_state(board, player_piece)
   opponent_piece = player_piece == 'x' ? 'o' : 'x'
-  board = build_board(board.flatten.map { |i| i == '' ? '_' : i }.join)
-  Tictactoe::Board.new(3, player_piece, opponent_piece)
+  board = make_board(board.flatten.map { |i| i == '' ? '_' : i }.join, 3, player_piece, opponent_piece)
+  puts board.inspect
+  board
 end
 
 # def get_alternative_game_state
@@ -125,8 +127,13 @@ def get_blank_board
   Array.new(3) { Array.new(3, '') }
 end
 
-def build_board(code, size = 3)
-  board = Tictactoe::Board.new(size, 'x', 'o')
+def build_board(code)
+  make_board(code, 3, 'x', 'o')
+end
+
+def make_board(code, size, player_piece, opponent_piece)
+  puts player_piece
+  board = Tictactoe::Board.new(size, player_piece, opponent_piece)
   row = 0
   column = 0
   code.split(//).each do |c|
