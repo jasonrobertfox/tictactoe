@@ -66,6 +66,14 @@ module Tictactoe
       piece == @winner
     end
 
+    def clone
+      copy = super
+      copy.board = deep_copy @board
+      copy
+    end
+
+
+
     def check_for_win
       @winner = winning_row || winning_column || winning_diagonal || winning_reverse_diagonal
     end
@@ -122,6 +130,27 @@ module Tictactoe
         return nil unless row[size - index - 1] == candidate
       end
       candidate
+    end
+
+
+
+    protected
+
+    def board=(board)
+      @board = board
+    end
+
+    private
+
+    def deep_copy(value)
+      if value.is_a?(Array)
+        result = value.clone
+        result.clear
+        value.each { |v| result << deep_copy(v) }
+        result
+      else
+        value
+      end
     end
 
   end

@@ -130,6 +130,17 @@ describe Tictactoe::Board do
     b.opponent_piece.should eq 'x'
   end
 
+  it 'should support duplication of a board without deep references' do
+    b = build_board 'xo_______'
+    b1 = b.clone
+    b2 = b.clone
+    #     b1 = Marshal.load( Marshal.dump(b))
+    # b2 = Marshal.load( Marshal.dump(b))
+    b1.place_piece('x', 1, 1)
+    b2.place_piece('x', 2, 2)
+    b2.piece_at(1, 1).should eq ''
+  end
+
 end
 
 def build_board(code, size = 3)
