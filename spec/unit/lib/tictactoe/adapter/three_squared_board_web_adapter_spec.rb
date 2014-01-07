@@ -26,4 +26,10 @@ describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
       test_adapter.get_response(test_request('x', [['x', 'x', ''], ['o', 'o', ''], %w(x o)]))
     end.to raise_error ArgumentError, 'Board given contains less than 9 spaces.'
   end
+
+  it 'should raise an error if the board contains pieces other than the player pieces' do
+    expect do
+      test_adapter.get_response(test_request('x', [['b', 'x', ''], ['o', 'o', ''], %w(x o j)]))
+    end.to raise_error ArgumentError, 'Pieces in board must be either x, o or blank.'
+  end
 end

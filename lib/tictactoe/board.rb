@@ -17,9 +17,11 @@ module Tictactoe
     end
 
     def place_piece(piece, coordinate)
-      @board[coordinate.first][coordinate.last] = piece
-      update_moves(coordinate)
-      check_for_win if win_possible?
+      unless piece == BLANK
+        @board[coordinate.first][coordinate.last] = piece
+        update_moves(coordinate)
+        check_for_win if win_possible?
+      end
       self
     end
 

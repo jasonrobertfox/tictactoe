@@ -14,7 +14,11 @@ describe Tictactoe::Board do
   it 'should let a piece be set' do
     board.place_piece('x', [0, 2])
     board.available_moves.should_not include [0, 2]
-    # board.piece_at(0, 2).should eq 'x'
+  end
+
+  it 'should not place blank pieces' do
+    board.place_piece('', [0, 2])
+    board.available_moves.count.should eq 9
   end
 
   it 'should return a full array of available moves' do
