@@ -66,6 +66,12 @@ GEM
       guard (~> 2.0)
       rubocop (~> 0.10)
     http_parser.rb (0.5.3)
+    jasmine (2.0.0)
+      jasmine-core (~> 2.0.0)
+      phantomjs
+      rack (>= 1.2.1)
+      rake
+    jasmine-core (2.0.0)
     jsmin (1.0.1)
     listen (2.4.0)
       celluloid (>= 0.15.2)
@@ -81,6 +87,7 @@ GEM
     parser (2.1.2)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
+    phantomjs (1.9.2.1)
     poltergeist (1.5.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -185,6 +192,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   guard-shotgun!
+  jasmine
   poltergeist
   rake
   reek

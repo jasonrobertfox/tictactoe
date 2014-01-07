@@ -6,25 +6,24 @@ require 'tictactoe/board_factory'
 module Tictactoe
   module Adapter
     class ThreeSquaredBoardWebAdapter
-      attr_reader :board_width, :player_one, :player_two
+      attr_reader :board_width
 
       BOARD_WIDTH = 3
 
-      def initialize(player_one, player_two)
+      def initialize
         @board_width = BOARD_WIDTH
-        @player_one = player_one
-        @player_two = player_two
         @rows = %w(top middle bottom)
         @columns = %w(left center right)
       end
 
       def get_response(request_data)
         validate_request_data(request_data)
-        turn_piece = request_data['piece']
+        player_piece = request_data['player_piece']
+        opponent_piece = request_data['opponent_piece']
         board_data = request_data['board']
-        board = create_board(turn_piece, board_data)
+        board = create_board(player_piece, opponent_piece, board_data)
         unless board.over?
-          board = Tictactoe::Player::PerfectPlayer.new(turn_piece).take_turn(board)
+          board = Tictactoe::Player::PerfectPlayer.new(player_piece).take_turn(board)
         end
         create_response board
       end
@@ -32,20 +31,20 @@ module Tictactoe
       private
 
       def validate_request_data(request_data)
-        piece = request_data['piece']
+        player_piece = request_data['player_piece']
+        opponent_piece = request_data['opponent_piece']
         board = request_data['board']
-        fail ArgumentError, "Piece was not defined as either #{player_one} or #{player_two}." unless piece && (piece == player_one || piece == player_two)
+        fail ArgumentError, "Provided pieces need to be different." if player_piece && opponent_piece && (player_piece == opponent_piece)
         fail ArgumentError, "Board given contains less than #{board_width**2} spaces." unless board.count == board_width**2
         board.each do |i|
-          unless [player_one, player_two, ''].include?(i['value'])
-            fail ArgumentError, "Pieces in board must be either #{player_one}, #{player_two} or blank."
+          unless [player_piece, opponent_piece, ''].include?(i['value'])
+            fail ArgumentError, "Pieces in board must be either #{player_piece}, #{opponent_piece} or blank."
           end
         end
       end
 
-      def create_board(turn_piece, board_data)
-        opponent_piece = turn_piece == player_one ? player_two : player_one
-        board = Tictactoe::BoardFactory.build(board_width, turn_piece, opponent_piece)
+      def create_board(player_piece, opponent_piece, board_data)
+        board = Tictactoe::BoardFactory.build(board_width, player_piece, opponent_piece)
         board_data.each do |space|
           board.place_piece space['value'], id_to_coordinate(space['id'])
         end

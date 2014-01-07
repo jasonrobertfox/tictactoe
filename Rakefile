@@ -47,3 +47,5 @@ RSpec::Core::RakeTask.new(:system) do |t|
   t.pattern = FileList['spec/system/**/*_spec.rb']
   t.rspec_opts = get_rspec_flags('system')
 end
+require 'jasmine'
+load 'jasmine/tasks/jasmine.rake'

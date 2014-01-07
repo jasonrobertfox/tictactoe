@@ -20,6 +20,7 @@ group :test do
   gem 'capybara', '2.1.0'
   gem 'poltergeist'
   gem 'ruby-prof'
+  gem 'jasmine'
 end
 
 group :development do

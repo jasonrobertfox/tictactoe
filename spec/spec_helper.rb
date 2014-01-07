@@ -87,11 +87,11 @@ configure_profiling
 
 # Other general helper functions
 def test_adapter
-  Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
+  Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new
 end
 
-def test_request(piece, data)
-  { 'piece' => piece, 'board' => test_board_data(data) }
+def test_request(player_piece, opponent_piece, data)
+  { 'player_piece' => player_piece, 'opponent_piece' => opponent_piece, 'board' => test_board_data(data) }
 end
 
 def test_board_data(data)
