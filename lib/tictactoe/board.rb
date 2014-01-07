@@ -7,13 +7,9 @@ module Tictactoe
     attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board, :winner
 
     def initialize(size, player_piece, opponent_piece)
-      @player_piece = player_piece
-      @opponent_piece = opponent_piece
-      @size = size
-
-      initialize_helper_values
-      initialize_board
-      initialize_move_data
+      @player_piece, @opponent_piece, @size = player_piece, opponent_piece, size
+      @board = Array.new(@size) { Array.new(@size, BLANK) }
+      initialize_board_meta_data
     end
 
     def place_piece(piece, coordinate)
@@ -74,20 +70,13 @@ module Tictactoe
 
     private
 
-    def initialize_helper_values
-      @number_of_spaces = @size**2
+    def initialize_board_meta_data
+      @moves_made = 0
       @max_index = @size - 1
+      @number_of_spaces = @size**2
+      @moves_left = @number_of_spaces
       @board_range = (0..@max_index).to_a
       @minimum_moves_required_to_win = (2 * @size) - 1
-    end
-
-    def initialize_board
-      @board = Array.new(@size) { Array.new(@size, '') }
-    end
-
-    def initialize_move_data
-      @moves_left = @number_of_spaces
-      @moves_made = 0
       @available_moves = @board_range.product(@board_range)
       @corner_spaces = [0, @max_index].product([0, @max_index])
     end
