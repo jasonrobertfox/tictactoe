@@ -23,9 +23,13 @@ module Tictactoe
         turn_piece = extract_turn_piece_from_request(request_data)
         validate_board_data(request_data)
         board = create_board(turn_piece, request_data)
-        validate_board(board)
-        new_board = Tictactoe::Player::PerfectPlayer.new(turn_piece).take_turn(board)
-        create_response new_board
+
+
+        unless board.over?
+          board = Tictactoe::Player::PerfectPlayer.new(turn_piece).take_turn(board)
+        end
+
+        create_response board
       end
 
       private
@@ -58,19 +62,29 @@ module Tictactoe
         board
       end
 
-      def validate_board(board)
-        fail ArgumentError, 'Nothing to do, the board provided is a draw.' if board.draw?
-        fail ArgumentError, 'Nothing to do, there is already a winner.' if board.winner_exists?
-      end
-
       def create_response(board)
         board_data = []
         board.board.each_with_index do |row, r|
           row.each_with_index do |value, c|
-            board_data.push('id' => "#{@rows[r]}-#{@columns[c]}", 'value' => value)
+            space_data = { 'id' => "#{@rows[r]}-#{@columns[c]}", 'value' => value }
+            if board.winner_exists? && board.winning_line.include?([r, c])
+              space_data['winning_space'] = 'true'
+            end
+            board_data.push(space_data)
           end
         end
-        { piece: board.player_piece, board: board_data }
+        response = { piece: board.player_piece, board: board_data, status: game_status(board) }
+        if board.winner_exists?
+          response[:winner] = board.winner
+        end
+        response
+
+      end
+
+      def game_status(board)
+        return 'draw' if board.draw?
+        return 'win' if board.winner_exists?
+        'active'
       end
     end
   end

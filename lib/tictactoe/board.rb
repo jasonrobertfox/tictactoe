@@ -4,7 +4,7 @@ module Tictactoe
   class Board
     BLANK = ''
 
-    attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board
+    attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board, :winner
 
     def initialize(size, player_piece, opponent_piece)
       @player_piece = player_piece
@@ -102,18 +102,26 @@ module Tictactoe
     end
 
     def check_for_win
-      @winner = winning_row(@board) || winning_row(@board.transpose) || winning_diagonal || winning_reverse_diagonal
+      @winner = winning_row(@board) || winning_column || winning_diagonal || winning_reverse_diagonal
     end
 
     def winning_row(board)
       board.each_with_index do |row, i|
         candidate = row[0]
         if candidate != BLANK && row.count(candidate) == @size
-          @winning_line = @board_range.product([i]) if @gather_line
+          @winning_line = [i].product(@board_range) if @gather_line
           return candidate
         end
       end
       nil
+    end
+
+    def winning_column
+      result = winning_row(@board.transpose)
+      if result && @gather_line
+        @winning_line.map! { |i| i.reverse } if @gather_line
+      end
+      result
     end
 
     def winning_diagonal

@@ -135,8 +135,8 @@ describe Tictactoe::Board do
   end
 
   it 'should return a list of the winning coordinates for a row win' do
-    b = test_board '_xo_x_ox_'
-    b.winning_line.should eq [[0, 1], [1, 1], [2, 1]]
+    b = test_board 'o__xxx_o_'
+    b.winning_line.should eq [[1, 0], [1, 1], [1, 2]]
   end
 
   it 'should return a list of the winning coordinates for a column win' do
@@ -152,6 +152,11 @@ describe Tictactoe::Board do
   it 'should return a list of the winning coordinates for a diagonal win' do
     b = test_board 'x_o_o_o_x'
     b.winning_line.should eq [[0, 2], [1, 1], [2, 0]]
+  end
+
+  it 'should return the winning piece' do
+    b = test_board 'x_o_o_o_x'
+    b.winner.should eq 'o'
   end
 
 end
