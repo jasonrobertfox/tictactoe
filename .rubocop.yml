@@ -4,8 +4,8 @@ LineLength:
 MethodLength:
   Max: 30
 
-SymbolName:
-  AllowCamelCase: false
+ClassLength:
+  Max: 200
 
 Documentation:
   Enabled: false
