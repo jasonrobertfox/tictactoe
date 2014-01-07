@@ -128,4 +128,30 @@ describe Tictactoe::Board do
     b2.board[1][1].should eq ''
     b1.available_moves.should_not eq b2.available_moves
   end
+
+  it 'should return nil for a board with no winning pieces' do
+    b = test_board 'xo_______'
+    b.winning_line.should be_nil
+  end
+
+  it 'should return a list of the winning coordinates for a row win' do
+    b = test_board '_xo_x_ox_'
+    b.winning_line.should eq [[0, 1], [1, 1], [2, 1]]
+  end
+
+  it 'should return a list of the winning coordinates for a column win' do
+    b = test_board '__x_ox_ox'
+    b.winning_line.should eq [[0, 2], [1, 2], [2, 2]]
+  end
+
+  it 'should return a list of the winning coordinates for a diagonal win' do
+    b = test_board 'xo__xo__x'
+    b.winning_line.should eq [[0, 0], [1, 1], [2, 2]]
+  end
+
+  it 'should return a list of the winning coordinates for a diagonal win' do
+    b = test_board 'x_o_o_o_x'
+    b.winning_line.should eq [[0, 2], [1, 1], [2, 0]]
+  end
+
 end

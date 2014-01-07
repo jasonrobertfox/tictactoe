@@ -99,7 +99,7 @@ describe Tictactoe::Player::PerfectPlayer do
   it 'should always draw when playing itself', :skip do
     players = { 'x' => Tictactoe::Player::PerfectPlayer.new('x'), 'o' => Tictactoe::Player::PerfectPlayer.new('o') }
     results = []
-    (1..2).each do
+    (1..10).each do
       board = test_board('_________')
       while board.over? == false
         board = players[board.player_piece].take_turn(board)

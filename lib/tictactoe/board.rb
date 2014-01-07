@@ -51,6 +51,12 @@ module Tictactoe
       piece == @winner
     end
 
+    def winning_line
+      @gather_line = true
+      check_for_win
+      @winning_line
+    end
+
     def hand_off
       copy = dup
       copy.board = @board.map { |i| i.dup }
@@ -100,25 +106,32 @@ module Tictactoe
     end
 
     def winning_row(board)
-      board.each do |row|
+      board.each_with_index do |row, i|
         candidate = row[0]
-        return candidate if candidate != BLANK && row.count(candidate) == @size
+        if candidate != BLANK && row.count(candidate) == @size
+          @winning_line = @board_range.product([i]) if @gather_line
+          return candidate
+        end
       end
       nil
     end
 
     def winning_diagonal
-      check_diagonal(@board[0][0]) { |i| @board[i][i] }
+      check_diagonal(@board[0][0]) { |i| i }
     end
 
     def winning_reverse_diagonal
-      check_diagonal(@board[@max_index][0]) { |i| @board[i][@max_index - i] }
+      check_diagonal(@board[@max_index][0]) { |i| @max_index - i }
     end
 
     def check_diagonal(candidate)
+      diagonal = []
       (0..@max_index).each do |i|
-        return nil unless (yield i) == candidate
+        column = yield i
+        return nil unless candidate != BLANK && @board[i][column] == candidate
+        diagonal << [i, column] if @gather_line
       end
+      @winning_line = diagonal if diagonal.count == @size
       candidate
     end
   end
