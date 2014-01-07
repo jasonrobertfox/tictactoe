@@ -66,13 +66,13 @@ class TictactoeWebApp < Sinatra::Base
   end
 
   # This API conforms to message specifications as defined by http://labs.omniti.com/labs/jsend
-  namespace '/api/v1', layout: false do
+  namespace '/api/v2', layout: false do
 
     post '/play' do
       begin
         content_type :json
         content = JSON.parse request.body.read
-        web_adapter = Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
+        web_adapter = Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new
         return_success web_adapter.get_response(content)
       rescue ArgumentError => error
         return_fail error.message
