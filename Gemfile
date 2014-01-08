@@ -20,6 +20,8 @@ group :test do
   gem 'capybara', '2.1.0'
   gem 'poltergeist'
   gem 'ruby-prof'
+  gem 'jasmine', '1.3.2'
+  gem 'jasmine-phantom'
 end
 
 group :development do
@@ -31,5 +33,4 @@ group :development do
   gem 'blam'
   gem 'flay'
   gem 'reek'
-  gem 'jasmine', '1.3.2'
 end

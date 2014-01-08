@@ -8,7 +8,7 @@ task default: :build_full
 task build: [:clean, :prepare, :quality, :test]
 
 desc 'Runs standard build activities.'
-task build_full: [:build, :system]
+task build_full: [:build, :js, :system]
 
 desc 'Runs quality checks.'
 task quality: [:rubocop]
@@ -50,5 +50,13 @@ RSpec::Core::RakeTask.new(:system) do |t|
   t.pattern = FileList['spec/system/**/*_spec.rb']
   t.rspec_opts = get_rspec_flags('system')
 end
+
 require 'jasmine'
 load 'jasmine/tasks/jasmine.rake'
+
+require 'jasmine-phantom/server'
+load 'jasmine-phantom/tasks.rake'
+
+task :js do
+  Rake::Task['jasmine:phantom:ci'].invoke
+end
