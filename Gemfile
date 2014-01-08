@@ -31,4 +31,5 @@ group :development do
   gem 'blam'
   gem 'flay'
   gem 'reek'
+  gem 'jasmine', '1.3.2'
 end

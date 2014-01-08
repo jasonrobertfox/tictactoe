@@ -17,7 +17,7 @@ end
 
 describe 'tic tac toe api behavior' do
   it 'should return an error if provided pieces are different' do
-    data = { player_piece: 'b', opponent_piece: 'b'}
+    data = { player_piece: 'b', opponent_piece: 'b' }
     result = post_json('/api/v2/play', data)
     expect(last_response.status).to be 400
     result['status'].should eq 'fail'

@@ -18,6 +18,9 @@ Rubocop::RakeTask.new
 desc 'Removes the build directory.'
 task :clean do
   FileUtils.rm_rf 'build'
+  FileUtils.rm_rf '.bundle'
+  FileUtils.rm_rf '.sass-cache'
+  FileUtils.rm_rf 'tmp'
 end
 desc 'Creates a basic build directory.'
 task :prepare do

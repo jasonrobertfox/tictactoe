@@ -34,7 +34,7 @@ module Tictactoe
         player_piece = request_data['player_piece']
         opponent_piece = request_data['opponent_piece']
         board = request_data['board']
-        fail ArgumentError, "Provided pieces need to be different." if player_piece && opponent_piece && (player_piece == opponent_piece)
+        fail ArgumentError, 'Provided pieces need to be different.' if player_piece && opponent_piece && (player_piece == opponent_piece)
         fail ArgumentError, "Board given contains less than #{board_width**2} spaces." unless board.count == board_width**2
         board.each do |i|
           unless [player_piece, opponent_piece, ''].include?(i['value'])
