@@ -37,7 +37,7 @@ describe 'tic tac toe api behavior' do
     result = post_json('/api/v2/play', data)
     expect(last_response.status).to be 200
     result['status'].should eq 'success'
-    result['data']['piece'].should eq 'o'
+    result['data']['player_piece'].should eq 'o'
     result['data']['board'].count { |space| space['value'] != '' }.should eq 7
   end
 

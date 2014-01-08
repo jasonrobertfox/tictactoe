@@ -65,13 +65,13 @@
     }
 }
 
-$board-border: 2px solid #eee;
+$board-border: 2px solid #DCEBDF;
 
-#top-left, #top-center, #top-right, #middle-left, #middle-center, #middle-right{
+.top-left, .top-center, .top-right, .middle-left, .middle-center, .middle-right{
     border-bottom: $board-border;
 }
 
-#top-left, #top-center, #middle-left, #middle-center, #bottom-left, #bottom-center{
+.top-left, .top-center, .middle-left, .middle-center, .bottom-left, .bottom-center{
     border-right: $board-border;
 }
 
@@ -115,11 +115,29 @@ $board-border: 2px solid #eee;
     }
 }
 
-.selected{
-    color: $primary-color;
+$computer-color: #624C47;
+$human-color: #AFD9C8;
+
+.human {
+    color: $human-color;
 }
 
+a.human:hover {
+    color: darken($human-color, 10%);
+}
+
+.computer {
+    color: $computer-color;
+}
+
+a.computer:hover {
+    color: darken($computer-color, 10%);
+}
+
+.space {
+        color: #DCEBDF;
+    }
+
 .winning{
-    background-color: $secondary-color;
-    border: 2px solid $secondary-color;
+    color: #F7374B;
 }

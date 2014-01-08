@@ -21,7 +21,8 @@ describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
 
   it 'should return a response with a new game state and win information if the turn completes the game' do
     response = test_adapter.get_response(test_request('x', 'o', [['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]))
-    response[:piece].should eq 'o'
+    response[:player_piece].should eq 'o'
+    response[:opponent_piece].should eq 'x'
     response[:board].count { |space| space[:value] != '' }.should eq 7
     response[:status].should eq 'win'
     response[:winner].should eq 'x'
@@ -32,7 +33,8 @@ describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
 
   it 'should return a response with a new game state and show active status if the game is ongoing' do
     response = test_adapter.get_response(test_request('x', 'o', [['x', '', ''], ['o', 'o', ''], ['x', '', '']]))
-    response[:piece].should eq 'o'
+    response[:player_piece].should eq 'o'
+    response[:opponent_piece].should eq 'x'
     response[:board].count { |space| space[:value] != '' }.should eq 5
     response[:status].should eq 'active'
     response[:winner].should be_nil

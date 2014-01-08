@@ -18,7 +18,7 @@ describe 'tic tac toe web application' do
     page.should_not have_content 'Go.'
     find('#start-human').click
     page.should have_content 'Go.'
-    find('#top-left').click
+    find('.top-left').click
     page.should have_css('.space i[title=x]')
   end
 

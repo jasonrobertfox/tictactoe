@@ -52,7 +52,7 @@ module Tictactoe
       end
 
       def create_response(board)
-        { piece: board.player_piece, board: make_board_data(board) }.merge(make_meta_data(board))
+        { player_piece: board.player_piece, opponent_piece: board.opponent_piece, board: make_board_data(board) }.merge(make_meta_data(board))
       end
 
       def make_board_data(board)
