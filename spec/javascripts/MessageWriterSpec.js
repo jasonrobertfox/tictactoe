@@ -4,31 +4,37 @@ describe('MessageWriter', function() {
     ce = $('<p id="computer">You Start</p>');
     he = $('<p id="human">You Start</p>');
     pe = $('<p id="prompt">You Start</p>');
-    mw = new MessageWriter(ce, he, pe);
+    reporter = new Reporter(ce, he, pe);
   });
 
 
   it('Should be constructed', function() {
-    expect(mw).toBeDefined();
+    expect(reporter).toBeDefined();
   });
 
-  it('Can update the message for the computer', function() {
-    mw.setComputerMessage('Computer Message');
-    expect(ce).toContainText('Computer Message');
+  it('Can set the start messages.', function() {
+    reporter.start();
+    expect(ce).toContainText('You start over.');
+    expect(he).toContainText('I\'ll start over.');
   });
 
-  it('Can update the message for the human', function() {
-    mw.setHumanMessage('Human Message');
-    expect(he).toContainText('Human Message');
+  it('Can set go', function() {
+    reporter.updateStatus('active');
+    expect(pe).toContainText('Go.');
   });
 
-  it('Can set the prompt message', function() {
-    mw.setPromptMessage('Prompt Message');
-    expect(pe).toContainText('Prompt Message');
+  it('Can set draw', function() {
+    reporter.updateStatus('draw');
+    expect(pe).toContainText('It\'s a draw.');
   });
 
-  it('Can update the prompt to thinking', function() {
-    mw.think();
+  it('Can set win', function() {
+    reporter.updateStatus('win');
+    expect(pe).toContainText('I win.');
+  });
+
+  it('Can think', function() {
+    reporter.think();
     expect(pe).toContainHtml('<i class="fa fa-cog fa-spin fa-2x"></i>');
   });
 
@@ -36,14 +42,13 @@ describe('MessageWriter', function() {
 
 
 
-describe('Player', function(){
+describe('Player', function() {
   it('Should be constructed', function() {
     firstPlayer = new Player('x', 'fa-times');
     expect(firstPlayer.piece).toBe('x');
     expect(firstPlayer.iconClass).toBe('fa-times');
   });
 });
-
 
 
 
@@ -73,13 +78,18 @@ describe('Board', function() {
 
   it('can be read', function() {
     board = new Board(dirtyBoard);
-    data = [{
-      id: 'top-left',
-      value: 'x'
-    }, {
-      id: 'top-right',
-      value: 'o'
-    }];
+    board.startWith(secondPlayer, firstPlayer);
+    data = {
+      player_piece: 'x',
+      opponent_piece: 'o',
+      board: [{
+        id: 'top-left',
+        value: 'x'
+      }, {
+        id: 'top-right',
+        value: 'o'
+      }]
+    };
     expect(board.read()).toEqual(data);
   });
 
@@ -125,7 +135,7 @@ describe('Board', function() {
     expect(blankBoard).toBeMatchedBy('#top-left.fa.hover.fa-times');
   });
 
-  it('will not override a selected space', function(){
+  it('will not override a selected space', function() {
     partialBoard = $('<i id="top-left" class="fa fa-circle-o computer" title="o"></i><i id="top-right" class="fa"></i>');
     board = new Board(partialBoard);
     board.enable();
@@ -133,7 +143,7 @@ describe('Board', function() {
     expect(partialBoard).not.toBeMatchedBy('#top-left.fa.hover.fa-times');
   });
 
-  it('will set the correct pieces if begin human', function(){
+  it('will set the correct pieces if begin human', function() {
     board = new Board(blankBoard);
     board.startWith(firstPlayer, secondPlayer);
     board.enable();
@@ -141,7 +151,7 @@ describe('Board', function() {
     expect(blankBoard).toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
   });
 
-  it('will set the correct pieces if begin computer', function(){
+  it('will set the correct pieces if begin computer', function() {
     board = new Board(blankBoard);
     board.startWith(secondPlayer, firstPlayer);
     board.enable();
