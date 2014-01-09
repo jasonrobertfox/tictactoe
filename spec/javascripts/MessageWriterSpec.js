@@ -34,47 +34,26 @@ describe('MessageWriter', function() {
 
 });
 
-// describe('Game', function(){
-//   beforeEach(function(){
-//     blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>')
-//     dirtyBoard = $('<i id="top-left" title="x" class="fa fa-times human"></i><i id="top-right" title="o" class="fa fa-circleo computer"></i>')
-//     tests = $('<i id="top-left" title="x" class="fa fa-times human">')
-//   });
 
-//   it('Should be constructed', function(){
-//       game = new Game(blankBoard, messageWriter);
-//       expect(game).toBeDefined();
-//   });
 
-//   it('should start a game by resetting the board', function(){
-//     game = new Game(dirtyBoard, messageWriter);
-//     game.humanStart();
-//     expect(dirtyBoard).not.toHaveClass('fa-times');
-//     expect(dirtyBoard).not.toHaveClass('fa-circleo');
-//     expect(dirtyBoard).not.toHaveClass('human');
-//     expect(dirtyBoard).not.toHaveClass('computer');
-//     expect(dirtyBoard).toHaveProp('title', '');
-//     expect(messageWriter.setComputerMessage).toHaveBeenCalled();
-//     expect(messageWriter.setHumanMessage).toHaveBeenCalled();
-//     expect(messageWriter.setPromptMessage).toHaveBeenCalled();
-//   });
+describe('Player', function(){
+  it('Should be constructed', function() {
+    firstPlayer = new Player('x', 'fa-times');
+    expect(firstPlayer.piece).toBe('x');
+    expect(firstPlayer.iconClass).toBe('fa-times');
+  });
+});
 
-//   it('should start a computer game by resetting the board', function(){
-//     game = new Game(dirtyBoard);
-//     game.computerStart();
-//     expect(dirtyBoard).not.toHaveClass('fa-times');
-//     expect(dirtyBoard).not.toHaveClass('fa-circleo');
-//     expect(dirtyBoard).not.toHaveClass('human');
-//     expect(dirtyBoard).not.toHaveClass('computer');
-//     expect(dirtyBoard).toHaveProp('title', '');
-//     expect(messageWriter.setComputerMessage).toHaveBeenCalled();
-//     expect(messageWriter.setHumanMessage).toHaveBeenCalled();
-//   });
-// });
+
+
 
 describe('Board', function() {
   beforeEach(function() {
     dirtyBoard = $('<i id="top-left" title="x" class="fa fa-times human"></i><i id="top-right" title="o" class="fa fa-circle-o computer"></i>');
+    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
+    selectedSpace = $('<i id="top-left"></i>');
+    firstPlayer = new Player('x', 'fa-times');
+    secondPlayer = new Player('o', 'fa-circle-o');
   });
 
   it('Should be constructed', function() {
@@ -105,8 +84,8 @@ describe('Board', function() {
   });
 
   it('can write to dom', function() {
-    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
     board = new Board(blankBoard);
+    board.startWith(firstPlayer, secondPlayer);
     data = {
       player_piece: 'x',
       opponent_piece: 'o',
@@ -125,39 +104,49 @@ describe('Board', function() {
   });
 
   it('can register a space click when enabled', function() {
-    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
-    clickedSpace = $('<i id="top-left"></i>');
     board = new Board(blankBoard);
     board.enable();
-    board.registerHumanClick(clickedSpace);
+    board.registerHumanClick(selectedSpace);
     expect(blankBoard).toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
   });
 
-  it('can be disabled', function() {
-    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
-    clickedSpace = $('<i id="top-left"></i>');
+  it('is disabled by default', function() {
     board = new Board(blankBoard);
-    board.disable();
-    board.registerHumanClick(clickedSpace);
+    board.startWith(firstPlayer, secondPlayer);
+    board.registerHumanClick(selectedSpace);
     expect(blankBoard).not.toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
   });
 
   it('can hover when enabled', function() {
-    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
-    hoverSpace = $('<i id="top-left"></i>');
     board = new Board(blankBoard);
+    board.startWith(firstPlayer, secondPlayer);
     board.enable();
-    board.registerHumanHover(hoverSpace);
+    board.registerHumanHover(selectedSpace);
     expect(blankBoard).toBeMatchedBy('#top-left.fa.hover.fa-times');
   });
 
   it('will not override a selected space', function(){
-    blankBoard = $('<i id="top-left" class="fa fa-circle-o computer" title="o"></i><i id="top-right" class="fa"></i>');
-    hoverSpace = $('<i id="top-left"></i>');
-    board = new Board(blankBoard);
+    partialBoard = $('<i id="top-left" class="fa fa-circle-o computer" title="o"></i><i id="top-right" class="fa"></i>');
+    board = new Board(partialBoard);
     board.enable();
-    board.registerHumanHover(hoverSpace);
-    expect(blankBoard).not.toBeMatchedBy('#top-left.fa.hover.fa-times');
+    board.registerHumanHover(selectedSpace);
+    expect(partialBoard).not.toBeMatchedBy('#top-left.fa.hover.fa-times');
+  });
+
+  it('will set the correct pieces if begin human', function(){
+    board = new Board(blankBoard);
+    board.startWith(firstPlayer, secondPlayer);
+    board.enable();
+    board.registerHumanClick(selectedSpace);
+    expect(blankBoard).toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
+  });
+
+  it('will set the correct pieces if begin computer', function(){
+    board = new Board(blankBoard);
+    board.startWith(secondPlayer, firstPlayer);
+    board.enable();
+    board.registerHumanClick(selectedSpace);
+    expect(blankBoard).toBeMatchedBy('#top-left.fa.human.fa-circle-o[title=o]');
   });
 
 
