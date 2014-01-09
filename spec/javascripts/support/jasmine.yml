@@ -12,9 +12,7 @@
 #
 src_files:
   - lib/assets/javascripts/vendor/jquery.js
-  - lib/assets/javascripts/foundation/foundation.js
-  - lib/assets/javascripts/foundation/foundation.*.js
-  - lib/assets/javascripts/tail.js
+  - lib/assets/javascripts/*.js
 
 # stylesheets
 #

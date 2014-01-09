@@ -48,7 +48,9 @@ class TictactoeWebApp < Sinatra::Base
 
     # Javascript placed before the closing <body> tag
     js :tail, [
-      '/js/foundation/foundation.js',
+      '/js/Player.js',
+      '/js/Board.js',
+      '/js/Reporter.js',
       '/js/tail.js'
     ]
 
