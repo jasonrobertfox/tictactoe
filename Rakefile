@@ -8,7 +8,7 @@ task default: :build_full
 task build: [:clean, :prepare, :quality, :test]
 
 desc 'Runs standard build activities.'
-task build_full: [:build, :system]
+task build_full: [:build, :js, :system]
 
 desc 'Runs quality checks.'
 task quality: [:rubocop]
@@ -18,6 +18,9 @@ Rubocop::RakeTask.new
 desc 'Removes the build directory.'
 task :clean do
   FileUtils.rm_rf 'build'
+  FileUtils.rm_rf '.bundle'
+  FileUtils.rm_rf '.sass-cache'
+  FileUtils.rm_rf 'tmp'
 end
 desc 'Creates a basic build directory.'
 task :prepare do
@@ -46,4 +49,14 @@ RSpec::Core::RakeTask.new(:system) do |t|
   ENV['COVERAGE'] = 'false'
   t.pattern = FileList['spec/system/**/*_spec.rb']
   t.rspec_opts = get_rspec_flags('system')
+end
+
+require 'jasmine'
+load 'jasmine/tasks/jasmine.rake'
+
+require 'jasmine-phantom/server'
+load 'jasmine-phantom/tasks.rake'
+
+task :js do
+  Rake::Task['jasmine:phantom:ci'].invoke
 end
