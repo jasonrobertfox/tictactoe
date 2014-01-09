@@ -27,4 +27,14 @@ describe 'tic tac toe web application' do
     page.should have_css('.space i[title=x]')
   end
 
+  it 'should finish a quickly with foolish move making', js: true do
+    find('#start-computer').click
+    page.should have_css('.space i[title=x]')
+    first('.space i[title=\'\']').trigger('click')
+    page.should have_css('.space i[title=o]')
+    first('.space i[title=\'\']').trigger('click')
+    page.should have_content 'I win.'
+    page.save_screenshot('build/spec/full_game.png', full: true)
+  end
+
 end
