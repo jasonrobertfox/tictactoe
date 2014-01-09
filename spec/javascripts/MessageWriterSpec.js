@@ -124,4 +124,41 @@ describe('Board', function() {
     expect(blankBoard).toBeMatchedBy('#top-right.fa.computer.fa-circle-o[title=o]');
   });
 
+  it('can register a space click when enabled', function() {
+    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
+    clickedSpace = $('<i id="top-left"></i>');
+    board = new Board(blankBoard);
+    board.enable();
+    board.registerHumanClick(clickedSpace);
+    expect(blankBoard).toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
+  });
+
+  it('can be disabled', function() {
+    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
+    clickedSpace = $('<i id="top-left"></i>');
+    board = new Board(blankBoard);
+    board.disable();
+    board.registerHumanClick(clickedSpace);
+    expect(blankBoard).not.toBeMatchedBy('#top-left.fa.human.fa-times[title=x]');
+  });
+
+  it('can hover when enabled', function() {
+    blankBoard = $('<i id="top-left" class="fa"></i><i id="top-right" class="fa"></i>');
+    hoverSpace = $('<i id="top-left"></i>');
+    board = new Board(blankBoard);
+    board.enable();
+    board.registerHumanHover(hoverSpace);
+    expect(blankBoard).toBeMatchedBy('#top-left.fa.hover.fa-times');
+  });
+
+  it('will not override a selected space', function(){
+    blankBoard = $('<i id="top-left" class="fa fa-circle-o computer" title="o"></i><i id="top-right" class="fa"></i>');
+    hoverSpace = $('<i id="top-left"></i>');
+    board = new Board(blankBoard);
+    board.enable();
+    board.registerHumanHover(hoverSpace);
+    expect(blankBoard).not.toBeMatchedBy('#top-left.fa.hover.fa-times');
+  });
+
+
 });
