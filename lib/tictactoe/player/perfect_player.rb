@@ -5,6 +5,10 @@ module Tictactoe
     class PerfectPlayer
       attr_reader :piece, :board
 
+      INITIAL_DEPTH = 0
+      LOWER_BOUND = -100_000
+      UPPER_BOUND = 100_000
+
       Node = Struct.new(:score, :move)
 
       def initialize(piece)
@@ -31,41 +35,41 @@ module Tictactoe
 
       def best_possible_move
         @base_score = board.number_of_spaces + 1
-        minmax(board, 0)
+        minmax(board, INITIAL_DEPTH, LOWER_BOUND, UPPER_BOUND)
         @current_move_choice
       end
 
-      def minmax(node_board, depth)
-        return evaluate_state(node_board, depth) if node_board.over?
-        minmax_node = reduce_nodes(node_board, generate_nodes(node_board, depth))
-        @current_move_choice = minmax_node.move
-        minmax_node.score
+      def minmax(board, depth, lower, upper)
+        return evaluate_state(board, depth) if board.over?
+        candidate_move_nodes = []
+        board.available_moves.each do |move|
+
+          child_board = board.hand_off.place_piece(board.player_piece, move)
+          score = minmax(child_board, depth + 1, lower, upper)
+          node = Node.new score, move
+
+          if board.player_piece == piece
+            candidate_move_nodes << node
+            lower = node.score if node.score > lower
+          else
+            upper = node.score if node.score < upper
+          end
+
+          break if upper < lower
+        end
+
+        return upper unless  board.player_piece == piece
+        @current_move_choice = candidate_move_nodes.max_by { |node| node.score }.move
+        lower
       end
 
-      def evaluate_state(node_board, depth)
-        if node_board.won?(piece)
+      def evaluate_state(board, depth)
+        if board.won?(piece)
           @base_score - depth
-        elsif node_board.lost?(piece)
+        elsif board.lost?(piece)
           depth - @base_score
         else
           0
-        end
-      end
-
-      def generate_nodes(node_board, depth)
-        node_board.available_moves.map do |move|
-          new_node = node_board.hand_off.place_piece(node_board.player_piece, move)
-          Node.new minmax(new_node, depth + 1), move
-        end
-      end
-
-      def reduce_nodes(node_board, nodes)
-        nodes.reduce do |base, node|
-          if node_board.player_piece == piece
-            base.score > node.score ? base : node
-          else
-            base.score < node.score ? base : node
-          end
         end
       end
     end
