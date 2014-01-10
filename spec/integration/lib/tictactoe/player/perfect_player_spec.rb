@@ -92,7 +92,7 @@ describe Tictactoe::Player::PerfectPlayer do
     board = test_board('__zj', 2, 'z', 'j')
     player = get_player 'z'
     new_board = player.take_turn(board)
-    new_board.available_moves.should_not include [0, 1]
+    new_board.available_moves.should_not include [0, 0]
   end
 
   it 'should clearly block a move 3' do

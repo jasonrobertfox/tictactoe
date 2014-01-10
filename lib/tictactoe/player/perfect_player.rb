@@ -29,42 +29,88 @@ module Tictactoe
         best_possible_move
       end
 
-
       def best_possible_move
         @base_score = board.number_of_spaces + 1
-        minimax(board, 0, -100000, 100000)
+        minmax(board, 0, -100000, 100000)
         @current_move_choice
       end
 
-      def minimax(board, depth, alpha, beta)
+      def minmax(board, depth, lower, upper)
         return evaluate_state(board, depth) if board.over?
-        if board.player_piece == piece
-          v = min
-          board.available_moves.each do |move|
-            pgs = board.hand_off.place_piece(board.player_piece, move)
-            v_ = minimax(pgs, depth + 1, alpha, beta)
-            if v_ > v
-              v = v_
-              @current_move_choice = move
-            end
-            return beta if v > beta
-          end
-          return v
-        else
-          v = max
-          board.available_moves.each do |move|
-            pgs = board.hand_off.place_piece(board.player_piece, move)
-            v_ = minimax(pgs, depth + 1, alpha, beta)
 
-            if v_ < v
-              v = v_
-              @current_move_choice = move
+        # create child nodes
+        nodes = board.available_moves.map do |move|
+          node = {}
+          pgs = board.hand_off.place_piece(board.player_piece, move)
+          node[:board] = pgs
+          node[:move] = move
+          node
+        end
+
+        if board.player_piece == piece
+          nodes.each do |node|
+            node[:score] = minmax(node[:board], depth + 1, lower, upper)
+            if node[:score] > lower
+              lower = node[:score]
             end
-            return alpha if v < alpha
+            # break if lower > upper
           end
-          return alpha
+
+          max_node = nodes.max_by { |n| n[:score] }
+
+          @current_move_choice = max_node[:move]
+          return lower
+        else
+          nodes.each do |node|
+            node[:score] = minmax(node[:board], depth + 1, lower, upper)
+            if node[:score] < upper
+              upper = node[:score]
+            end
+            # break if upper < lower
+          end
+
+          min_node = nodes.min_by { |n| n[:score] }
+          return upper
         end
       end
+
+      # def minmax(board, depth)
+      #   return evaluate_state(board, depth) if board.over?
+
+      #   # create child nodes
+      #   nodes = board.available_moves.map do |move|
+      #     node = {}
+      #     pgs = board.hand_off.place_piece(board.player_piece, move)
+      #     node[:board] = pgs
+      #     node[:move] = move
+      #     node
+      #   end
+
+      #   if board.player_piece == piece
+      #     base_score = -10000
+      #     max_node = nil
+      #     nodes.each do |node|
+      #       node[:score] = minmax(node[:board], depth + 1)
+      #       if node[:score] > base_score
+      #         max_node = node
+      #         base_score = node[:score]
+      #       end
+      #     end
+      #     @current_move_choice = max_node[:move]
+      #     return max_node[:score]
+      #   else
+      #     base_score = 10000
+      #     min_node = nil
+      #     nodes.each do |node|
+      #       node[:score] = minmax(node[:board], depth + 1)
+      #       if node[:score] < base_score
+      #         min_node = node
+      #         base_score = node[:score]
+      #       end
+      #     end
+      #     return min_node[:score]
+      #   end
+      # end
 
       # def best_possible_move
       #   @base_score = board.number_of_spaces + 1
@@ -105,6 +151,7 @@ module Tictactoe
       #     end
       #   end
       # end
+
     end
   end
 end
