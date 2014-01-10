@@ -103,7 +103,7 @@ describe Tictactoe::Player::PerfectPlayer do
     new_board.available_moves.should_not include [0, 2]
   end
 
-  it 'should always draw when playing itself', :skip do
+  it 'should always draw when playing itself' do
     players = { 'x' => Tictactoe::Player::PerfectPlayer.new('x'), 'o' => Tictactoe::Player::PerfectPlayer.new('o') }
     results = []
     (1..10).each do

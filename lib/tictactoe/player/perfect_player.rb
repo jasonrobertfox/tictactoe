@@ -53,10 +53,10 @@ module Tictactoe
             if node[:score] > lower
               lower = node[:score]
             end
-            # break if lower > upper
+            break if lower > upper
           end
 
-          max_node = nodes.max_by { |n| n[:score] }
+          max_node = nodes.max_by { |n| n[:score] || -10000 }
 
           @current_move_choice = max_node[:move]
           return lower
@@ -66,10 +66,10 @@ module Tictactoe
             if node[:score] < upper
               upper = node[:score]
             end
-            # break if upper < lower
+            break if upper < lower
           end
 
-          min_node = nodes.min_by { |n| n[:score] }
+          min_node = nodes.min_by { |n| n[:score] || 10000 }
           return upper
         end
       end
