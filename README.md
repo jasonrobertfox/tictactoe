@@ -1,6 +1,6 @@
 #Tic Tac Toe Documentation
 
-[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png)](https://coveralls.io/r/jasonrobertfox/tictactoe) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
+[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png?branch=develop)](https://coveralls.io/r/jasonrobertfox/tictactoe?branch=develop) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
 
 A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
 
@@ -109,7 +109,7 @@ Along with the game there is a "Tic Tac Toe" API, simply post a JSON request ind
     }
 
 ###Development
-This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Specifics to that boilerplate can be found at its repository. 
+This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Specifics to that boilerplate can be found at its repository.
 
 ###Notes on Testing
 Tests are best executed using the rake tasks:
@@ -121,11 +121,11 @@ Tests are best executed using the rake tasks:
 
 This is due to conditional configuration based on test type to improve the execution speed. You may run tests directly with the `rspec` command but this will include all dependencies.
 
-To start a development server and guard simply run: 
+To start a development server and guard simply run:
 
 `bundle exec guard`
 
-To start a jasmine server to view the results of javascript tests in the browser run: 
+To start a jasmine server to view the results of javascript tests in the browser run:
 
 `bundle exec rake jasmine`
 
