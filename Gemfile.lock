@@ -194,7 +194,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  blam
+  blam (= 1.3.0)
   capybara (= 2.1.0)
   compass
   coveralls
