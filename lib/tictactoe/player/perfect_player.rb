@@ -63,10 +63,10 @@ module Tictactoe
         lower
       end
 
-      def evaluate_state(node_board, depth)
-        if node_board.won?(piece)
+      def evaluate_state(board, depth)
+        if board.won?(piece)
           @base_score - depth
-        elsif node_board.lost?(piece)
+        elsif board.lost?(piece)
           depth - @base_score
         else
           0
