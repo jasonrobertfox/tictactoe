@@ -12,8 +12,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (1.1.0)
-    backports (3.3.5)
-    blam (1.2.0)
+    backports (3.4.0)
+    blam (1.3.0)
       thor
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -23,6 +23,8 @@ GEM
       xpath (~> 2.0)
     celluloid (0.15.2)
       timers (~> 1.1.0)
+    childprocess (0.3.9)
+      ffi (~> 1.0, >= 1.0.11)
     chunky_png (1.2.9)
     cliver (0.3.2)
     coderay (1.1.0)
@@ -38,7 +40,7 @@ GEM
       thor
     daemons (1.1.9)
     diff-lcs (1.2.5)
-    docile (1.1.1)
+    docile (1.1.2)
     em-websocket (0.5.0)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.5.3)
@@ -59,13 +61,22 @@ GEM
       em-websocket (~> 0.5)
       guard (~> 2.0)
       multi_json (~> 1.8)
-    guard-rspec (4.2.0)
-      guard (>= 2.1.1)
+    guard-rspec (4.2.4)
+      guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
     guard-rubocop (1.0.1)
       guard (~> 2.0)
       rubocop (~> 0.10)
     http_parser.rb (0.5.3)
+    jasmine (1.3.2)
+      jasmine-core (~> 1.3.1)
+      rack (~> 1.0)
+      rspec (>= 1.3.1)
+      selenium-webdriver (>= 0.1.3)
+    jasmine-core (1.3.1)
+    jasmine-phantom (0.0.9)
+      jasmine (>= 1.2.0)
+      posix-spawn
     jsmin (1.0.1)
     listen (2.4.0)
       celluloid (>= 0.15.2)
@@ -75,10 +86,10 @@ GEM
     method_source (0.8.2)
     mime-types (2.0)
     mini_portile (0.5.2)
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
-    parser (2.0.0)
+    parser (2.1.3)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
     poltergeist (1.5.0)
@@ -86,6 +97,7 @@ GEM
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    posix-spawn (0.3.8)
     powerpack (0.0.9)
     pry (0.9.12.4)
       coderay (~> 1.0)
@@ -96,12 +108,12 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rainbow (1.1.4)
+    rainbow (1.99.1)
     rake (10.1.1)
-    rb-fsevent (0.9.3)
+    rb-fsevent (0.9.4)
     rb-inotify (0.9.3)
       ffi (>= 0.5.0)
-    reek (1.3.5)
+    reek (1.3.6)
       ruby2ruby (~> 2.0.7)
       ruby_parser (~> 3.2)
       sexp_processor
@@ -115,16 +127,23 @@ GEM
     rspec-expectations (2.14.4)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
-    rubocop (0.15.0)
-      parser (~> 2.0)
+    rubocop (0.16.0)
+      parser (~> 2.1)
       powerpack (~> 0.0.6)
       rainbow (>= 1.1.4)
+    ruby-prof (0.14.2)
     ruby2ruby (2.0.7)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
     ruby_parser (3.2.2)
       sexp_processor (~> 4.1)
+    rubyzip (1.1.0)
     sass (3.2.13)
+    selenium-webdriver (2.39.0)
+      childprocess (>= 0.2.5)
+      multi_json (~> 1.0)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0.4)
     sexp_processor (4.4.1)
     simplecov (0.8.2)
       docile (~> 1.1.0)
@@ -135,11 +154,11 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    sinatra-assetpack (0.3.1)
+    sinatra-assetpack (0.3.2)
       jsmin
       rack-test
       sinatra
-      tilt (>= 1.3.0)
+      tilt (>= 1.3.0, < 2.0)
     sinatra-contrib (1.4.2)
       backports (>= 2.0)
       multi_json
@@ -164,7 +183,8 @@ GEM
     tilt (1.4.1)
     timers (1.1.0)
     tins (0.13.1)
-    websocket-driver (0.3.1)
+    websocket (1.0.7)
+    websocket-driver (0.3.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     zurb-foundation (4.3.2)
@@ -174,7 +194,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  blam
+  blam (= 1.3.0)
   capybara (= 2.1.0)
   compass
   coveralls
@@ -184,11 +204,14 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   guard-shotgun!
+  jasmine (= 1.3.2)
+  jasmine-phantom
   poltergeist
   rake
   reek
   rspec (= 2.14.1)
   rubocop
+  ruby-prof
   sinatra
   sinatra-assetpack
   sinatra-contrib

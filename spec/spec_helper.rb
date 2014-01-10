@@ -2,6 +2,20 @@
 
 ENV['RACK_ENV'] = 'test'
 require 'rspec'
+require 'ruby-prof'
+
+def configure_coverage
+  require 'simplecov'
+  require 'coveralls'
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ]
+  SimpleCov.start do
+    add_filter 'spec'
+    coverage_dir 'build/coverage'
+  end
+end
 
 def configure_rspec_defaults
   RSpec.configure do |config|
@@ -33,18 +47,32 @@ def configure_rspec_for_system
 
   Capybara.app = TictactoeWebApp
   Capybara.javascript_driver = :poltergeist
+  Capybara.default_wait_time = 15
 end
 
-def configure_coverage
-  require 'simplecov'
-  require 'coveralls'
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-  SimpleCov.start do
-    add_filter 'spec'
-    coverage_dir 'build/coverage'
+def configure_profiling
+  RSpec.configure do |config|
+    def profile
+      result = RubyProf.profile { yield }
+      printer = RubyProf::MultiPrinter.new(result)
+      name = example.metadata[:full_description].downcase.gsub(/[^a-z0-9_-]/, '-').gsub(/-+/, '-')
+      directory_name = 'build/profiles'
+      Dir.mkdir(directory_name) unless File.exists?(directory_name)
+      printer = RubyProf::CallTreePrinter.new(result)
+      open("#{directory_name}/callgrind.#{name}.#{Time.now.to_i}.trace", 'w') do |f|
+        printer.print(f)
+      end
+    end
+
+    config.filter_run :profile if ENV['PROFILE']
+
+    config.around(:each) do |example|
+      if example.metadata[:profile] && ENV['PROFILE']
+        profile { example.run }
+      else
+        example.run
+      end
+    end
   end
 end
 
@@ -56,17 +84,18 @@ coverage = ENV['COVERAGE'] == 'true' ? true : false
 configure_coverage if coverage
 configure_rspec_defaults
 configure_rspec_for_system if system
+configure_profiling
 
 # Other general helper functions
-def get_adapter
-  Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new('x', 'o')
+def test_adapter
+  Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new
 end
 
-def get_request(piece, data)
-  { 'piece' => piece, 'board' => get_test_board_data(data) }
+def test_request(player_piece, opponent_piece, data)
+  { 'player_piece' => player_piece, 'opponent_piece' => opponent_piece, 'board' => test_board_data(data) }
 end
 
-def get_test_board_data(data)
+def test_board_data(data)
   board = []
   rows = %w(top middle bottom)
   columns = %w(left center right)
@@ -85,15 +114,22 @@ end
 
 PlayerStub = Struct.new(:piece)
 
-def get_game_state(board, player_piece)
-  opponent_piece = player_piece == 'x' ? 'o' : 'x'
-  Tictactoe::GameState.new(board, player_piece, opponent_piece)
+def test_board(code)
+  test_board(code, 3, 'x', 'o')
 end
 
-def get_alternative_game_state
-  Tictactoe::GameState.new([['z', ''], ['', 'j']], 'z', 'j')
-end
-
-def get_blank_board
-  Array.new(3) { Array.new(3, '') }
+def test_board(code, size = 3, player_piece = 'x', opponent_piece = 'o')
+  board = Tictactoe::Board.new(size, player_piece, opponent_piece)
+  row = 0
+  column = 0
+  code.split(//).each do |c|
+    board.place_piece(c, [row, column]) unless c == '_'
+    if column == size - 1
+      column = 0
+      row += 1
+    else
+      column += 1
+    end
+  end
+  board
 end

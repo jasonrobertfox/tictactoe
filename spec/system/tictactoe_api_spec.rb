@@ -16,50 +16,45 @@ describe 'default app behavior' do
 end
 
 describe 'tic tac toe api behavior' do
-  it 'should return an error if the piece is not provided' do
-    data = {}
-    result = post_json('/api/v1/play', data)
+  it 'should return an error if provided pieces are different' do
+    data = { player_piece: 'b', opponent_piece: 'b' }
+    result = post_json('/api/v2/play', data)
     expect(last_response.status).to be 400
     result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Piece was not defined as either x or o.'
-  end
-
-  it 'should return an error if the piece is invalid' do
-    data = { piece: 'b' }
-    result = post_json('/api/v1/play', data)
-    expect(last_response.status).to be 400
-    result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Piece was not defined as either x or o.'
+    result['data']['message'].should eq 'Provided pieces need to be different.'
   end
 
   it 'should handle the exception if a board validation exception is raised' do
-    data = { piece: 'x', board: get_test_board_data([['x', 'b', ''], ['o', 'o', ''], ['x', 'o', '']]) }
-    result = post_json('/api/v1/play', data)
+    data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([['x', 'b', ''], ['o', 'o', ''], ['x', 'o', '']]) }
+    result = post_json('/api/v2/play', data)
     expect(last_response.status).to be 400
     result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Board contains invalid pieces.'
+    result['data']['message'].should eq 'Pieces in board must be either x, o or blank.'
   end
 
   it 'should return a data set with next move and other piece if the game is active' do
-    data = { piece: 'x', board: get_test_board_data([['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]) }
-    result = post_json('/api/v1/play', data)
+    data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]) }
+    result = post_json('/api/v2/play', data)
     expect(last_response.status).to be 200
     result['status'].should eq 'success'
-    result['data']['piece'].should eq 'o'
+    result['data']['player_piece'].should eq 'o'
     result['data']['board'].count { |space| space['value'] != '' }.should eq 7
   end
 
-  it 'should reject a board that is in a draw state' do
-    data = { piece: 'x', board: get_test_board_data([%w(x x o), %w(o o x), %w(x o o)]) }
-    result = post_json('/api/v1/play', data)
-    expect(last_response.status).to be 400
-    result['data']['message'].should eq 'Nothing to do, the board provided is a draw.'
+  it 'should return update the board with draw status' do
+    data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([%w(x x o), %w(o o x), %w(x o o)]) }
+    result = post_json('/api/v2/play', data)
+    expect(last_response.status).to be 200
+    result['data']['status'].should eq 'draw'
   end
 
-  it 'should reject a board that is already in a wining state' do
-    data = { piece: 'x', board: get_test_board_data([%w(x x x), ['o', 'o', ''], ['x', 'o', '']]) }
-    result = post_json('/api/v1/play', data)
-    expect(last_response.status).to be 400
-    result['data']['message'].should eq 'Nothing to do, there is already a winner.'
+  it 'should update the board with winning status ' do
+    data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([%w(x x x), ['o', 'o', ''], ['x', 'o', '']]) }
+    result = post_json('/api/v2/play', data)
+    expect(last_response.status).to be 200
+    result['data']['status'].should eq 'win'
+    result['data']['winner'].should eq 'x'
+    result['data']['board'][1]['winning_space'].should eq true
+    result['data']['board'][5]['winning_space'].should be_nil
   end
 end

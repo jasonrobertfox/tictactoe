@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'tictactoe/game_state'
+require 'tictactoe/board'
 require 'tictactoe/player/perfect_player'
 
 def get_player(piece)
@@ -11,101 +11,107 @@ end
 describe Tictactoe::Player::PerfectPlayer do
 
   it 'should reject a game state where it is not the turn taking player' do
-    game_state = get_game_state([['', 'o', 'x'], %w(o o x), %w(x x o)], 'x')
+    board = test_board '_oxooxxxo', 3, 'x', 'o'
     player = get_player 'o'
     expect do
-      player.take_turn(game_state)
+      player.take_turn(board)
     end.to raise_error ArgumentError, 'It is not this player\'s turn.'
   end
 
   it 'should pick a good opening move if the board is blank' do
-    game_state = get_game_state(get_blank_board, 'x')
+    board = test_board('_________')
     player = get_player 'x'
-    new_state = player.take_turn(game_state)
-    # For now we will just pick a random corner for variability
-    flat_board = new_state.board.flatten
-    [flat_board[0], flat_board[2], flat_board[6], flat_board[8]].should include 'x'
+    new_board = player.take_turn(board)
+    new_board.board.flatten.should include 'x'
+    new_board.player_piece.should eq 'o'
   end
 
   it 'should simply fill in the last space if there is only one blank' do
-    game_state = get_game_state([['', 'o', 'x'], %w(o o x), %w(x x o)], 'x')
+    board = test_board '_oxooxxxo', 3, 'x', 'o'
     player = get_player 'x'
-    new_state = player.take_turn(game_state)
-    new_state.is_draw?.should be_true
+    new_board = player.take_turn(board)
+    new_board.draw?.should be_true
   end
 
   it 'should pick the winning move of a nearly complete game for x' do
-    game_state = get_game_state([['x', 'o', ''], ['x', 'x', ''], ['', 'o', 'o']], 'x')
+    board = test_board 'xo_xx__oo', 3, 'x', 'o'
     player = get_player 'x'
-    new_state = player.take_turn(game_state)
-    new_state.available_moves.length.should eq 2
-    new_state.have_i_won?(player).should be_true
+    new_board = player.take_turn(board)
+    new_board.available_moves.count.should eq 2
+    new_board.won?('x').should be_true
   end
 
   it 'should pick the winning move of a nearly complete game for o' do
-    game_state = get_game_state([%w(x o x), ['x', 'x', ''], ['', 'o', 'o']], 'o')
+    board = test_board 'xoxxx__oo', 3, 'o', 'x'
     player = get_player 'o'
-    new_state = player.take_turn(game_state)
-    new_state.have_i_won?(player).should be_true
+    new_board = player.take_turn(board)
+    new_board.won?('o').should be_true
   end
 
   it 'should pick the winning move from a more incomplete game' do
-    game_state = get_game_state([['x', '', 'x'], ['', 'o', ''], ['', 'o', '']], 'x')
+    board = test_board('x_x_o__o_', 3, 'x', 'o')
     player = get_player 'x'
-    new_state = player.take_turn(game_state)
-    new_state.have_i_won?(player).should be_true
+    new_board = player.take_turn(board)
+    new_board.won?('x').should be_true
   end
 
-  it 'should pick the next move from a more incomplete game' do
-    game_state = get_game_state([['x', '', ''], ['', '', ''], ['', '', '']], 'o')
-    player = get_player 'o'
-    new_state = player.take_turn(game_state)
-    new_state.available_moves.length.should eq 7
-    new_state.is_over?.should be_false
+  it 'should pick the next move from a more incomplete game', profile: true do
+    board = test_board('o________', 3, 'x', 'o')
+    player = get_player 'x'
+    new_board = player.take_turn(board)
+    new_board.available_moves.length.should eq 7
+    new_board.over?.should be_false
   end
 
   it 'should clearly block a move' do
-    game_state = get_game_state([['', '', ''], ['', 'x', ''], ['x', '', 'o']], 'o')
+    board = test_board('____x_x_o', 3, 'o', 'x')
     player = get_player 'o'
-    new_state = player.take_turn(game_state)
-    new_state.available_moves.length.should eq 5
-    new_state.is_over?.should be_false
-    new_state.board.should eq [['', '', 'o'], ['', 'x', ''], ['x', '', 'o']]
+    new_board = player.take_turn(board)
+    new_board.available_moves.length.should eq 5
+    new_board.over?.should be_false
+    new_board.available_moves.should_not include [0, 2]
   end
 
   it 'should clearly block a move 2' do
-    game_state = get_game_state([['o', '', ''], ['', '', 'x'], ['', '', 'x']], 'o')
+    board = test_board('o____x__x', 3, 'o', 'x')
     player = get_player 'o'
-    new_state = player.take_turn(game_state)
-    new_state.available_moves.length.should eq 5
-    new_state.is_over?.should be_false
-    new_state.board.should eq [['o', '', 'o'], ['', '', 'x'], ['', '', 'x']]
-  end
-
-  it 'should work with an alternative state' do
-    player = get_player 'z'
-    new_state = player.take_turn(get_alternative_game_state)
-    new_state.board.should eq [['z', ''], %w(z j)]
+    new_board = player.take_turn(board)
+    new_board.available_moves.length.should eq 5
+    new_board.over?.should be_false
+    new_board.available_moves.should_not include [0, 2]
   end
 
   it 'should clearly block a move 3' do
-    game_state = get_game_state([['', 'x', ''], ['', '', 'x'], %w(o o x)], 'o')
+    board = test_board('x_o_xx__o', 3, 'o', 'x')
     player = get_player 'o'
-    new_state = player.take_turn(game_state)
-    new_state.is_over?.should be_false
-    new_state.board.should eq [['', 'x', 'o'], ['', '', 'x'], %w(o o x)]
+    new_board = player.take_turn(board)
+    new_board.available_moves.should_not include [1, 0]
   end
 
-  it 'should always draw when playing itself' do
+  it 'should work with an alternative state' do
+    board = test_board('__zj', 2, 'z', 'j')
+    player = get_player 'z'
+    new_board = player.take_turn(board)
+    new_board.available_moves.should_not include [0, 0]
+  end
+
+  it 'should clearly block a move 3' do
+    board = test_board('_x___xoox', 3, 'o', 'x')
+    player = get_player 'o'
+    new_board = player.take_turn(board)
+    new_board.over?.should be_false
+    new_board.available_moves.should_not include [0, 2]
+  end
+
+  it 'should always draw when playing itself', :skip do
     players = { 'x' => Tictactoe::Player::PerfectPlayer.new('x'), 'o' => Tictactoe::Player::PerfectPlayer.new('o') }
-    # for 2 games
     results = []
-    (1..2).each do
-      game_state = get_game_state(get_blank_board, 'x')
-      while game_state.is_over? == false
-        game_state = players[game_state.player_piece].take_turn(game_state)
+    (1..10).each do
+      board = test_board('_________')
+      while board.over? == false
+        board = players[board.player_piece].take_turn(board)
       end
-      results.push game_state.is_draw?
+      results.push board.draw?
     end
     results.should_not include false
   end

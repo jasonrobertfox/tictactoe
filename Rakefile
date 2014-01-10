@@ -8,7 +8,7 @@ task default: :build_full
 task build: [:clean, :prepare, :quality, :test]
 
 desc 'Runs standard build activities.'
-task build_full: [:build, :system]
+task build_full: [:build, :js, :system]
 
 desc 'Runs quality checks.'
 task quality: [:rubocop]
@@ -18,6 +18,9 @@ Rubocop::RakeTask.new
 desc 'Removes the build directory.'
 task :clean do
   FileUtils.rm_rf 'build'
+  FileUtils.rm_rf '.bundle'
+  FileUtils.rm_rf '.sass-cache'
+  FileUtils.rm_rf 'tmp'
 end
 desc 'Creates a basic build directory.'
 task :prepare do
@@ -26,6 +29,12 @@ end
 
 def get_rspec_flags(log_name, others = nil)
   "--format documentation --out build/spec/#{log_name}.log --format html --out build/spec/#{log_name}.html --format progress #{others}"
+end
+
+desc 'Run tests with profiling of those tagged "profile".'
+task :profile do
+  ENV['PROFILE'] = 'true'
+  Rake::Task['test'].invoke
 end
 
 RSpec::Core::RakeTask.new(:test) do |t|
@@ -40,4 +49,14 @@ RSpec::Core::RakeTask.new(:system) do |t|
   ENV['COVERAGE'] = 'false'
   t.pattern = FileList['spec/system/**/*_spec.rb']
   t.rspec_opts = get_rspec_flags('system')
+end
+
+require 'jasmine'
+load 'jasmine/tasks/jasmine.rake'
+
+require 'jasmine-phantom/server'
+load 'jasmine-phantom/tasks.rake'
+
+task :js do
+  Rake::Task['jasmine:phantom:ci'].invoke
 end
