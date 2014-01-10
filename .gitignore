@@ -2,3 +2,4 @@
 .sass-cache
 build
 .bundle
+Gemfile.lock

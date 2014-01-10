@@ -81,6 +81,13 @@ describe Tictactoe::Player::PerfectPlayer do
     new_board.available_moves.should_not include [0, 2]
   end
 
+  it 'should clearly block a move 3' do
+    board = test_board('x_o_xx__o', 3, 'o', 'x')
+    player = get_player 'o'
+    new_board = player.take_turn(board)
+    new_board.available_moves.should_not include [1, 0]
+  end
+
   it 'should work with an alternative state' do
     board = test_board('__zj', 2, 'z', 'j')
     player = get_player 'z'
