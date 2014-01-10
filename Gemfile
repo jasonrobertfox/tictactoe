@@ -15,13 +15,14 @@ gem 'compass'
 gem 'rspec', '2.14.1'
 gem 'rubocop'
 gem 'rake'
+gem 'jasmine', '1.3.2'
+gem 'jasmine-phantom'
 group :test do
   gem 'coveralls'
   gem 'capybara', '2.1.0'
   gem 'poltergeist'
   gem 'ruby-prof'
-  gem 'jasmine', '1.3.2'
-  gem 'jasmine-phantom'
+
 end
 
 group :development do
