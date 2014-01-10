@@ -21,3 +21,4 @@ AllCops:
   Excludes:
     - lib/public/**
     - build/**
+    - vendor/**
