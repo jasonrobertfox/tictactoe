@@ -47,6 +47,7 @@ def configure_rspec_for_system
 
   Capybara.app = TictactoeWebApp
   Capybara.javascript_driver = :poltergeist
+  Capybara.default_wait_time = 15
 end
 
 def configure_profiling
