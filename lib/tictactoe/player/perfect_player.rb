@@ -44,9 +44,7 @@ module Tictactoe
         candidate_move_nodes = []
         board.available_moves.each do |move|
 
-          child_board = board.hand_off.place_piece(board.player_piece, move)
-          score = minmax(child_board, depth + 1, lower, upper)
-          node = Node.new score, move
+          node = build_node(board, move, depth + 1, lower, upper)
 
           if board.player_piece == piece
             candidate_move_nodes << node
@@ -61,6 +59,12 @@ module Tictactoe
         return upper unless  board.player_piece == piece
         @current_move_choice = candidate_move_nodes.max_by { |node| node.score }.move
         lower
+      end
+
+      def build_node(board, move, depth, lower, upper)
+        child_board = board.hand_off.place_piece(board.player_piece, move)
+        score = minmax(child_board, depth + 1, lower, upper)
+        Node.new score, move
       end
 
       def evaluate_state(board, depth)
