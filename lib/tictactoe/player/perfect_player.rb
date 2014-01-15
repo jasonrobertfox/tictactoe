@@ -36,7 +36,6 @@ module Tictactoe
       def best_possible_move
         @base_score = board.number_of_spaces + 1
         minmax(board, INITIAL_DEPTH, LOWER_BOUND, UPPER_BOUND)
-        @current_move_choice
       end
 
       def minmax(board, depth, lower, upper)
@@ -52,12 +51,11 @@ module Tictactoe
           else
             upper = node.score if node.score < upper
           end
-
           break if upper < lower
         end
 
         return upper unless  board.player_piece == piece
-        @current_move_choice = candidate_move_nodes.max_by { |node| node.score }.move
+        return candidate_move_nodes.max_by { |node| node.score }.move if depth == 0
         lower
       end
 
