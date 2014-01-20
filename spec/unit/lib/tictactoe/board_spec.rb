@@ -45,7 +45,7 @@ describe Tictactoe::Board do
 
   it 'when a board is copied off it should be a deep copy' do
     board.place_piece('x', [0, 0])
-    board_copy = board.copy
+    board_copy = board.clone
     board.place_piece('x', [0, 1])
     board_copy.place_piece('x', [0, 2])
     board_copy.contents_of([0, 1]).should eq ''

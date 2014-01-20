@@ -39,15 +39,12 @@ module Tictactoe
       @blank_spaces.map { |space| space.split(//).map(&:to_i) }
     end
 
-    def copy
-      board_copy = dup
-      board_copy.blank_spaces = @blank_spaces.dup
-      board_copy.board = @board.dup
-      board_copy
+    def initialize_copy(source)
+      blank_spaces = @blank_spaces.dup
+      board = @board.dup
+      super
+      @blank_spaces = blank_spaces
+      @board = board
     end
-
-    protected
-
-    attr_writer :board, :blank_spaces
   end
 end
