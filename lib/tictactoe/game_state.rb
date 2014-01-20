@@ -1,34 +1,21 @@
 # Encoding: utf-8
 
-require 'tictactoe/board'
-
 module Tictactoe
   class GameState
     BLANK = ''
 
     attr_reader :player_piece, :opponent_piece, :winner
 
-    def initialize(size, player_piece, opponent_piece)
-      @player_piece, @opponent_piece, @size = player_piece, opponent_piece, size
-      # @board = Array.new(@size) { Array.new(@size, BLANK) }
-      @board = Board.new(size)
+    def initialize(board, player_piece, opponent_piece)
+      @board, @player_piece, @opponent_piece = board, player_piece, opponent_piece
       initialize_board_meta_data
+      check_for_win if win_possible?
     end
 
     def place_piece(piece, coordinate)
       @board.place_piece(piece, coordinate)
-      # unless piece == BLANK
-      #   @board[coordinate.first][coordinate.last] = piece
-      #   update_moves(coordinate)
-        check_for_win if win_possible?
-      # end
+      check_for_win if win_possible?
       self
-    end
-
-    # Refactor methods
-
-    def contents_of(x, y)
-      @board.contents_of([x, y])
     end
 
     def available_moves
@@ -45,10 +32,10 @@ module Tictactoe
 
     def board
       array = []
-      0.upto(@size - 1) do |r|
+      0.upto(@max_index) do |r|
         row = []
-        0.upto(@size - 1) do |c|
-          row << contents_of(r, c)
+        0.upto(@max_index) do |c|
+          row << @board.contents_of([r, c])
         end
         array << row
       end
@@ -99,26 +86,14 @@ module Tictactoe
 
     protected
 
-    attr_writer :board, :available_moves, :player_piece, :opponent_piece
+    attr_writer :board, :player_piece, :opponent_piece
 
     private
 
     def initialize_board_meta_data
-      @moves_made = 0
-      @max_index = @size - 1
-      @number_of_spaces = @size**2
-      @moves_left = @number_of_spaces
+      @max_index = @board.width - 1
       @board_range = (0..@max_index).to_a
-      @minimum_moves_required_to_win = (2 * @size) - 1
-      @available_moves = @board_range.product(@board_range)
-      @corner_spaces = [0, @max_index].product([0, @max_index])
-    end
-
-    def update_moves(coordinate)
-      @available_moves.delete(coordinate)
-      @has_pieces ||= true
-      @moves_left -= 1
-      @moves_made += 1
+      @minimum_moves_required_to_win = (2 * @board.width) - 1
     end
 
     def win_possible?
@@ -130,9 +105,9 @@ module Tictactoe
     end
 
     def winning_row
-      0.upto(@size - 1) do |r|
-        candidate = contents_of(r, 0)
-        if candidate != BLANK && 0.upto(@size - 1).map { |c| contents_of(r, c) }.count(candidate) == @size
+      0.upto(@max_index) do |r|
+        candidate = @board.contents_of([r, 0])
+        if candidate != BLANK && 0.upto(@max_index).map { |c| @board.contents_of([r, c]) }.count(candidate) == @board.width
           @winning_line = [r].product(@board_range) if @gather_line
           return candidate
         end
@@ -141,9 +116,9 @@ module Tictactoe
     end
 
     def winning_column
-      0.upto(@size - 1) do |c|
-        candidate = contents_of(0, c)
-        if candidate != BLANK && 0.upto(@size - 1).map { |r| contents_of(r, c) }.count(candidate) == @size
+      0.upto(@max_index) do |c|
+        candidate = @board.contents_of([0, c])
+        if candidate != BLANK && 0.upto(@max_index).map { |r| @board.contents_of([r, c]) }.count(candidate) == @board.width
           @winning_line = @board_range.product([c]) if @gather_line
           return candidate
         end
@@ -152,21 +127,21 @@ module Tictactoe
     end
 
     def winning_diagonal
-      check_diagonal(contents_of(0, 0)) { |i| i }
+      check_diagonal(@board.contents_of([0, 0])) { |i| i }
     end
 
     def winning_reverse_diagonal
-      check_diagonal(contents_of(@max_index, 0)) { |i| @max_index - i }
+      check_diagonal(@board.contents_of([@max_index, 0])) { |i| @max_index - i }
     end
 
     def check_diagonal(candidate)
       diagonal = []
       (0..@max_index).each do |i|
         column = yield i
-        return nil unless candidate != BLANK && contents_of(i, column) == candidate
+        return nil unless candidate != BLANK && @board.contents_of([i, column]) == candidate
         diagonal << [i, column] if @gather_line
       end
-      @winning_line = diagonal if diagonal.count == @size
+      @winning_line = diagonal if diagonal.count == @board.width
       candidate
     end
   end

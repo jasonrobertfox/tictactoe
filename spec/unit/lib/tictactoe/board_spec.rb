@@ -55,4 +55,9 @@ describe Tictactoe::Board do
     board_copy.contents_of([0, 1]).should eq ''
     board.blank_spaces.should_not eq board_copy.blank_spaces
   end
+
+  it 'should scale available moves for larger boards' do
+    b = Tictactoe::Board.new(4)
+    b.number_of_spaces.should eq 16
+  end
 end
