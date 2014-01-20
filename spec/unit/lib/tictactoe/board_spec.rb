@@ -17,6 +17,10 @@ describe Tictactoe::Board do
     board.blank_spaces.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
   end
 
+  it 'should return a list of corner spaces' do
+    board.corner_spaces.should eq [[0, 0], [0, 2], [2, 0], [2, 2]]
+  end
+
   it 'should be blank by default' do
     board.blank?.should be_true
   end

@@ -4,7 +4,7 @@ module Tictactoe
   class Board
     BLANK = ''
 
-    attr_reader :width, :number_of_spaces, :number_of_blanks, :number_of_occupied
+    attr_reader :width, :number_of_spaces, :number_of_blanks, :number_of_occupied, :corner_spaces
 
     def initialize(width)
       @width = width
@@ -13,6 +13,7 @@ module Tictactoe
       board_range = (0..(width - 1)).to_a
       @blank_spaces = board_range.product(board_range).map { |s| s.join }
       @board = Array.new(@number_of_spaces) { BLANK }
+      @corner_spaces = [0, width - 1].product([0, width - 1])
     end
 
     def blank?
