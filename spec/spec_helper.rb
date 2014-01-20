@@ -114,10 +114,6 @@ end
 
 PlayerStub = Struct.new(:piece)
 
-def test_board(code)
-  test_board(code, 3, 'x', 'o')
-end
-
 def test_board(code, size = 3, player_piece = 'x', opponent_piece = 'o')
   board = Tictactoe::Board.new(size, player_piece, opponent_piece)
   row = 0
