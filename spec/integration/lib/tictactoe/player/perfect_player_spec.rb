@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'tictactoe/board'
+require 'tictactoe/game_state'
 require 'tictactoe/player/perfect_player'
 
 def get_player(piece)

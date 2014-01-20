@@ -1,12 +1,12 @@
 # Encoding: utf-8
 
-require 'tictactoe/board'
+require 'tictactoe/game_state'
 
 module Tictactoe
-  class BoardFactory
+  class GameStateFactory
     def self.build(size, player_piece, opponent_piece)
       validate_pieces(player_piece, opponent_piece)
-      Board.new(size, player_piece, opponent_piece)
+      GameState.new(size, player_piece, opponent_piece)
     end
 
     private

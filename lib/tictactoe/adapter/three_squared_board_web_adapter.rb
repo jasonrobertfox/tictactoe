@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 require 'tictactoe/player/perfect_player'
-require 'tictactoe/board_factory'
+require 'tictactoe/game_state_factory'
 
 module Tictactoe
   module Adapter
@@ -44,7 +44,7 @@ module Tictactoe
       end
 
       def create_board(player_piece, opponent_piece, board_data)
-        board = Tictactoe::BoardFactory.build(board_width, player_piece, opponent_piece)
+        board = Tictactoe::GameStateFactory.build(board_width, player_piece, opponent_piece)
         board_data.each do |space|
           board.place_piece space['value'], id_to_coordinate(space['id'])
         end

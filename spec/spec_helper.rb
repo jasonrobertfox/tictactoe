@@ -115,7 +115,7 @@ end
 PlayerStub = Struct.new(:piece)
 
 def test_board(code, size = 3, player_piece = 'x', opponent_piece = 'o')
-  board = Tictactoe::Board.new(size, player_piece, opponent_piece)
+  board = Tictactoe::GameState.new(size, player_piece, opponent_piece)
   row = 0
   column = 0
   code.split(//).each do |c|

@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 module Tictactoe
-  class Board
+  class GameState
     BLANK = ''
 
     attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board, :winner

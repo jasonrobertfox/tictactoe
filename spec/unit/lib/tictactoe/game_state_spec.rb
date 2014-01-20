@@ -1,47 +1,47 @@
 # Encoding: utf-8
 
 require 'spec_helper'
-require 'tictactoe/board'
+require 'tictactoe/game_state'
 
-describe Tictactoe::Board do
+describe Tictactoe::GameState do
 
-  let(:board) { Tictactoe::Board.new(3, 'x', 'o') }
+  let(:game_state) { Tictactoe::GameState.new(3, 'x', 'o') }
 
   it 'should be initialized with it size' do
-    board.number_of_spaces.should eq 9
+    game_state.number_of_spaces.should eq 9
   end
 
   it 'should let a piece be set' do
-    board.place_piece('x', [0, 2])
-    board.available_moves.should_not include [0, 2]
+    game_state.place_piece('x', [0, 2])
+    game_state.available_moves.should_not include [0, 2]
   end
 
   it 'should not place blank pieces' do
-    board.place_piece('', [0, 2])
-    board.available_moves.count.should eq 9
+    game_state.place_piece('', [0, 2])
+    game_state.available_moves.count.should eq 9
   end
 
   it 'should return a full array of available moves' do
-    board.available_moves.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
-    board.blank?.should be_true
+    game_state.available_moves.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
+    game_state.blank?.should be_true
   end
 
   it 'should return an array of corner spaces' do
-    board.corner_spaces.should eq [[0, 0], [0, 2], [2, 0], [2, 2]]
+    game_state.corner_spaces.should eq [[0, 0], [0, 2], [2, 0], [2, 2]]
   end
 
   it 'should not be blank if a piece has been placed on it' do
-    board.place_piece('x', [0, 2])
-    board.blank?.should be_false
+    game_state.place_piece('x', [0, 2])
+    game_state.blank?.should be_false
   end
 
   it 'should return itself after placing a piece' do
-    board.place_piece('x', [0, 2]).should be_an_instance_of Tictactoe::Board
+    game_state.place_piece('x', [0, 2]).should be_an_instance_of Tictactoe::GameState
   end
 
   it 'should not show a move that has been made' do
-    board.place_piece('x', [0, 0])
-    board.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
+    game_state.place_piece('x', [0, 0])
+    game_state.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
   end
 
   it 'should report if there is only a single move left' do
@@ -97,7 +97,7 @@ describe Tictactoe::Board do
   end
 
   it 'should scale available moves for larger boards' do
-    b = Tictactoe::Board.new(4, 'x', 'o')
+    b = Tictactoe::GameState.new(4, 'x', 'o')
     b.available_moves.count.should eq 16
   end
 
