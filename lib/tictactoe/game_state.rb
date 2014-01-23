@@ -2,14 +2,13 @@
 
 module Tictactoe
   class GameState
+    # TODO: get rid of this blank thing...
     BLANK = ''
 
     attr_reader :player_piece, :opponent_piece, :winner
 
     def initialize(player_piece, opponent_piece)
-      fail ArgumentError, "Pieces must be a single character: #{player_piece}" unless player_piece.length == 1
-      fail ArgumentError, "Pieces must be a single character: #{opponent_piece}" unless opponent_piece.length == 1
-      fail ArgumentError, "Pieces must not be the same: #{player_piece}, #{opponent_piece}" if player_piece.downcase == opponent_piece.downcase
+      validate_arguments(player_piece, opponent_piece)
       @player_piece, @opponent_piece = player_piece, opponent_piece
     end
 
@@ -28,11 +27,9 @@ module Tictactoe
 
     def make_move(space)
       new_state = dup
-      new_board = board.dup
-      new_board.place_piece(player_piece, space)
-      new_state.player_piece = @opponent_piece
-      new_state.opponent_piece = @player_piece
-      new_state.board = new_board
+      new_state.player_piece = opponent_piece
+      new_state.opponent_piece = player_piece
+      new_state.board = board.dup.place_piece(player_piece, space)
       new_state
     end
 
@@ -83,6 +80,16 @@ module Tictactoe
     attr_writer :player_piece, :opponent_piece
 
     private
+
+    def validate_arguments(player_piece, opponent_piece)
+      validate_piece(player_piece)
+      validate_piece(opponent_piece)
+      fail ArgumentError, "Pieces must not be the same: #{player_piece}, #{opponent_piece}" if player_piece.downcase == opponent_piece.downcase
+    end
+
+    def validate_piece(piece)
+      fail ArgumentError, "Pieces must be a single character: #{piece}" unless piece.length == 1
+    end
 
     def win_possible?
       board.number_of_occupied >= @minimum_moves_required_to_win

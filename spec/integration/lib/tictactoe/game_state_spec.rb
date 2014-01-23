@@ -130,5 +130,4 @@ describe Tictactoe::GameState do
     b = test_game_state 'x_o_o_o_x'
     b.winner.should eq 'o'
   end
-
 end

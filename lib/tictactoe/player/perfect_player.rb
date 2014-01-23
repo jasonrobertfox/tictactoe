@@ -3,8 +3,6 @@
 module Tictactoe
   module Player
     class PerfectPlayer
-      attr_reader :piece, :game_state
-
       INITIAL_DEPTH = 0
 
       Node = Struct.new(:score, :move)
@@ -16,6 +14,8 @@ module Tictactoe
       end
 
       private
+
+      attr_reader :piece, :game_state
 
       def choose_move
         return game_state.corner_spaces.sample if game_state.unplayed?
