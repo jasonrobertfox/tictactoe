@@ -12,7 +12,7 @@ module Tictactoe
     def board=(board)
       @board = board
       @max_index ||= board.width - 1
-      @board_range ||= board.width.times.to_a
+      @board_width = board.width
       @minimum_moves_required_to_win ||= (2 * board.width) - 1
       check_for_win if win_possible?
     end
@@ -96,35 +96,36 @@ module Tictactoe
     end
 
     def winning_row
-      @board_range.each do |r|
-        candidate = board.contents_of([r, 0])
-        return candidate if check_line(candidate) { |i| [r, i] }
+      @board_width.times do |r|
+        candidate = check_line([r, 0]) { |i| [r, i] }
+        return candidate if candidate
       end
       nil
     end
 
     def winning_column
-      @board_range.each do |c|
-        candidate = board.contents_of([0, c])
-        return candidate if check_line(candidate) { |i| [i, c] }
+      @board_width.times do |c|
+        candidate = check_line([0, c]) { |i| [i, c] }
+        return candidate if candidate
       end
       nil
     end
 
     def winning_diagonal
-      check_line(board.contents_of([0, 0])) { |i| [i, i] }
+      check_line([0, 0]) { |i| [i, i] }
     end
 
     def winning_reverse_diagonal
-      check_line(board.contents_of([@max_index, 0])) { |i| [i, @max_index - i] }
+      check_line([0, @max_index]) { |i| [i, @max_index - i] }
     end
 
-    def check_line(candidate)
+    def check_line(candidate_space)
+      candidate = @board.contents_of(candidate_space)
       return nil unless candidate
-      line = []
-      (0..@max_index).each do |i|
+      line = [candidate_space]
+      (1..@max_index).each do |i|
         space = yield i
-        return nil unless board.contents_of(space) == candidate
+        return nil unless @board.contents_of(space) == candidate
         line << space if @gather_line
       end
       @winning_line = line if @gather_line
