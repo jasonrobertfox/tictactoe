@@ -115,11 +115,15 @@ end
 PlayerStub = Struct.new(:piece)
 
 def test_game_state(code, size = 3, player_piece = 'x', opponent_piece = 'o')
+  game_state = Tictactoe::GameState.new(player_piece, opponent_piece)
+  game_state.board = test_board(code, size)
+  game_state
+end
+
+def test_board(code, size = 3)
   board = Tictactoe::Board.new(size)
   code.split(//).each_with_index do |piece, i|
     board.place_piece(piece, [i / size, i % size]) unless piece == '_'
   end
-  game_state = Tictactoe::GameState.new(player_piece, opponent_piece)
-  game_state.board = board
-  game_state
+  board
 end

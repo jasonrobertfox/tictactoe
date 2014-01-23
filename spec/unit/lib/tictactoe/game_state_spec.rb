@@ -8,6 +8,8 @@ describe Tictactoe::GameState do
   it 'should be instantiated with the player and opponent pieces' do
     b = Tictactoe::GameState.new('x', 'o')
     b.should be_an_instance_of Tictactoe::GameState
+    b.player_piece.should eq 'x'
+    b.opponent_piece.should eq 'o'
   end
 
   it 'should reject anything but single characters for pieces' do
@@ -27,8 +29,8 @@ describe Tictactoe::GameState do
   end
 
   it 'trying to get an unset board should raise an error' do
-    b = Tictactoe::GameState.new('x', 'o')
-    expect { b.board }.to raise_error(RuntimeError, 'Game state has know knowledge of a board.')
+    gs = Tictactoe::GameState.new('x', 'o')
+    expect { gs.board }.to raise_error(RuntimeError, 'Game state has know knowledge of a board.')
   end
 
   # it 'should be instantiated with an instance of a board' do

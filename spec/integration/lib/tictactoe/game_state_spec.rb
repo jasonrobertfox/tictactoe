@@ -7,48 +7,45 @@ describe Tictactoe::GameState do
 
   let(:game_state) { test_game_state('_________') }
 
-  it 'should be initialized with it size' do
-    game_state.number_of_spaces.should eq 9
+  it 'should have certain defaults when a board is set' do
+    b = test_board('_________')
+    gs = Tictactoe::GameState.new('x', 'o')
+    gs.board = b
+    gs.over?.should be_false
+    gs.unplayed?.should be_true
+    gs.winner_exists?.should be_false
+    gs.winning_line.should be_nil
+    gs.lost?('x').should be_false
+    gs.won?('x').should be_false
+    gs.lost?('o').should be_false
+    gs.won?('o').should be_false
+    gs.final_move?.should be_false
+    gs.available_moves.should eq b.blank_spaces
   end
 
-  it 'should let a piece be set' do
-    game_state.place_piece('x', [0, 2])
-    game_state.available_moves.should_not include [0, 2]
+  it 'should return a new instance of game_state when a move is made' do
+    new_state = game_state.make_move([0, 0])
+    new_state.unplayed?.should be_false
+    new_state.player_piece.should eq 'o'
+    new_state.opponent_piece.should eq 'x'
   end
 
-  it 'should not place blank pieces' do
-    game_state.place_piece('', [0, 2])
-    game_state.available_moves.count.should eq 9
-  end
-
-  it 'should return a full array of available moves' do
-    game_state.available_moves.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
-    game_state.blank?.should be_true
+  it 'should ensure different instances when moves are made' do
+    gs = test_game_state 'xo_______'
+    gs_1 = gs.make_move([1, 1])
+    gs_2 = gs.make_move([2, 2])
+    gs_1.should_not be gs_2
+    gs_1.available_moves.should_not eq gs_2.available_moves
   end
 
   it 'should return an array of corner spaces' do
     game_state.corner_spaces.should eq [[0, 0], [0, 2], [2, 0], [2, 2]]
   end
 
-  it 'should not be blank if a piece has been placed on it' do
-    game_state.place_piece('x', [0, 2])
-    game_state.blank?.should be_false
-  end
-
-  it 'should return itself after placing a piece' do
-    game_state.place_piece('x', [0, 2]).should be_an_instance_of Tictactoe::GameState
-  end
-
-  it 'should not show a move that has been made' do
-    game_state.place_piece('x', [0, 0])
-    game_state.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
-  end
-
   it 'should report if there is only a single move left' do
     b = test_game_state('xoxoxox__')
     b.last_move?.should be_false
-    b.place_piece('x', [2, 1])
-    b.last_move?.should be_true
+    b.make_move([2, 1]).last_move?.should be_true
   end
 
   it 'should report win information for a row victory' do
@@ -96,11 +93,6 @@ describe Tictactoe::GameState do
     b.winner_exists?.should be_true
   end
 
-  # it 'should scale available moves for larger boards' do
-  #   b = Tictactoe::GameState.new(4, 'x', 'o')
-  #   b.available_moves.count.should eq 16
-  # end
-
   it 'should have a general win algorithm for arbitrary board size' do
     win_boards = {
       diagonal: 'xooo_x____x____x',
@@ -112,30 +104,6 @@ describe Tictactoe::GameState do
       b = test_game_state code, 4, 'x', 'o'
       b.won?('x').should be_true
     end
-  end
-
-  it 'should swap player pieces when the board is handed off' do
-    b = test_game_state 'xo_______'
-    b.player_piece.should eq 'x'
-    b.place_piece('x', [1, 1])
-    new_b = b.hand_off
-    new_b.player_piece.should eq 'o'
-    new_b.opponent_piece.should eq 'x'
-  end
-
-  it 'when a board is handed off it should be a deep copy' do
-    b = test_game_state 'xo_______'
-    b1 = b.hand_off
-    b2 = b.hand_off
-    b1.place_piece('x', [1, 1])
-    b2.place_piece('x', [2, 2])
-    b2.board.contents_of([1, 1]).should eq ''
-    b1.available_moves.should_not eq b2.available_moves
-  end
-
-  it 'should return nil for a board with no winning pieces' do
-    b = test_game_state 'xo_______'
-    b.winning_line.should be_nil
   end
 
   it 'should return a list of the winning coordinates for a row win' do
