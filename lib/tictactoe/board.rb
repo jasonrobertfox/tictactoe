@@ -47,5 +47,9 @@ module Tictactoe
       @blank_spaces = blank_spaces
       @board = board
     end
+
+    def to_a
+      @board
+    end
   end
 end

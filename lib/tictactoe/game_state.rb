@@ -6,9 +6,12 @@ module Tictactoe
 
     attr_reader :player_piece, :opponent_piece, :winner
 
-    attr_writer :board
+    # attr_writer :board
 
-    def initialize(board, player_piece, opponent_piece)
+    def initialize(player_piece, opponent_piece)
+      fail ArgumentError, "Pieces must be a single character: #{player_piece}" unless player_piece.length == 1
+      fail ArgumentError, "Pieces must be a single character: #{opponent_piece}" unless opponent_piece.length == 1
+      fail ArgumentError, "Pieces must not be the same: #{player_piece}, #{opponent_piece}" if player_piece.downcase == opponent_piece.downcase
       @player_piece, @opponent_piece = player_piece, opponent_piece
     end
 
@@ -17,6 +20,11 @@ module Tictactoe
       initialize_board_meta_data
       check_for_win if win_possible?
       self
+    end
+
+    def board
+      fail 'Game state has know knowledge of a board.' unless @board
+      @board
     end
 
     def place_piece(piece, coordinate)
@@ -47,17 +55,17 @@ module Tictactoe
       @board.number_of_spaces
     end
 
-    def board
-      array = []
-      0.upto(@max_index) do |r|
-        row = []
-        0.upto(@max_index) do |c|
-          row << @board.contents_of([r, c])
-        end
-        array << row
-      end
-      array
-    end
+    # def board
+    #   array = []
+    #   0.upto(@max_index) do |r|
+    #     row = []
+    #     0.upto(@max_index) do |c|
+    #       row << @board.contents_of([r, c])
+    #     end
+    #     array << row
+    #   end
+    #   array
+    # end
 
     def blank?
       @board.blank?

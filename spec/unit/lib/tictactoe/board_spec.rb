@@ -60,4 +60,10 @@ describe Tictactoe::Board do
     b = Tictactoe::Board.new(4)
     b.number_of_spaces.should eq 16
   end
+
+  it 'can be serialized to a flat array' do
+    board.place_piece('x', [0, 2])
+    board.place_piece('o', [1, 1])
+    board.to_a.should eq ['', '', 'x', '', 'o', '', '', '', '']
+  end
 end

@@ -119,7 +119,7 @@ def test_game_state(code, size = 3, player_piece = 'x', opponent_piece = 'o')
   code.split(//).each_with_index do |piece, i|
     board.place_piece(piece, [i / size, i % size]) unless piece == '_'
   end
-  game_state = Tictactoe::GameState.new(board, player_piece, opponent_piece)
+  game_state = Tictactoe::GameState.new(player_piece, opponent_piece)
   game_state.board = board
   game_state
 end

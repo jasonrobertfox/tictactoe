@@ -49,29 +49,29 @@ module Tictactoe
         board_data.each do |space|
           board.place_piece space['value'], id_to_coordinate(space['id'])
         end
-        game_state = Tictactoe::GameState.new(board, player_piece, opponent_piece)
+        game_state = Tictactoe::GameState.new(player_piece, opponent_piece)
         game_state.board = board
         game_state
       end
 
-      def create_response(board)
-        { player_piece: board.player_piece, opponent_piece: board.opponent_piece, board: make_board_data(board) }.merge(make_meta_data(board))
+      def create_response(game_state)
+        { player_piece: game_state.player_piece, opponent_piece: game_state.opponent_piece, board: make_board_data(game_state) }.merge(make_meta_data(game_state))
       end
 
-      def make_board_data(board)
+      def make_board_data(game_state)
         i = 0
         board_data = []
-        board.board.flatten.each do |value|
+        game_state.board.to_a.each do |value|
           coordinate = [i / board_width, i % board_width]
-          board_data << make_space_data(board.winning_line, coordinate, value)
+          board_data << make_space_data(game_state.winning_line, coordinate, value)
           i += 1
         end
         board_data
       end
 
-      def make_meta_data(board)
-        return { status: 'draw' } if board.draw?
-        return { status: 'win', winner: board.winner } if board.winner_exists?
+      def make_meta_data(game_state)
+        return { status: 'draw' } if game_state.draw?
+        return { status: 'win', winner: game_state.winner } if game_state.winner_exists?
         { status: 'active' }
       end
 

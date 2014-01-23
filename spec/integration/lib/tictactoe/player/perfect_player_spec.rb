@@ -22,7 +22,7 @@ describe Tictactoe::Player::PerfectPlayer do
     game_state = test_game_state('_________')
     player = get_player 'x'
     new_game_state = player.take_turn(game_state)
-    new_game_state.board.flatten.should include 'x'
+    new_game_state.board.to_a.should include 'x'
     new_game_state.player_piece.should eq 'o'
   end
 

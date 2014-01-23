@@ -129,7 +129,7 @@ describe Tictactoe::GameState do
     b2 = b.hand_off
     b1.place_piece('x', [1, 1])
     b2.place_piece('x', [2, 2])
-    b2.board[1][1].should eq ''
+    b2.board.contents_of([1, 1]).should eq ''
     b1.available_moves.should_not eq b2.available_moves
   end
 
