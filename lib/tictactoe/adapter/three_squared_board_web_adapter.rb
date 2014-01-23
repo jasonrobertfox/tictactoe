@@ -47,7 +47,7 @@ module Tictactoe
       def create_game_state(player_piece, opponent_piece, board_data)
         board = Tictactoe::Board.new(board_width)
         board_data.each do |space|
-          board.place_piece space['value'], id_to_coordinate(space['id'])
+          board.place_piece(space['value'], id_to_coordinate(space['id'])) unless space['value'] == ''
         end
         game_state = Tictactoe::GameState.new(player_piece, opponent_piece)
         game_state.board = board
@@ -61,7 +61,7 @@ module Tictactoe
       def make_board_data(game_state)
         i = 0
         board_data = []
-        game_state.board.to_a.each do |value|
+        game_state.board.to_a.map { |e| e || '' }.each do |value|
           coordinate = [i / board_width, i % board_width]
           board_data << make_space_data(game_state.winning_line, coordinate, value)
           i += 1

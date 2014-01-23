@@ -2,9 +2,6 @@
 
 module Tictactoe
   class GameState
-    # TODO: get rid of this blank thing...
-    BLANK = ''
-
     attr_reader :player_piece, :opponent_piece, :winner
 
     def initialize(player_piece, opponent_piece)
@@ -14,15 +11,14 @@ module Tictactoe
 
     def board=(board)
       @board = board
-      @max_index = board.width - 1
-      @board_range = board.width.times.to_a
-      @minimum_moves_required_to_win = (2 * board.width) - 1
+      @max_index ||= board.width - 1
+      @board_range ||= board.width.times.to_a
+      @minimum_moves_required_to_win ||= (2 * board.width) - 1
       check_for_win if win_possible?
     end
 
     def board
-      fail 'Game state has know knowledge of a board.' unless @board
-      @board
+      @board || fail('Game state has know knowledge of a board.')
     end
 
     def make_move(space)
@@ -102,10 +98,7 @@ module Tictactoe
     def winning_row
       @board_range.each do |r|
         candidate = board.contents_of([r, 0])
-        if candidate != BLANK && @board_range.map { |c| board.contents_of([r, c]) }.count(candidate) == board.width
-          @winning_line = [r].product(@board_range) if @gather_line
-          return candidate
-        end
+        return candidate if check_line(candidate) { |i| [r, i] }
       end
       nil
     end
@@ -113,30 +106,28 @@ module Tictactoe
     def winning_column
       @board_range.each do |c|
         candidate = board.contents_of([0, c])
-        if candidate != BLANK && @board_range.map { |r| board.contents_of([r, c]) }.count(candidate) == board.width
-          @winning_line = @board_range.product([c]) if @gather_line
-          return candidate
-        end
+        return candidate if check_line(candidate) { |i| [i, c] }
       end
       nil
     end
 
     def winning_diagonal
-      check_diagonal(board.contents_of([0, 0])) { |i| i }
+      check_line(board.contents_of([0, 0])) { |i| [i, i] }
     end
 
     def winning_reverse_diagonal
-      check_diagonal(board.contents_of([@max_index, 0])) { |i| @max_index - i }
+      check_line(board.contents_of([@max_index, 0])) { |i| [i, @max_index - i] }
     end
 
-    def check_diagonal(candidate)
-      diagonal = []
+    def check_line(candidate)
+      return nil unless candidate
+      line = []
       (0..@max_index).each do |i|
-        column = yield i
-        return nil unless candidate != BLANK && board.contents_of([i, column]) == candidate
-        diagonal << [i, column] if @gather_line
+        space = yield i
+        return nil unless board.contents_of(space) == candidate
+        line << space if @gather_line
       end
-      @winning_line = diagonal if diagonal.count == board.width
+      @winning_line = line if @gather_line
       candidate
     end
   end

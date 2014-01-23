@@ -35,7 +35,7 @@ describe Tictactoe::Board do
   end
 
   it 'should not place blank pieces' do
-    board.place_piece('', [0, 2])
+    board.place_piece(nil, [0, 2])
     board.number_of_blanks.should eq 9
   end
 
@@ -48,7 +48,7 @@ describe Tictactoe::Board do
     board_copy = board.clone
     board.place_piece('x', [0, 1])
     board_copy.place_piece('x', [0, 2])
-    board_copy.contents_of([0, 1]).should eq ''
+    board_copy.contents_of([0, 1]).should be_nil
     board.blank_spaces.should_not eq board_copy.blank_spaces
   end
 
@@ -60,6 +60,6 @@ describe Tictactoe::Board do
   it 'can be serialized to a flat array' do
     board.place_piece('x', [0, 2])
     board.place_piece('o', [1, 1])
-    board.to_a.should eq ['', '', 'x', '', 'o', '', '', '', '']
+    board.to_a.should eq [nil, nil, 'x', nil, 'o', nil, nil, nil, nil]
   end
 end

@@ -2,7 +2,7 @@
 
 module Tictactoe
   class Board
-    BLANK = ''
+    BLANK = nil
 
     attr_reader :width, :number_of_spaces, :number_of_blanks, :number_of_occupied, :blank_spaces
 
@@ -11,7 +11,7 @@ module Tictactoe
       @number_of_spaces = @number_of_blanks = width**2
       @number_of_occupied = 0
       @blank_spaces = square_array(width.times.to_a)
-      @board = Array.new(@number_of_spaces) { BLANK }
+      @board =  Array.new(width) { Array.new(width) { BLANK } }
     end
 
     def blank?
@@ -20,7 +20,7 @@ module Tictactoe
 
     def place_piece(piece, space)
       unless piece == BLANK
-        @board[calculate_board_index(space)] = piece
+        @board[space.first][space.last] = piece
         @number_of_blanks -= 1
         @number_of_occupied += 1
         @blank_spaces.delete(space)
@@ -29,18 +29,18 @@ module Tictactoe
     end
 
     def contents_of(space)
-      @board[calculate_board_index(space)]
+      @board[space.first][space.last]
     end
 
     def to_a
-      @board
+      @board.flatten
     end
 
     private
 
     def initialize_copy(source)
       blank_spaces = @blank_spaces.map(&:dup)
-      board = @board.dup
+      board = @board.map(&:dup)
       super
       @blank_spaces = blank_spaces
       @board = board
@@ -48,10 +48,6 @@ module Tictactoe
 
     def square_array(array)
       array.product(array)
-    end
-
-    def calculate_board_index(space)
-      space.first * @width + space.last
     end
   end
 end
