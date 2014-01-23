@@ -19,7 +19,7 @@ describe Tictactoe::GameState do
     gs.won?('x').should be_false
     gs.lost?('o').should be_false
     gs.won?('o').should be_false
-    gs.final_move?.should be_false
+    gs.final_move.should be_nil
     gs.available_moves.should eq b.blank_spaces
   end
 
@@ -44,8 +44,8 @@ describe Tictactoe::GameState do
 
   it 'should report if there is only a single move left' do
     b = test_game_state('xoxoxox__')
-    b.last_move?.should be_false
-    b.make_move([2, 1]).last_move?.should be_true
+    b.final_move.should be_nil
+    b.make_move([2, 1]).final_move.should eq [2, 2]
   end
 
   it 'should report win information for a row victory' do

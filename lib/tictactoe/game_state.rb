@@ -56,20 +56,12 @@ module Tictactoe
       board.number_of_spaces
     end
 
-    def blank?
-      board.blank?
-    end
-
     def unplayed?
       board.blank?
     end
 
-    def final_move?
-      board.number_of_blanks == 1
-    end
-
-    def last_move?
-      board.number_of_blanks == 1
+    def final_move
+      return board.blank_spaces.first if board.number_of_blanks == 1
     end
 
     def over?
