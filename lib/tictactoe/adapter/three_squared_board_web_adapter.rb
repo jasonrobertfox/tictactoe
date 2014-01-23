@@ -24,7 +24,7 @@ module Tictactoe
         board_data = request_data['board']
         game_state = create_game_state(player_piece, opponent_piece, board_data)
         unless game_state.over?
-          game_state = Tictactoe::Player::PerfectPlayer.new(player_piece).take_turn(game_state)
+          game_state = Tictactoe::Player::PerfectPlayer.new.take_turn(game_state)
         end
         create_response game_state
       end
