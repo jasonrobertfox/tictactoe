@@ -22,11 +22,11 @@ module Tictactoe
         player_piece = request_data['player_piece']
         opponent_piece = request_data['opponent_piece']
         board_data = request_data['board']
-        board = create_board(player_piece, opponent_piece, board_data)
-        unless board.over?
-          board = Tictactoe::Player::PerfectPlayer.new(player_piece).take_turn(board)
+        game_state = create_game_state(player_piece, opponent_piece, board_data)
+        unless game_state.over?
+          game_state = Tictactoe::Player::PerfectPlayer.new(player_piece).take_turn(game_state)
         end
-        create_response board
+        create_response game_state
       end
 
       private
@@ -44,12 +44,14 @@ module Tictactoe
         end
       end
 
-      def create_board(player_piece, opponent_piece, board_data)
+      def create_game_state(player_piece, opponent_piece, board_data)
         board = Tictactoe::Board.new(board_width)
         board_data.each do |space|
           board.place_piece space['value'], id_to_coordinate(space['id'])
         end
-        Tictactoe::GameState.new(board, player_piece, opponent_piece)
+        game_state = Tictactoe::GameState.new(board, player_piece, opponent_piece)
+        game_state.board = board
+        game_state
       end
 
       def create_response(board)

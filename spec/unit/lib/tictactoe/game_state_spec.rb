@@ -5,6 +5,11 @@ require 'tictactoe/game_state'
 
 describe Tictactoe::GameState do
 
+  # it 'should be instantiated with an instance of a board' do
+  #   board = double 'Tictactoe::Board'
+  #   Tictactoe::GameState.new(board, 'x', 'o')
+  # end
+
   # let(:game_state) { Tictactoe::GameState.new(3, 'x', 'o') }
 
   #   it 'should reject anything but single characters for pieces' do

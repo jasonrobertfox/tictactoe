@@ -6,16 +6,33 @@ module Tictactoe
 
     attr_reader :player_piece, :opponent_piece, :winner
 
+    attr_writer :board
+
     def initialize(board, player_piece, opponent_piece)
-      @board, @player_piece, @opponent_piece = board, player_piece, opponent_piece
+      @player_piece, @opponent_piece = player_piece, opponent_piece
+    end
+
+    def board=(board)
+      @board = board
       initialize_board_meta_data
       check_for_win if win_possible?
+      self
     end
 
     def place_piece(piece, coordinate)
-      @board.place_piece(piece, coordinate)
-      check_for_win if win_possible?
+      # TODO: this is a hack and we should clean this up.
+      self.board = @board.place_piece(piece, coordinate)
+      # check_for_win if win_possible?
       self
+    end
+
+    def take_turn(space)
+      copy = dup
+      copy.board = @board.dup.place_piece(player_piece, space)
+      copy.check_for_win if copy.win_possible?
+      copy.player_piece = @opponent_piece
+      copy.opponent_piece = @player_piece
+      copy
     end
 
     def available_moves
@@ -86,7 +103,7 @@ module Tictactoe
 
     protected
 
-    attr_writer :board, :player_piece, :opponent_piece
+    attr_writer :player_piece, :opponent_piece
 
     private
 
