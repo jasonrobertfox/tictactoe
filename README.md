@@ -1,6 +1,6 @@
 #Tic Tac Toe Documentation
 
-[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png?branch=develop)](https://coveralls.io/r/jasonrobertfox/tictactoe?branch=develop) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
+[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png)](https://coveralls.io/r/jasonrobertfox/tictactoe) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
 
 A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
 
