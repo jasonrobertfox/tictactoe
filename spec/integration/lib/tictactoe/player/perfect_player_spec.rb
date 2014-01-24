@@ -88,7 +88,7 @@ describe Tictactoe::Player::PerfectPlayer do
     game_state.draw?.should be_true
   end
 
-  it 'should always draw when playing itself', :skip do
+  it 'should always draw when playing itself' do
     results = []
     (1..5).each do
       game_state = test_game_state('_________')
