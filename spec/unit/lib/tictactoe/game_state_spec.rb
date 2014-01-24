@@ -27,9 +27,4 @@ describe Tictactoe::GameState do
       end.to raise_error(ArgumentError, /Pieces must not be the same:/), "Arguments: #{arguments.inspect}"
     end
   end
-
-  it 'trying to get an unset board should raise an error' do
-    gs = Tictactoe::GameState.new('x', 'o')
-    expect { gs.board }.to raise_error(RuntimeError, 'Game state has know knowledge of a board.')
-  end
 end
