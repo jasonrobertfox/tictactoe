@@ -16,26 +16,18 @@ describe 'default app behavior' do
 end
 
 describe 'tic tac toe api behavior' do
-  it 'should return an error if provided pieces are different' do
-    data = { player_piece: 'b', opponent_piece: 'b' }
+  it 'should handle the exception from lower level components' do
+    data = { player_piece: 'b', opponent_piece: 'b', board: test_board_data([['x', 'o', ''], ['o', 'o', ''], ['x', 'o', '']]) }
     result = post_json('/api/v2/play', data)
-    expect(last_response.status).to be 400
+    expect(last_response.status).to eq 400
     result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Provided pieces need to be different.'
-  end
-
-  it 'should handle the exception if a board validation exception is raised' do
-    data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([['x', 'b', ''], ['o', 'o', ''], ['x', 'o', '']]) }
-    result = post_json('/api/v2/play', data)
-    expect(last_response.status).to be 400
-    result['status'].should eq 'fail'
-    result['data']['message'].should eq 'Pieces in board must be either x, o or blank.'
+    result['data']['message'].should_not be_empty
   end
 
   it 'should return a data set with next move and other piece if the game is active' do
     data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([['x', 'x', ''], ['o', 'o', ''], ['x', 'o', '']]) }
     result = post_json('/api/v2/play', data)
-    expect(last_response.status).to be 200
+    expect(last_response.status).to eq 200
     result['status'].should eq 'success'
     result['data']['player_piece'].should eq 'o'
     result['data']['board'].count { |space| space['value'] != '' }.should eq 7
@@ -44,14 +36,14 @@ describe 'tic tac toe api behavior' do
   it 'should return update the board with draw status' do
     data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([%w(x x o), %w(o o x), %w(x o o)]) }
     result = post_json('/api/v2/play', data)
-    expect(last_response.status).to be 200
+    expect(last_response.status).to eq 200
     result['data']['status'].should eq 'draw'
   end
 
   it 'should update the board with winning status ' do
     data = { player_piece: 'x', opponent_piece: 'o', board: test_board_data([%w(x x x), ['o', 'o', ''], ['x', 'o', '']]) }
     result = post_json('/api/v2/play', data)
-    expect(last_response.status).to be 200
+    expect(last_response.status).to eq 200
     result['data']['status'].should eq 'win'
     result['data']['winner'].should eq 'x'
     result['data']['board'][1]['winning_space'].should eq true

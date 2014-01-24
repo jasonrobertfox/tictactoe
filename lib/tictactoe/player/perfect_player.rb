@@ -8,6 +8,7 @@ module Tictactoe
       Node = Struct.new(:score, :move)
 
       def take_turn(game_state)
+        return game_state if game_state.over?
         @game_state = game_state
         @piece = game_state.player_piece
         game_state.make_move(choose_move)

@@ -82,6 +82,12 @@ describe Tictactoe::Player::PerfectPlayer do
     new_game_state.available_moves.should_not include [0, 2]
   end
 
+  it 'should return the state if the game is already over' do
+    game_state = test_game_state 'oo_xxx___', 3, 'o', 'x'
+    new_game_state = player.take_turn(game_state)
+    new_game_state.should be game_state
+  end
+
   it 'should draw when playing itself' do
     game_state = test_game_state('_________')
     game_state = player.take_turn(game_state) while game_state.over? == false
