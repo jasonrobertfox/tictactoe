@@ -4,6 +4,9 @@ require 'spec_helper'
 require 'tictactoe/adapter/three_squared_board_web_adapter'
 
 describe Tictactoe::Adapter::ThreeSquaredBoardWebAdapter do
+
+  let(:test_adapter) { Tictactoe::Adapter::ThreeSquaredBoardWebAdapter.new }
+
   it 'should return the board with draw status if the board is already a draw' do
     response = test_adapter.get_response(test_request('x', 'o', [%w(x x o), %w(o o x), %w(x o o)]))
     response[:status].should eq 'draw'

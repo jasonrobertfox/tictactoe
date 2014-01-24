@@ -3,70 +3,60 @@
 module Tictactoe
   module Player
     class PerfectPlayer
-      attr_reader :piece, :board
-
       INITIAL_DEPTH = 0
-      LOWER_BOUND = -100_000
-      UPPER_BOUND = 100_000
 
       Node = Struct.new(:score, :move)
 
-      def initialize(piece)
-        @piece = piece
-      end
-
-      def take_turn(board)
-        validate_players_turn(board)
-        @board = board
-        board.place_piece(piece, choose_move).hand_off
+      def take_turn(game_state)
+        return game_state if game_state.over?
+        @game_state = game_state
+        @piece = game_state.player_piece
+        game_state.make_move(choose_move)
       end
 
       private
 
-      def validate_players_turn(board)
-        fail ArgumentError, 'It is not this player\'s turn.' if piece != board.player_piece
-      end
+      attr_reader :piece, :game_state
 
       def choose_move
-        return board.corner_spaces.sample if board.blank?
-        return board.available_moves[0] if board.last_move?
+        return game_state.corner_spaces.sample if game_state.unplayed?
+        return game_state.final_move if game_state.final_move
         best_possible_move
       end
 
       def best_possible_move
-        @base_score = board.number_of_spaces + 1
-        minmax(board, INITIAL_DEPTH, LOWER_BOUND, UPPER_BOUND)
+        @base_score = game_state.available_moves.count + 1
+        bound = @base_score + 1
+        minmax(game_state, INITIAL_DEPTH, -bound, bound)
         @current_move_choice
       end
 
-      def minmax(board, depth, lower, upper)
-        return evaluate_state(board, depth) if board.over?
+      def minmax(game_state, depth, lower_bound, upper_bound)
+        return evaluate_state(game_state, depth) if game_state.over?
         candidate_move_nodes = []
-        board.available_moves.each do |move|
-
-          child_board = board.hand_off.place_piece(board.player_piece, move)
-          score = minmax(child_board, depth + 1, lower, upper)
+        game_state.available_moves.each do |move|
+          child_board = game_state.make_move(move)
+          score = minmax(child_board, depth + 1, lower_bound, upper_bound)
           node = Node.new score, move
 
-          if board.player_piece == piece
+          if game_state.player_piece == piece
             candidate_move_nodes << node
-            lower = node.score if node.score > lower
+            lower_bound = node.score if node.score > lower_bound
           else
-            upper = node.score if node.score < upper
+            upper_bound = node.score if node.score < upper_bound
           end
-
-          break if upper < lower
+          break if upper_bound < lower_bound
         end
 
-        return upper unless  board.player_piece == piece
+        return upper_bound unless  game_state.player_piece == piece
         @current_move_choice = candidate_move_nodes.max_by { |node| node.score }.move
-        lower
+        lower_bound
       end
 
-      def evaluate_state(board, depth)
-        if board.won?(piece)
+      def evaluate_state(game_state, depth)
+        if game_state.won?(piece)
           @base_score - depth
-        elsif board.lost?(piece)
+        elsif game_state.lost?(piece)
           depth - @base_score
         else
           0
