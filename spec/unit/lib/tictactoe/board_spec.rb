@@ -5,29 +5,28 @@ require 'tictactoe/board'
 
 describe Tictactoe::Board do
 
-  let(:board) { Tictactoe::Board.new(3, 'x', 'o') }
+  let(:board) { Tictactoe::Board.new(3) }
 
-  it 'should be initialized with it size' do
+  it 'should be initialized with size' do
+    board.width.should eq 3
+  end
+
+  it 'should report the total spaces' do
     board.number_of_spaces.should eq 9
+    board.number_of_blanks.should eq 9
+    board.blank_spaces.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
   end
 
-  it 'should let a piece be set' do
-    board.place_piece('x', [0, 2])
-    board.available_moves.should_not include [0, 2]
-  end
-
-  it 'should not place blank pieces' do
-    board.place_piece('', [0, 2])
-    board.available_moves.count.should eq 9
-  end
-
-  it 'should return a full array of available moves' do
-    board.available_moves.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
+  it 'should be blank by default' do
     board.blank?.should be_true
   end
 
-  it 'should return an array of corner spaces' do
-    board.corner_spaces.should eq [[0, 0], [0, 2], [2, 0], [2, 2]]
+  it 'should let a piece be set' do
+    board.place_piece('x', [1, 2])
+    board.blank_spaces.should eq [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [2, 0], [2, 1], [2, 2]]
+    board.number_of_blanks.should eq 8
+    board.number_of_occupied.should eq 1
+    board.contents_of([1, 2]).should eq 'x'
   end
 
   it 'should not be blank if a piece has been placed on it' do
@@ -35,132 +34,32 @@ describe Tictactoe::Board do
     board.blank?.should be_false
   end
 
+  it 'should not place blank pieces' do
+    board.place_piece(nil, [0, 2])
+    board.number_of_blanks.should eq 9
+  end
+
   it 'should return itself after placing a piece' do
     board.place_piece('x', [0, 2]).should be_an_instance_of Tictactoe::Board
   end
 
-  it 'should not show a move that has been made' do
+  it 'when a board is copied off it should be a deep copy' do
     board.place_piece('x', [0, 0])
-    board.available_moves.should eq [[0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
-  end
-
-  it 'should report if there is only a single move left' do
-    b = test_board('xoxoxox__')
-    b.last_move?.should be_false
-    b.place_piece('x', [2, 1])
-    b.last_move?.should be_true
-  end
-
-  it 'should report win information for a row victory' do
-    %w(xxxo_o___ o__xxx_o_ o__o__xxx).each do |code|
-      b = test_board code
-      b.won?('x').should be_true, "Failed with #{code}"
-      b.draw?.should be_false
-      b.over?.should be_true
-    end
-  end
-
-  it 'should report win information for a column victory' do
-    %w(x_oxo_x__ _xo_x_ox_ __x_ox_ox).each do |code|
-      b = test_board code
-      b.won?('x').should be_true, "Failed with #{code}"
-      b.draw?.should be_false
-      b.over?.should be_true
-    end
-  end
-
-  it 'should report win information for a diagonal victory' do
-    b = test_board 'xo__xo__x'
-    b.won?('x').should be_true
-    b.lost?('o').should be_true
-    b.draw?.should be_false
-    b.over?.should be_true
-  end
-
-  it 'should report win information for a reverse diagonal victory' do
-    b = test_board 'x_o_o_o_x'
-    b.won?('o').should be_true
-    b.draw?.should be_false
-    b.over?.should be_true
-  end
-
-  it 'should report a draw state' do
-    b = test_board 'xoxxxooxo'
-    b.winner_exists?.should be_false
-    b.draw?.should be_true
-    b.over?.should be_true
-  end
-
-  it 'should report if someone has won' do
-    b = test_board 'o_x_x_x_o'
-    b.winner_exists?.should be_true
+    board_copy = board.clone
+    board.place_piece('x', [0, 1])
+    board_copy.place_piece('x', [0, 2])
+    board_copy.contents_of([0, 1]).should be_nil
+    board.blank_spaces.should_not eq board_copy.blank_spaces
   end
 
   it 'should scale available moves for larger boards' do
-    b = Tictactoe::Board.new(4, 'x', 'o')
-    b.available_moves.count.should eq 16
+    b = Tictactoe::Board.new(4)
+    b.number_of_spaces.should eq 16
   end
 
-  it 'should have a general win algorithm for arbitrary board size' do
-    win_boards = {
-      diagonal: 'xooo_x____x____x',
-      reverse_diagonal: 'ooox__x__x__x___',
-      row: 'ooo_____xxxx____',
-      column: '_xooox___x___x__'
-    }
-    win_boards.each do |name, code|
-      b = test_board code, 4, 'x', 'o'
-      b.won?('x').should be_true
-    end
+  it 'can be serialized to a flat array' do
+    board.place_piece('x', [0, 2])
+    board.place_piece('o', [1, 1])
+    board.to_a.should eq [nil, nil, 'x', nil, 'o', nil, nil, nil, nil]
   end
-
-  it 'should swap player pieces when the board is handed off' do
-    b = test_board 'xo_______'
-    b.player_piece.should eq 'x'
-    b.place_piece('x', [1, 1])
-    new_b = b.hand_off
-    new_b.player_piece.should eq 'o'
-    new_b.opponent_piece.should eq 'x'
-  end
-
-  it 'when a board is handed off it should be a deep copy' do
-    b = test_board 'xo_______'
-    b1 = b.hand_off
-    b2 = b.hand_off
-    b1.place_piece('x', [1, 1])
-    b2.place_piece('x', [2, 2])
-    b2.board[1][1].should eq ''
-    b1.available_moves.should_not eq b2.available_moves
-  end
-
-  it 'should return nil for a board with no winning pieces' do
-    b = test_board 'xo_______'
-    b.winning_line.should be_nil
-  end
-
-  it 'should return a list of the winning coordinates for a row win' do
-    b = test_board 'o__xxx_o_'
-    b.winning_line.should eq [[1, 0], [1, 1], [1, 2]]
-  end
-
-  it 'should return a list of the winning coordinates for a column win' do
-    b = test_board '__x_ox_ox'
-    b.winning_line.should eq [[0, 2], [1, 2], [2, 2]]
-  end
-
-  it 'should return a list of the winning coordinates for a diagonal win' do
-    b = test_board 'xo__xo__x'
-    b.winning_line.should eq [[0, 0], [1, 1], [2, 2]]
-  end
-
-  it 'should return a list of the winning coordinates for a diagonal win' do
-    b = test_board 'x_o_o_o_x'
-    b.winning_line.should eq [[0, 2], [1, 1], [2, 0]]
-  end
-
-  it 'should return the winning piece' do
-    b = test_board 'x_o_o_o_x'
-    b.winner.should eq 'o'
-  end
-
 end

@@ -2,136 +2,52 @@
 
 module Tictactoe
   class Board
-    BLANK = ''
+    BLANK = nil
 
-    attr_reader :available_moves, :corner_spaces, :number_of_spaces, :player_piece, :opponent_piece, :board, :winner
+    attr_reader :width, :number_of_spaces, :number_of_blanks, :number_of_occupied, :blank_spaces
 
-    def initialize(size, player_piece, opponent_piece)
-      @player_piece, @opponent_piece, @size = player_piece, opponent_piece, size
-      @board = Array.new(@size) { Array.new(@size, BLANK) }
-      initialize_board_meta_data
+    def initialize(width)
+      @width = width
+      @number_of_spaces = @number_of_blanks = width**2
+      @number_of_occupied = 0
+      @blank_spaces = square_array(width.times.to_a)
+      @board =  Array.new(width) { Array.new(width) { BLANK } }
     end
 
-    def place_piece(piece, coordinate)
+    def blank?
+      @number_of_blanks == @number_of_spaces
+    end
+
+    def place_piece(piece, space)
       unless piece == BLANK
-        @board[coordinate.first][coordinate.last] = piece
-        update_moves(coordinate)
-        check_for_win if win_possible?
+        @board[space.first][space.last] = piece
+        @number_of_blanks -= 1
+        @number_of_occupied += 1
+        @blank_spaces.delete(space)
       end
       self
     end
 
-    def blank?
-      ! @has_pieces
+    def contents_of(space)
+      @board[space.first][space.last]
     end
 
-    def last_move?
-      @moves_left == 1
+    def to_a
+      @board.flatten
     end
-
-    def over?
-      @winner || draw?
-    end
-
-    def draw?
-      @moves_left == 0 && !@winner
-    end
-
-    def winner_exists?
-      !!@winner
-    end
-
-    def lost?(piece)
-      @winner && @winner != piece
-    end
-
-    def won?(piece)
-      piece == @winner
-    end
-
-    def winning_line
-      @gather_line = true
-      check_for_win
-      @winning_line
-    end
-
-    def hand_off
-      copy = dup
-      copy.board = @board.map { |i| i.dup }
-      copy.available_moves = @available_moves.map { |i| i.dup }
-      copy.player_piece = @opponent_piece
-      copy.opponent_piece = @player_piece
-      copy
-    end
-
-    protected
-
-    attr_writer :board, :available_moves, :player_piece, :opponent_piece
 
     private
 
-    def initialize_board_meta_data
-      @moves_made = 0
-      @max_index = @size - 1
-      @number_of_spaces = @size**2
-      @moves_left = @number_of_spaces
-      @board_range = (0..@max_index).to_a
-      @minimum_moves_required_to_win = (2 * @size) - 1
-      @available_moves = @board_range.product(@board_range)
-      @corner_spaces = [0, @max_index].product([0, @max_index])
+    def initialize_copy(source)
+      blank_spaces = @blank_spaces.map(&:dup)
+      board = @board.map(&:dup)
+      super
+      @blank_spaces = blank_spaces
+      @board = board
     end
 
-    def update_moves(coordinate)
-      @available_moves.delete(coordinate)
-      @has_pieces ||= true
-      @moves_left -= 1
-      @moves_made += 1
-    end
-
-    def win_possible?
-      @moves_made >= @minimum_moves_required_to_win
-    end
-
-    def check_for_win
-      @winner = winning_row(@board) || winning_column || winning_diagonal || winning_reverse_diagonal
-    end
-
-    def winning_row(board)
-      board.each_with_index do |row, i|
-        candidate = row[0]
-        if candidate != BLANK && row.count(candidate) == @size
-          @winning_line = [i].product(@board_range) if @gather_line
-          return candidate
-        end
-      end
-      nil
-    end
-
-    def winning_column
-      result = winning_row(@board.transpose)
-      if result && @gather_line
-        @winning_line.map! { |i| i.reverse } if @gather_line
-      end
-      result
-    end
-
-    def winning_diagonal
-      check_diagonal(@board[0][0]) { |i| i }
-    end
-
-    def winning_reverse_diagonal
-      check_diagonal(@board[@max_index][0]) { |i| @max_index - i }
-    end
-
-    def check_diagonal(candidate)
-      diagonal = []
-      (0..@max_index).each do |i|
-        column = yield i
-        return nil unless candidate != BLANK && @board[i][column] == candidate
-        diagonal << [i, column] if @gather_line
-      end
-      @winning_line = diagonal if diagonal.count == @size
-      candidate
+    def square_array(array)
+      array.product(array)
     end
   end
 end
