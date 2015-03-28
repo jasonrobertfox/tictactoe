@@ -1,6 +1,6 @@
 #Tic Tac Toe Documentation
 
-[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png?branch=develop)](https://coveralls.io/r/jasonrobertfox/tictactoe?branch=develop) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
+[![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png)](https://coveralls.io/r/jasonrobertfox/tictactoe) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
 
 A simple game. Or is it!? Try your skill at [http://perfecttictactoe.herokuapp.com/](http://perfecttictactoe.herokuapp.com/)
 
@@ -133,7 +133,27 @@ To start a jasmine server to view the results of javascript tests in the browser
 - The board class is a little heavy, there may be a way to pull this apart.
 - There may be a way to further speed up the algorithm
 
+##License
+```
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+```
+License located in `LICENSE.md`
+
 ##Change Log
+
+###2.1.1 - March 28, 2015
+- Add GPL v3 License
 
 ###2.1.0 - January 23, 2014
 - Split Board into a Board and GameState object for better separation of responsibilities.
@@ -150,4 +170,3 @@ To start a jasmine server to view the results of javascript tests in the browser
 - Refactor client javascript code to simply read/write board and manage turn/messages.
 - Spruced up the styles a little.
 - Various test/code cleaning and performance optimizations.
-
