@@ -1,4 +1,4 @@
-#Tic Tac Toe Documentation
+# Tic Tac Toe Documentation
 
 [![Build Status](https://travis-ci.org/jasonrobertfox/tictactoe.png?branch=master)](https://travis-ci.org/jasonrobertfox/tictactoe) [![Coverage Status](https://coveralls.io/repos/jasonrobertfox/tictactoe/badge.png)](https://coveralls.io/r/jasonrobertfox/tictactoe) [![Code Climate](https://codeclimate.com/github/jasonrobertfox/tictactoe.png)](https://codeclimate.com/github/jasonrobertfox/tictactoe)
 
@@ -108,10 +108,10 @@ Along with the game there is a "Tic Tac Toe" API, simply post a JSON request ind
        }
     }
 
-###Development
+### Development
 This game was built on top of my [sinatra-boilerplate](https://github.com/neverstopbuilding/sinatra-boilerplate) app. Specifics to that boilerplate can be found at its repository.
 
-###Notes on Testing
+### Notes on Testing
 Tests are best executed using the rake tasks:
 
 - `rake test`
@@ -129,11 +129,11 @@ To start a jasmine server to view the results of javascript tests in the browser
 
 `bundle exec rake jasmine`
 
-###Room for Improvement
+### Room for Improvement
 - The board class is a little heavy, there may be a way to pull this apart.
 - There may be a way to further speed up the algorithm
 
-##License
+## License
 ```
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -150,18 +150,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 License located in `LICENSE.md`
 
-##Change Log
+## Change Log
 
-###2.1.1 - March 28, 2015
+### 2.1.1 - March 28, 2015
 - Add GPL v3 License
 
-###2.1.0 - January 23, 2014
+### 2.1.0 - January 23, 2014
 - Split Board into a Board and GameState object for better separation of responsibilities.
 - Improve turn hand off, isolating knowledge of pieces to the GameState.
 - Cleaned up with win check algorithm to leverage a more universal function.
 - Added mechanism to identify which "lines" on a board can never be winning because they contain at least 1 of both players' pieces. These are cached to prevent future checks of that line and improve speed.
 
-###2.0.0 - January 10, 2014
+### 2.0.0 - January 10, 2014
 
 - Ignore expensive win check if there are not enough pieces for a win to be possible (while following the rules). For example, the soonest a player could win on a 3x3 board is when marking the 5th square.
 - Refactor board state object to improve copying performance and holding the state of the game as moves are made, this prevents expensive win checking of the whole board any time that method is called.
